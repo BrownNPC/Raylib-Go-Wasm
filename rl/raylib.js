@@ -6,6 +6,8 @@ document.addEventListener('DOMContentLoaded', () => {
   window.customElements.define('raylib-game', RaylibComponent)
 })
 
+const importLocation = document?.location?.toString()
+
 // run this function before calling anything
 export async function raylib_run(canvas, userInit, userUpdate) {
   const raylib = {}

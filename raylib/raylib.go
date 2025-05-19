@@ -182,7 +182,7 @@ type AutomationEventList struct {
 // }
 
 // CameraMode type
-type CameraMode int32
+type CameraMode = int32
 
 // Camera system modes
 const (
@@ -194,7 +194,7 @@ const (
 )
 
 // CameraProjection type
-type CameraProjection int32
+type CameraProjection = int32
 
 // Camera projection modes
 const (
@@ -368,7 +368,7 @@ const (
 	MouseMiddleButton = MouseButtonMiddle
 )
 
-type MouseButton int32
+type MouseButton = int32
 
 // Mouse Buttons
 const (
@@ -668,7 +668,7 @@ type Asset interface {
 }
 
 // Gestures type
-type Gestures int32
+type Gestures = int32
 
 // Gestures types
 // NOTE: It could be used as flags to enable only some gestures
@@ -720,7 +720,7 @@ const (
 )
 
 // ShaderUniformDataType type
-type ShaderUniformDataType int32
+type ShaderUniformDataType = int32
 
 // ShaderUniformDataType enumeration
 const (
@@ -1093,7 +1093,7 @@ const (
 )
 
 // TextureFilterMode - Texture filter mode
-type TextureFilterMode int32
+type TextureFilterMode = int32
 
 // Texture parameters: filter mode
 // NOTE 1: Filtering considers mipmaps if available in the texture
@@ -1194,7 +1194,7 @@ func NewRenderTexture2D(id uint32, texture, depth Texture2D) RenderTexture2D {
 type TraceLogCallbackFun func(int, string)
 
 // TraceLogLevel parameter of trace log message
-type TraceLogLevel int
+type TraceLogLevel = int
 
 // Trace log level
 // NOTE: Organized by priority level
@@ -1218,7 +1218,7 @@ const (
 )
 
 // N-patch layout
-type NPatchLayout int32
+type NPatchLayout = int32
 
 const (
 	NPatchNinePatch            NPatchLayout = iota // Npatch layout: 3x3 tiles

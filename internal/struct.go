@@ -1,6 +1,7 @@
 package wasm
 
 import (
+	"fmt"
 	"slices"
 	"unsafe"
 )
@@ -33,10 +34,9 @@ func StructToBytes[T any](t T) []byte {
 // Panics if b is too short.
 func BytesToStruct[T any](b []byte) T {
 	var result T
-
 	size := unsafe.Sizeof(result)
 	if uintptr(len(b)) < size {
-		panic("byte slice too short for type")
+		Panic(fmt.Sprintf("byte slice too short for type %T", result))
 	}
 	dst := structRawMemory(&result)
 
@@ -45,4 +45,21 @@ func BytesToStruct[T any](b []byte) T {
 
 	// result holds the binary data and we can return it
 	return result
+}
+
+// Convert struct to a struct argument
+func Struct[T any](t T) structArg {
+	return structArg{
+		mem: copyToWASM(StructToBytes(t)), size: unsafe.Sizeof(t),
+	}
+}
+
+// Read a struct from a Return value
+func ReadStruct[T any](r ReturnValue) T {
+	v, ok := r.([]byte)
+	if !ok {
+		var name T
+		Panic(fmt.Sprintf("Invalid return value for %T", name))
+	}
+	return BytesToStruct[T](v)
 }
