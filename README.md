@@ -22,11 +22,24 @@ For **Windows Powershell**:
 $env:GOOS="js"; $env:GOARCH="wasm"; go build -o ./Raylib-Go-Wasm/index/main.wasm .
 ```
 
-## Copy Golang wasm runtime
+## Copy Golang wasm runtime (only needs to be copied once)
 For **All** platforms:
 ```sh
   cp "$(go env GOROOT)/lib/wasm/wasm_exec.js" ./Raylib-Go-Wasm/index/wasm_exec.js
 ```
 
-## Running
-TODO
+## Compile the server
+```
+go build ./Raylib-Go-Wasm/server/server.go
+```
+
+# Running
+```
+./server.go
+```
+this will serve your app on https://localhost:8080
+
+
+# Publish to Github Pages
+
+**TODO**
