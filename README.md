@@ -83,4 +83,4 @@ I recommend you run the server in a seperate terminal, so you can recompile your
 
 # Publish to Github Pages
 
-**TODO**
+copy the contents of the folder Raylib-Go-Wasm/index into your github pages repository
