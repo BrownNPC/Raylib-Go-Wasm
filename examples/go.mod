@@ -2,11 +2,10 @@ module github.com/BrownNPC/Raylib-Go-Wasm/examples
 
 go 1.24.1
 
+replace github.com/gen2brain/raylib-go/raylib => ../raylib
 
-replace github.com/gen2brain/raylib-go/raylib => github.com/BrownNPC/Raylib-Go-Wasm/raylib v0.0.0
+replace github.com/BrownNPC/Raylib-Go-Wasm/wasm => ../wasm
 
-require (
-	github.com/ebitengine/purego v0.7.1 // indirect
-	golang.org/x/exp v0.0.0-20240506185415-9bf2ced13842 // indirect
-	golang.org/x/sys v0.20.0 // indirect
-)
+require github.com/gen2brain/raylib-go/raylib v0.0.0-00010101000000-000000000000
+
+require github.com/BrownNPC/Raylib-Go-Wasm/wasm v0.0.0-20250519111955-3a1bd02edef2 // indirect

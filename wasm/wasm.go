@@ -113,6 +113,10 @@ func (fn Function) Call(inputs ...any) (ReturnValue, []Pointer) {
 	for _, input := range inputs {
 		if sa, ok := input.(structArg); ok {
 			arguments = append(arguments, sa.mem)
+		} else if s, ok := input.(string); ok { // convert to C string char *
+			ptr := ToCharPointer(s)
+			freeList = append(freeList, ptr)
+			arguments = append(arguments, ptr)
 		} else {
 			arguments = append(arguments, input)
 		}
@@ -125,13 +129,22 @@ func (fn Function) Call(inputs ...any) (ReturnValue, []Pointer) {
 
 	var result ReturnValue
 	if fn.Returns == reflect.Invalid {
-
 		return nil, freeList
 	}
 	if fn.Returns == reflect.Struct {
 		result = ReadFromWASM(returnAddr, fn.ReturnSize)
+	} else if fn.Returns == reflect.String {
+		result = CharPointerToString(returnAddr)
 	} else {
 		result = retval
 	}
 	return result, freeList
+}
+func ToCharPointer(s string) Pointer {
+	ptr := Module.Call("stringToNewUTF8", js.ValueOf(s))
+	return Pointer(ptr.Int())
+}
+func CharPointerToString(charPtr Pointer) string {
+	str := Module.Call("UTF8ToString", charPtr)
+	return str.String()
 }

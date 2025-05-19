@@ -8,7 +8,7 @@ func main() {
 
 	//rl.SetTargetFPS(60)
 
-	for !rl.WindowShouldClose() {
+	var update = func() {
 		rl.BeginDrawing()
 
 		rl.ClearBackground(rl.RayWhite)
@@ -17,6 +17,6 @@ func main() {
 
 		rl.EndDrawing()
 	}
-
+	rl.SetMainLoop(update)
 	rl.CloseWindow()
 }

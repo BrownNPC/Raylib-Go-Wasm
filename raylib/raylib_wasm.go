@@ -1,4 +1,5 @@
 package rl
+
 // some functions need to be defined manually
 
 import (
@@ -10,7 +11,7 @@ import (
 // Use this instead of a for loop on web platform
 func SetMainLoop(UpdateAndDrawFrame func()) {
 	wasm.SetMainLoop(UpdateAndDrawFrame)
-	select {}
+	<-make(chan struct{}, 0)
 }
 
 // UNSUPPORTED: USE SetMainLoop

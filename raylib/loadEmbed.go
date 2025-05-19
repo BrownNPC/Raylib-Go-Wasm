@@ -3,7 +3,6 @@
 package rl
 
 import wasm "github.com/BrownNPC/Raylib-Go-Wasm/wasm"
-
 // LoadTexture - Load texture from file into GPU memory (VRAM)
 func LoadTexture(fileName string) Texture2D {
 	ret, fl := loadTexture.Call(fileName)

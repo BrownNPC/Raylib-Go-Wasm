@@ -1,18 +1,12 @@
 
 import Module from './raylib_emscripten.js'
-import RaylibComponent from './raylib_wc.js'
 
-document.addEventListener('DOMContentLoaded', () => {
-  window.customElements.define('raylib-game', RaylibComponent)
-})
-
-const importLocation = document?.location?.toString()
 
 // run this function before calling anything
 export async function raylib_run(canvas, userInit, userUpdate) {
   const raylib = {}
   const wasmBinary = new Uint8Array(await fetch(import.meta.url.replace('raylib.js', 'raylib.wasm')).then(r => r.arrayBuffer()))
-  const mod = await Module({canvas, wasmBinary})
+  const mod = await Module({ canvas, wasmBinary })
   raylib.mod = mod
   // Vector2, 2 components
   raylib.Vector2 = class Vector2 {
@@ -23,21 +17,21 @@ export async function raylib_run(canvas, userInit, userUpdate) {
       this.x = init.x || 0
       this.y = init.y || 0
     }
-    
-      get x () {
-        return mod.getValue(this._address + 0, 'float')
-      }
-      set x (x) {
-        mod.setValue(this._address + 0, x, 'float')
-      }
 
-  
-      get y () {
-        return mod.getValue(this._address + 4, 'float')
-      }
-      set y (y) {
-        mod.setValue(this._address + 4, y, 'float')
-      }
+    get x() {
+      return mod.getValue(this._address + 0, 'float')
+    }
+    set x(x) {
+      mod.setValue(this._address + 0, x, 'float')
+    }
+
+
+    get y() {
+      return mod.getValue(this._address + 4, 'float')
+    }
+    set y(y) {
+      mod.setValue(this._address + 4, y, 'float')
+    }
 
   }
 
@@ -51,29 +45,29 @@ export async function raylib_run(canvas, userInit, userUpdate) {
       this.y = init.y || 0
       this.z = init.z || 0
     }
-    
-      get x () {
-        return mod.getValue(this._address + 0, 'float')
-      }
-      set x (x) {
-        mod.setValue(this._address + 0, x, 'float')
-      }
 
-  
-      get y () {
-        return mod.getValue(this._address + 4, 'float')
-      }
-      set y (y) {
-        mod.setValue(this._address + 4, y, 'float')
-      }
+    get x() {
+      return mod.getValue(this._address + 0, 'float')
+    }
+    set x(x) {
+      mod.setValue(this._address + 0, x, 'float')
+    }
 
-  
-      get z () {
-        return mod.getValue(this._address + 8, 'float')
-      }
-      set z (z) {
-        mod.setValue(this._address + 8, z, 'float')
-      }
+
+    get y() {
+      return mod.getValue(this._address + 4, 'float')
+    }
+    set y(y) {
+      mod.setValue(this._address + 4, y, 'float')
+    }
+
+
+    get z() {
+      return mod.getValue(this._address + 8, 'float')
+    }
+    set z(z) {
+      mod.setValue(this._address + 8, z, 'float')
+    }
 
   }
 
@@ -88,37 +82,37 @@ export async function raylib_run(canvas, userInit, userUpdate) {
       this.z = init.z || 0
       this.w = init.w || 0
     }
-    
-      get x () {
-        return mod.getValue(this._address + 0, 'float')
-      }
-      set x (x) {
-        mod.setValue(this._address + 0, x, 'float')
-      }
 
-  
-      get y () {
-        return mod.getValue(this._address + 4, 'float')
-      }
-      set y (y) {
-        mod.setValue(this._address + 4, y, 'float')
-      }
+    get x() {
+      return mod.getValue(this._address + 0, 'float')
+    }
+    set x(x) {
+      mod.setValue(this._address + 0, x, 'float')
+    }
 
-  
-      get z () {
-        return mod.getValue(this._address + 8, 'float')
-      }
-      set z (z) {
-        mod.setValue(this._address + 8, z, 'float')
-      }
 
-  
-      get w () {
-        return mod.getValue(this._address + 12, 'float')
-      }
-      set w (w) {
-        mod.setValue(this._address + 12, w, 'float')
-      }
+    get y() {
+      return mod.getValue(this._address + 4, 'float')
+    }
+    set y(y) {
+      mod.setValue(this._address + 4, y, 'float')
+    }
+
+
+    get z() {
+      return mod.getValue(this._address + 8, 'float')
+    }
+    set z(z) {
+      mod.setValue(this._address + 8, z, 'float')
+    }
+
+
+    get w() {
+      return mod.getValue(this._address + 12, 'float')
+    }
+    set w(w) {
+      mod.setValue(this._address + 12, w, 'float')
+    }
 
   }
 
@@ -145,133 +139,133 @@ export async function raylib_run(canvas, userInit, userUpdate) {
       this.m11 = init.m11 || 0
       this.m15 = init.m15 || 0
     }
-    
-      get m0 () {
-        return mod.getValue(this._address + 0, 'float')
-      }
-      set m0 (m0) {
-        mod.setValue(this._address + 0, m0, 'float')
-      }
 
-  
-      get m4 () {
-        return mod.getValue(this._address + 4, 'float')
-      }
-      set m4 (m4) {
-        mod.setValue(this._address + 4, m4, 'float')
-      }
+    get m0() {
+      return mod.getValue(this._address + 0, 'float')
+    }
+    set m0(m0) {
+      mod.setValue(this._address + 0, m0, 'float')
+    }
 
-  
-      get m8 () {
-        return mod.getValue(this._address + 8, 'float')
-      }
-      set m8 (m8) {
-        mod.setValue(this._address + 8, m8, 'float')
-      }
 
-  
-      get m12 () {
-        return mod.getValue(this._address + 12, 'float')
-      }
-      set m12 (m12) {
-        mod.setValue(this._address + 12, m12, 'float')
-      }
+    get m4() {
+      return mod.getValue(this._address + 4, 'float')
+    }
+    set m4(m4) {
+      mod.setValue(this._address + 4, m4, 'float')
+    }
 
-  
-      get m1 () {
-        return mod.getValue(this._address + 16, 'float')
-      }
-      set m1 (m1) {
-        mod.setValue(this._address + 16, m1, 'float')
-      }
 
-  
-      get m5 () {
-        return mod.getValue(this._address + 20, 'float')
-      }
-      set m5 (m5) {
-        mod.setValue(this._address + 20, m5, 'float')
-      }
+    get m8() {
+      return mod.getValue(this._address + 8, 'float')
+    }
+    set m8(m8) {
+      mod.setValue(this._address + 8, m8, 'float')
+    }
 
-  
-      get m9 () {
-        return mod.getValue(this._address + 24, 'float')
-      }
-      set m9 (m9) {
-        mod.setValue(this._address + 24, m9, 'float')
-      }
 
-  
-      get m13 () {
-        return mod.getValue(this._address + 28, 'float')
-      }
-      set m13 (m13) {
-        mod.setValue(this._address + 28, m13, 'float')
-      }
+    get m12() {
+      return mod.getValue(this._address + 12, 'float')
+    }
+    set m12(m12) {
+      mod.setValue(this._address + 12, m12, 'float')
+    }
 
-  
-      get m2 () {
-        return mod.getValue(this._address + 32, 'float')
-      }
-      set m2 (m2) {
-        mod.setValue(this._address + 32, m2, 'float')
-      }
 
-  
-      get m6 () {
-        return mod.getValue(this._address + 36, 'float')
-      }
-      set m6 (m6) {
-        mod.setValue(this._address + 36, m6, 'float')
-      }
+    get m1() {
+      return mod.getValue(this._address + 16, 'float')
+    }
+    set m1(m1) {
+      mod.setValue(this._address + 16, m1, 'float')
+    }
 
-  
-      get m10 () {
-        return mod.getValue(this._address + 40, 'float')
-      }
-      set m10 (m10) {
-        mod.setValue(this._address + 40, m10, 'float')
-      }
 
-  
-      get m14 () {
-        return mod.getValue(this._address + 44, 'float')
-      }
-      set m14 (m14) {
-        mod.setValue(this._address + 44, m14, 'float')
-      }
+    get m5() {
+      return mod.getValue(this._address + 20, 'float')
+    }
+    set m5(m5) {
+      mod.setValue(this._address + 20, m5, 'float')
+    }
 
-  
-      get m3 () {
-        return mod.getValue(this._address + 48, 'float')
-      }
-      set m3 (m3) {
-        mod.setValue(this._address + 48, m3, 'float')
-      }
 
-  
-      get m7 () {
-        return mod.getValue(this._address + 52, 'float')
-      }
-      set m7 (m7) {
-        mod.setValue(this._address + 52, m7, 'float')
-      }
+    get m9() {
+      return mod.getValue(this._address + 24, 'float')
+    }
+    set m9(m9) {
+      mod.setValue(this._address + 24, m9, 'float')
+    }
 
-  
-      get m11 () {
-        return mod.getValue(this._address + 56, 'float')
-      }
-      set m11 (m11) {
-        mod.setValue(this._address + 56, m11, 'float')
-      }
 
-  
-      get m15 () {
-        return mod.getValue(this._address + 60, 'float')
-      }
-      set m15 (m15) {
-        mod.setValue(this._address + 60, m15, 'float')
-      }
+    get m13() {
+      return mod.getValue(this._address + 28, 'float')
+    }
+    set m13(m13) {
+      mod.setValue(this._address + 28, m13, 'float')
+    }
+
+
+    get m2() {
+      return mod.getValue(this._address + 32, 'float')
+    }
+    set m2(m2) {
+      mod.setValue(this._address + 32, m2, 'float')
+    }
+
+
+    get m6() {
+      return mod.getValue(this._address + 36, 'float')
+    }
+    set m6(m6) {
+      mod.setValue(this._address + 36, m6, 'float')
+    }
+
+
+    get m10() {
+      return mod.getValue(this._address + 40, 'float')
+    }
+    set m10(m10) {
+      mod.setValue(this._address + 40, m10, 'float')
+    }
+
+
+    get m14() {
+      return mod.getValue(this._address + 44, 'float')
+    }
+    set m14(m14) {
+      mod.setValue(this._address + 44, m14, 'float')
+    }
+
+
+    get m3() {
+      return mod.getValue(this._address + 48, 'float')
+    }
+    set m3(m3) {
+      mod.setValue(this._address + 48, m3, 'float')
+    }
+
+
+    get m7() {
+      return mod.getValue(this._address + 52, 'float')
+    }
+    set m7(m7) {
+      mod.setValue(this._address + 52, m7, 'float')
+    }
+
+
+    get m11() {
+      return mod.getValue(this._address + 56, 'float')
+    }
+    set m11(m11) {
+      mod.setValue(this._address + 56, m11, 'float')
+    }
+
+
+    get m15() {
+      return mod.getValue(this._address + 60, 'float')
+    }
+    set m15(m15) {
+      mod.setValue(this._address + 60, m15, 'float')
+    }
 
   }
 
@@ -286,37 +280,37 @@ export async function raylib_run(canvas, userInit, userUpdate) {
       this.b = init.b || 0
       this.a = init.a || 0
     }
-    
-      get r () {
-        return mod.HEAPU8[this._address + 0]
-      }
-      set r (r) {
-        mod.HEAPU8[this._address + 0] = r
-      }
 
-  
-      get g () {
-        return mod.HEAPU8[this._address + 1]
-      }
-      set g (g) {
-        mod.HEAPU8[this._address + 1] = g
-      }
+    get r() {
+      return mod.HEAPU8[this._address + 0]
+    }
+    set r(r) {
+      mod.HEAPU8[this._address + 0] = r
+    }
 
-  
-      get b () {
-        return mod.HEAPU8[this._address + 2]
-      }
-      set b (b) {
-        mod.HEAPU8[this._address + 2] = b
-      }
 
-  
-      get a () {
-        return mod.HEAPU8[this._address + 3]
-      }
-      set a (a) {
-        mod.HEAPU8[this._address + 3] = a
-      }
+    get g() {
+      return mod.HEAPU8[this._address + 1]
+    }
+    set g(g) {
+      mod.HEAPU8[this._address + 1] = g
+    }
+
+
+    get b() {
+      return mod.HEAPU8[this._address + 2]
+    }
+    set b(b) {
+      mod.HEAPU8[this._address + 2] = b
+    }
+
+
+    get a() {
+      return mod.HEAPU8[this._address + 3]
+    }
+    set a(a) {
+      mod.HEAPU8[this._address + 3] = a
+    }
 
   }
 
@@ -331,37 +325,37 @@ export async function raylib_run(canvas, userInit, userUpdate) {
       this.width = init.width || 0
       this.height = init.height || 0
     }
-    
-      get x () {
-        return mod.getValue(this._address + 0, 'float')
-      }
-      set x (x) {
-        mod.setValue(this._address + 0, x, 'float')
-      }
 
-  
-      get y () {
-        return mod.getValue(this._address + 4, 'float')
-      }
-      set y (y) {
-        mod.setValue(this._address + 4, y, 'float')
-      }
+    get x() {
+      return mod.getValue(this._address + 0, 'float')
+    }
+    set x(x) {
+      mod.setValue(this._address + 0, x, 'float')
+    }
 
-  
-      get width () {
-        return mod.getValue(this._address + 8, 'float')
-      }
-      set width (width) {
-        mod.setValue(this._address + 8, width, 'float')
-      }
 
-  
-      get height () {
-        return mod.getValue(this._address + 12, 'float')
-      }
-      set height (height) {
-        mod.setValue(this._address + 12, height, 'float')
-      }
+    get y() {
+      return mod.getValue(this._address + 4, 'float')
+    }
+    set y(y) {
+      mod.setValue(this._address + 4, y, 'float')
+    }
+
+
+    get width() {
+      return mod.getValue(this._address + 8, 'float')
+    }
+    set width(width) {
+      mod.setValue(this._address + 8, width, 'float')
+    }
+
+
+    get height() {
+      return mod.getValue(this._address + 12, 'float')
+    }
+    set height(height) {
+      mod.setValue(this._address + 12, height, 'float')
+    }
 
   }
 
@@ -377,45 +371,45 @@ export async function raylib_run(canvas, userInit, userUpdate) {
       this.mipmaps = init.mipmaps || 0
       this.format = init.format || 0
     }
-    
-      get data () {
-        return mod.getValue(this._address + 0, '*')
-      }
-      set data (data) {
-        mod.setValue(this._address + 0, data, '*')
-      }
 
-  
-      get width () {
-        return mod.getValue(this._address + 4, 'i32')
-      }
-      set width (width) {
-        mod.setValue(this._address + 4, width, 'i32')
-      }
+    get data() {
+      return mod.getValue(this._address + 0, '*')
+    }
+    set data(data) {
+      mod.setValue(this._address + 0, data, '*')
+    }
 
-  
-      get height () {
-        return mod.getValue(this._address + 8, 'i32')
-      }
-      set height (height) {
-        mod.setValue(this._address + 8, height, 'i32')
-      }
 
-  
-      get mipmaps () {
-        return mod.getValue(this._address + 12, 'i32')
-      }
-      set mipmaps (mipmaps) {
-        mod.setValue(this._address + 12, mipmaps, 'i32')
-      }
+    get width() {
+      return mod.getValue(this._address + 4, 'i32')
+    }
+    set width(width) {
+      mod.setValue(this._address + 4, width, 'i32')
+    }
 
-  
-      get format () {
-        return mod.getValue(this._address + 16, 'i32')
-      }
-      set format (format) {
-        mod.setValue(this._address + 16, format, 'i32')
-      }
+
+    get height() {
+      return mod.getValue(this._address + 8, 'i32')
+    }
+    set height(height) {
+      mod.setValue(this._address + 8, height, 'i32')
+    }
+
+
+    get mipmaps() {
+      return mod.getValue(this._address + 12, 'i32')
+    }
+    set mipmaps(mipmaps) {
+      mod.setValue(this._address + 12, mipmaps, 'i32')
+    }
+
+
+    get format() {
+      return mod.getValue(this._address + 16, 'i32')
+    }
+    set format(format) {
+      mod.setValue(this._address + 16, format, 'i32')
+    }
 
   }
 
@@ -431,45 +425,45 @@ export async function raylib_run(canvas, userInit, userUpdate) {
       this.mipmaps = init.mipmaps || 0
       this.format = init.format || 0
     }
-    
-      get id () {
-        return mod.HEAPU32[this._address + 0]
-      }
-      set id (id) {
-        mod.HEAPU32[this._address + 0] = id
-      }
 
-  
-      get width () {
-        return mod.getValue(this._address + 4, 'i32')
-      }
-      set width (width) {
-        mod.setValue(this._address + 4, width, 'i32')
-      }
+    get id() {
+      return mod.HEAPU32[this._address + 0]
+    }
+    set id(id) {
+      mod.HEAPU32[this._address + 0] = id
+    }
 
-  
-      get height () {
-        return mod.getValue(this._address + 8, 'i32')
-      }
-      set height (height) {
-        mod.setValue(this._address + 8, height, 'i32')
-      }
 
-  
-      get mipmaps () {
-        return mod.getValue(this._address + 12, 'i32')
-      }
-      set mipmaps (mipmaps) {
-        mod.setValue(this._address + 12, mipmaps, 'i32')
-      }
+    get width() {
+      return mod.getValue(this._address + 4, 'i32')
+    }
+    set width(width) {
+      mod.setValue(this._address + 4, width, 'i32')
+    }
 
-  
-      get format () {
-        return mod.getValue(this._address + 16, 'i32')
-      }
-      set format (format) {
-        mod.setValue(this._address + 16, format, 'i32')
-      }
+
+    get height() {
+      return mod.getValue(this._address + 8, 'i32')
+    }
+    set height(height) {
+      mod.setValue(this._address + 8, height, 'i32')
+    }
+
+
+    get mipmaps() {
+      return mod.getValue(this._address + 12, 'i32')
+    }
+    set mipmaps(mipmaps) {
+      mod.setValue(this._address + 12, mipmaps, 'i32')
+    }
+
+
+    get format() {
+      return mod.getValue(this._address + 16, 'i32')
+    }
+    set format(format) {
+      mod.setValue(this._address + 16, format, 'i32')
+    }
 
   }
 
@@ -483,16 +477,16 @@ export async function raylib_run(canvas, userInit, userUpdate) {
       this.texture = new raylib.Texture(init.texture || {}, this._address + 4)
       this.depth = new raylib.Texture(init.depth || {}, this._address + 24)
     }
-    
-      get id () {
-        return mod.HEAPU32[this._address + 0]
-      }
-      set id (id) {
-        mod.HEAPU32[this._address + 0] = id
-      }
 
-  
-  
+    get id() {
+      return mod.HEAPU32[this._address + 0]
+    }
+    set id(id) {
+      mod.HEAPU32[this._address + 0] = id
+    }
+
+
+
   }
 
   // NPatchInfo, n-patch layout info
@@ -508,46 +502,46 @@ export async function raylib_run(canvas, userInit, userUpdate) {
       this.bottom = init.bottom || 0
       this.layout = init.layout || 0
     }
-    
-  
-      get left () {
-        return mod.getValue(this._address + 16, 'i32')
-      }
-      set left (left) {
-        mod.setValue(this._address + 16, left, 'i32')
-      }
 
-  
-      get top () {
-        return mod.getValue(this._address + 20, 'i32')
-      }
-      set top (top) {
-        mod.setValue(this._address + 20, top, 'i32')
-      }
 
-  
-      get right () {
-        return mod.getValue(this._address + 24, 'i32')
-      }
-      set right (right) {
-        mod.setValue(this._address + 24, right, 'i32')
-      }
+    get left() {
+      return mod.getValue(this._address + 16, 'i32')
+    }
+    set left(left) {
+      mod.setValue(this._address + 16, left, 'i32')
+    }
 
-  
-      get bottom () {
-        return mod.getValue(this._address + 28, 'i32')
-      }
-      set bottom (bottom) {
-        mod.setValue(this._address + 28, bottom, 'i32')
-      }
 
-  
-      get layout () {
-        return mod.getValue(this._address + 32, 'i32')
-      }
-      set layout (layout) {
-        mod.setValue(this._address + 32, layout, 'i32')
-      }
+    get top() {
+      return mod.getValue(this._address + 20, 'i32')
+    }
+    set top(top) {
+      mod.setValue(this._address + 20, top, 'i32')
+    }
+
+
+    get right() {
+      return mod.getValue(this._address + 24, 'i32')
+    }
+    set right(right) {
+      mod.setValue(this._address + 24, right, 'i32')
+    }
+
+
+    get bottom() {
+      return mod.getValue(this._address + 28, 'i32')
+    }
+    set bottom(bottom) {
+      mod.setValue(this._address + 28, bottom, 'i32')
+    }
+
+
+    get layout() {
+      return mod.getValue(this._address + 32, 'i32')
+    }
+    set layout(layout) {
+      mod.setValue(this._address + 32, layout, 'i32')
+    }
 
   }
 
@@ -563,39 +557,39 @@ export async function raylib_run(canvas, userInit, userUpdate) {
       this.advanceX = init.advanceX || 0
       this.image = new raylib.Image(init.image || {}, this._address + 16)
     }
-    
-      get value () {
-        return mod.getValue(this._address + 0, 'i32')
-      }
-      set value (value) {
-        mod.setValue(this._address + 0, value, 'i32')
-      }
 
-  
-      get offsetX () {
-        return mod.getValue(this._address + 4, 'i32')
-      }
-      set offsetX (offsetX) {
-        mod.setValue(this._address + 4, offsetX, 'i32')
-      }
+    get value() {
+      return mod.getValue(this._address + 0, 'i32')
+    }
+    set value(value) {
+      mod.setValue(this._address + 0, value, 'i32')
+    }
 
-  
-      get offsetY () {
-        return mod.getValue(this._address + 8, 'i32')
-      }
-      set offsetY (offsetY) {
-        mod.setValue(this._address + 8, offsetY, 'i32')
-      }
 
-  
-      get advanceX () {
-        return mod.getValue(this._address + 12, 'i32')
-      }
-      set advanceX (advanceX) {
-        mod.setValue(this._address + 12, advanceX, 'i32')
-      }
+    get offsetX() {
+      return mod.getValue(this._address + 4, 'i32')
+    }
+    set offsetX(offsetX) {
+      mod.setValue(this._address + 4, offsetX, 'i32')
+    }
 
-  
+
+    get offsetY() {
+      return mod.getValue(this._address + 8, 'i32')
+    }
+    set offsetY(offsetY) {
+      mod.setValue(this._address + 8, offsetY, 'i32')
+    }
+
+
+    get advanceX() {
+      return mod.getValue(this._address + 12, 'i32')
+    }
+    set advanceX(advanceX) {
+      mod.setValue(this._address + 12, advanceX, 'i32')
+    }
+
+
   }
 
   // Font, font texture and GlyphInfo array data
@@ -611,33 +605,33 @@ export async function raylib_run(canvas, userInit, userUpdate) {
       this.recs = new raylib.Rectangle(init.recs || {}, this._address + 32)
       this.glyphs = new raylib.GlyphInfo(init.glyphs || {}, this._address + 36)
     }
-    
-      get baseSize () {
-        return mod.getValue(this._address + 0, 'i32')
-      }
-      set baseSize (baseSize) {
-        mod.setValue(this._address + 0, baseSize, 'i32')
-      }
 
-  
-      get glyphCount () {
-        return mod.getValue(this._address + 4, 'i32')
-      }
-      set glyphCount (glyphCount) {
-        mod.setValue(this._address + 4, glyphCount, 'i32')
-      }
+    get baseSize() {
+      return mod.getValue(this._address + 0, 'i32')
+    }
+    set baseSize(baseSize) {
+      mod.setValue(this._address + 0, baseSize, 'i32')
+    }
 
-  
-      get glyphPadding () {
-        return mod.getValue(this._address + 8, 'i32')
-      }
-      set glyphPadding (glyphPadding) {
-        mod.setValue(this._address + 8, glyphPadding, 'i32')
-      }
 
-  
-  
-  
+    get glyphCount() {
+      return mod.getValue(this._address + 4, 'i32')
+    }
+    set glyphCount(glyphCount) {
+      mod.setValue(this._address + 4, glyphCount, 'i32')
+    }
+
+
+    get glyphPadding() {
+      return mod.getValue(this._address + 8, 'i32')
+    }
+    set glyphPadding(glyphPadding) {
+      mod.setValue(this._address + 8, glyphPadding, 'i32')
+    }
+
+
+
+
   }
 
   // Camera, defines position/orientation in 3d space
@@ -652,24 +646,24 @@ export async function raylib_run(canvas, userInit, userUpdate) {
       this.fovy = init.fovy || 0
       this.projection = init.projection || 0
     }
-    
-  
-  
-  
-      get fovy () {
-        return mod.getValue(this._address + 36, 'float')
-      }
-      set fovy (fovy) {
-        mod.setValue(this._address + 36, fovy, 'float')
-      }
 
-  
-      get projection () {
-        return mod.getValue(this._address + 40, 'i32')
-      }
-      set projection (projection) {
-        mod.setValue(this._address + 40, projection, 'i32')
-      }
+
+
+
+    get fovy() {
+      return mod.getValue(this._address + 36, 'float')
+    }
+    set fovy(fovy) {
+      mod.setValue(this._address + 36, fovy, 'float')
+    }
+
+
+    get projection() {
+      return mod.getValue(this._address + 40, 'i32')
+    }
+    set projection(projection) {
+      mod.setValue(this._address + 40, projection, 'i32')
+    }
 
   }
 
@@ -684,23 +678,23 @@ export async function raylib_run(canvas, userInit, userUpdate) {
       this.rotation = init.rotation || 0
       this.zoom = init.zoom || 0
     }
-    
-  
-  
-      get rotation () {
-        return mod.getValue(this._address + 16, 'float')
-      }
-      set rotation (rotation) {
-        mod.setValue(this._address + 16, rotation, 'float')
-      }
 
-  
-      get zoom () {
-        return mod.getValue(this._address + 20, 'float')
-      }
-      set zoom (zoom) {
-        mod.setValue(this._address + 20, zoom, 'float')
-      }
+
+
+    get rotation() {
+      return mod.getValue(this._address + 16, 'float')
+    }
+    set rotation(rotation) {
+      mod.setValue(this._address + 16, rotation, 'float')
+    }
+
+
+    get zoom() {
+      return mod.getValue(this._address + 20, 'float')
+    }
+    set zoom(zoom) {
+      mod.setValue(this._address + 20, zoom, 'float')
+    }
 
   }
 
@@ -728,134 +722,134 @@ export async function raylib_run(canvas, userInit, userUpdate) {
       this.vaoId = init.vaoId || 0
       this.vboId = init.vboId || 0
     }
-    
-      get vertexCount () {
-        return mod.getValue(this._address + 0, 'i32')
-      }
-      set vertexCount (vertexCount) {
-        mod.setValue(this._address + 0, vertexCount, 'i32')
-      }
 
-  
-      get triangleCount () {
-        return mod.getValue(this._address + 4, 'i32')
-      }
-      set triangleCount (triangleCount) {
-        mod.setValue(this._address + 4, triangleCount, 'i32')
-      }
+    get vertexCount() {
+      return mod.getValue(this._address + 0, 'i32')
+    }
+    set vertexCount(vertexCount) {
+      mod.setValue(this._address + 0, vertexCount, 'i32')
+    }
 
-  
-      get vertices () {
-        return mod.getValue(this._address + 8, '*')
-      }
-      set vertices (vertices) {
-        mod.setValue(this._address + 8, vertices, '*')
-      }
 
-  
-      get texcoords () {
-        return mod.getValue(this._address + 12, '*')
-      }
-      set texcoords (texcoords) {
-        mod.setValue(this._address + 12, texcoords, '*')
-      }
+    get triangleCount() {
+      return mod.getValue(this._address + 4, 'i32')
+    }
+    set triangleCount(triangleCount) {
+      mod.setValue(this._address + 4, triangleCount, 'i32')
+    }
 
-  
-      get texcoords2 () {
-        return mod.getValue(this._address + 16, '*')
-      }
-      set texcoords2 (texcoords2) {
-        mod.setValue(this._address + 16, texcoords2, '*')
-      }
 
-  
-      get normals () {
-        return mod.getValue(this._address + 20, '*')
-      }
-      set normals (normals) {
-        mod.setValue(this._address + 20, normals, '*')
-      }
+    get vertices() {
+      return mod.getValue(this._address + 8, '*')
+    }
+    set vertices(vertices) {
+      mod.setValue(this._address + 8, vertices, '*')
+    }
 
-  
-      get tangents () {
-        return mod.getValue(this._address + 24, '*')
-      }
-      set tangents (tangents) {
-        mod.setValue(this._address + 24, tangents, '*')
-      }
 
-  
-      get colors () {
-        return mod.getValue(this._address + 28, '*')
-      }
-      set colors (colors) {
-        mod.setValue(this._address + 28, colors, '*')
-      }
+    get texcoords() {
+      return mod.getValue(this._address + 12, '*')
+    }
+    set texcoords(texcoords) {
+      mod.setValue(this._address + 12, texcoords, '*')
+    }
 
-  
-      get indices () {
-        return mod.getValue(this._address + 32, '*')
-      }
-      set indices (indices) {
-        mod.setValue(this._address + 32, indices, '*')
-      }
 
-  
-      get animVertices () {
-        return mod.getValue(this._address + 36, '*')
-      }
-      set animVertices (animVertices) {
-        mod.setValue(this._address + 36, animVertices, '*')
-      }
+    get texcoords2() {
+      return mod.getValue(this._address + 16, '*')
+    }
+    set texcoords2(texcoords2) {
+      mod.setValue(this._address + 16, texcoords2, '*')
+    }
 
-  
-      get animNormals () {
-        return mod.getValue(this._address + 40, '*')
-      }
-      set animNormals (animNormals) {
-        mod.setValue(this._address + 40, animNormals, '*')
-      }
 
-  
-      get boneIds () {
-        return mod.getValue(this._address + 44, '*')
-      }
-      set boneIds (boneIds) {
-        mod.setValue(this._address + 44, boneIds, '*')
-      }
+    get normals() {
+      return mod.getValue(this._address + 20, '*')
+    }
+    set normals(normals) {
+      mod.setValue(this._address + 20, normals, '*')
+    }
 
-  
-      get boneWeights () {
-        return mod.getValue(this._address + 48, '*')
-      }
-      set boneWeights (boneWeights) {
-        mod.setValue(this._address + 48, boneWeights, '*')
-      }
 
-  
-  
-      get boneCount () {
-        return mod.getValue(this._address + 56, 'i32')
-      }
-      set boneCount (boneCount) {
-        mod.setValue(this._address + 56, boneCount, 'i32')
-      }
+    get tangents() {
+      return mod.getValue(this._address + 24, '*')
+    }
+    set tangents(tangents) {
+      mod.setValue(this._address + 24, tangents, '*')
+    }
 
-  
-      get vaoId () {
-        return mod.HEAPU32[this._address + 60]
-      }
-      set vaoId (vaoId) {
-        mod.HEAPU32[this._address + 60] = vaoId
-      }
 
-  
-      get vboId () {
-        return mod.getValue(this._address + 64, '*')
-      }
-      set vboId (vboId) {
-        mod.setValue(this._address + 64, vboId, '*')
-      }
+    get colors() {
+      return mod.getValue(this._address + 28, '*')
+    }
+    set colors(colors) {
+      mod.setValue(this._address + 28, colors, '*')
+    }
+
+
+    get indices() {
+      return mod.getValue(this._address + 32, '*')
+    }
+    set indices(indices) {
+      mod.setValue(this._address + 32, indices, '*')
+    }
+
+
+    get animVertices() {
+      return mod.getValue(this._address + 36, '*')
+    }
+    set animVertices(animVertices) {
+      mod.setValue(this._address + 36, animVertices, '*')
+    }
+
+
+    get animNormals() {
+      return mod.getValue(this._address + 40, '*')
+    }
+    set animNormals(animNormals) {
+      mod.setValue(this._address + 40, animNormals, '*')
+    }
+
+
+    get boneIds() {
+      return mod.getValue(this._address + 44, '*')
+    }
+    set boneIds(boneIds) {
+      mod.setValue(this._address + 44, boneIds, '*')
+    }
+
+
+    get boneWeights() {
+      return mod.getValue(this._address + 48, '*')
+    }
+    set boneWeights(boneWeights) {
+      mod.setValue(this._address + 48, boneWeights, '*')
+    }
+
+
+
+    get boneCount() {
+      return mod.getValue(this._address + 56, 'i32')
+    }
+    set boneCount(boneCount) {
+      mod.setValue(this._address + 56, boneCount, 'i32')
+    }
+
+
+    get vaoId() {
+      return mod.HEAPU32[this._address + 60]
+    }
+    set vaoId(vaoId) {
+      mod.HEAPU32[this._address + 60] = vaoId
+    }
+
+
+    get vboId() {
+      return mod.getValue(this._address + 64, '*')
+    }
+    set vboId(vboId) {
+      mod.setValue(this._address + 64, vboId, '*')
+    }
 
   }
 
@@ -868,21 +862,21 @@ export async function raylib_run(canvas, userInit, userUpdate) {
       this.id = init.id || 0
       this.locs = init.locs || 0
     }
-    
-      get id () {
-        return mod.HEAPU32[this._address + 0]
-      }
-      set id (id) {
-        mod.HEAPU32[this._address + 0] = id
-      }
 
-  
-      get locs () {
-        return mod.getValue(this._address + 4, '*')
-      }
-      set locs (locs) {
-        mod.setValue(this._address + 4, locs, '*')
-      }
+    get id() {
+      return mod.HEAPU32[this._address + 0]
+    }
+    set id(id) {
+      mod.HEAPU32[this._address + 0] = id
+    }
+
+
+    get locs() {
+      return mod.getValue(this._address + 4, '*')
+    }
+    set locs(locs) {
+      mod.setValue(this._address + 4, locs, '*')
+    }
 
   }
 
@@ -896,15 +890,15 @@ export async function raylib_run(canvas, userInit, userUpdate) {
       this.color = new raylib.Color(init.color || {}, this._address + 20)
       this.value = init.value || 0
     }
-    
-  
-  
-      get value () {
-        return mod.getValue(this._address + 24, 'float')
-      }
-      set value (value) {
-        mod.setValue(this._address + 24, value, 'float')
-      }
+
+
+
+    get value() {
+      return mod.getValue(this._address + 24, 'float')
+    }
+    set value(value) {
+      mod.setValue(this._address + 24, value, 'float')
+    }
 
   }
 
@@ -918,15 +912,15 @@ export async function raylib_run(canvas, userInit, userUpdate) {
       this.maps = new raylib.MaterialMap(init.maps || {}, this._address + 8)
       this.params = init.params || [0, 0, 0, 0]
     }
-    
-  
-  
-      get params () {
-        return mod.getValue(this._address + 12, '*')
-      }
-      set params (params) {
-        mod.setValue(this._address + 12, params, '*')
-      }
+
+
+
+    get params() {
+      return mod.getValue(this._address + 12, '*')
+    }
+    set params(params) {
+      mod.setValue(this._address + 12, params, '*')
+    }
 
   }
 
@@ -940,9 +934,9 @@ export async function raylib_run(canvas, userInit, userUpdate) {
       this.rotation = new raylib.Quaternion(init.rotation || {}, this._address + 12)
       this.scale = new raylib.Vector3(init.scale || {}, this._address + 28)
     }
-    
-  
-  
+
+
+
   }
 
   // Bone, skeletal animation bone
@@ -954,21 +948,21 @@ export async function raylib_run(canvas, userInit, userUpdate) {
       this.name = init.name || ''
       this.parent = init.parent || 0
     }
-    
-      get name () {
-        return mod.UTF8ToString(this._address + 0)
-      }
-      set name (name) {
-        mod.stringToUTF8(this._address + 0, name)
-      }
 
-  
-      get parent () {
-        return mod.getValue(this._address + 32, 'i32')
-      }
-      set parent (parent) {
-        mod.setValue(this._address + 32, parent, 'i32')
-      }
+    get name() {
+      return mod.UTF8ToString(this._address + 0)
+    }
+    set name(name) {
+      mod.stringToUTF8(this._address + 0, name)
+    }
+
+
+    get parent() {
+      return mod.getValue(this._address + 32, 'i32')
+    }
+    set parent(parent) {
+      mod.setValue(this._address + 32, parent, 'i32')
+    }
 
   }
 
@@ -988,43 +982,43 @@ export async function raylib_run(canvas, userInit, userUpdate) {
       this.bones = new raylib.BoneInfo(init.bones || {}, this._address + 88)
       this.bindPose = new raylib.Transform(init.bindPose || {}, this._address + 92)
     }
-    
-  
-      get meshCount () {
-        return mod.getValue(this._address + 64, 'i32')
-      }
-      set meshCount (meshCount) {
-        mod.setValue(this._address + 64, meshCount, 'i32')
-      }
 
-  
-      get materialCount () {
-        return mod.getValue(this._address + 68, 'i32')
-      }
-      set materialCount (materialCount) {
-        mod.setValue(this._address + 68, materialCount, 'i32')
-      }
 
-  
-  
-  
-      get meshMaterial () {
-        return mod.getValue(this._address + 80, '*')
-      }
-      set meshMaterial (meshMaterial) {
-        mod.setValue(this._address + 80, meshMaterial, '*')
-      }
+    get meshCount() {
+      return mod.getValue(this._address + 64, 'i32')
+    }
+    set meshCount(meshCount) {
+      mod.setValue(this._address + 64, meshCount, 'i32')
+    }
 
-  
-      get boneCount () {
-        return mod.getValue(this._address + 84, 'i32')
-      }
-      set boneCount (boneCount) {
-        mod.setValue(this._address + 84, boneCount, 'i32')
-      }
 
-  
-  
+    get materialCount() {
+      return mod.getValue(this._address + 68, 'i32')
+    }
+    set materialCount(materialCount) {
+      mod.setValue(this._address + 68, materialCount, 'i32')
+    }
+
+
+
+
+    get meshMaterial() {
+      return mod.getValue(this._address + 80, '*')
+    }
+    set meshMaterial(meshMaterial) {
+      mod.setValue(this._address + 80, meshMaterial, '*')
+    }
+
+
+    get boneCount() {
+      return mod.getValue(this._address + 84, 'i32')
+    }
+    set boneCount(boneCount) {
+      mod.setValue(this._address + 84, boneCount, 'i32')
+    }
+
+
+
   }
 
   // ModelAnimation
@@ -1039,38 +1033,38 @@ export async function raylib_run(canvas, userInit, userUpdate) {
       this.framePoses = init.framePoses || new raylib.Transform()
       this.name = init.name || ''
     }
-    
-      get boneCount () {
-        return mod.getValue(this._address + 0, 'i32')
-      }
-      set boneCount (boneCount) {
-        mod.setValue(this._address + 0, boneCount, 'i32')
-      }
 
-  
-      get frameCount () {
-        return mod.getValue(this._address + 4, 'i32')
-      }
-      set frameCount (frameCount) {
-        mod.setValue(this._address + 4, frameCount, 'i32')
-      }
+    get boneCount() {
+      return mod.getValue(this._address + 0, 'i32')
+    }
+    set boneCount(boneCount) {
+      mod.setValue(this._address + 0, boneCount, 'i32')
+    }
 
-  
-  
-      get framePoses () {
-        return mod.getValue(this._address + 12, '*')
-      }
-      set framePoses (framePoses) {
-        mod.setValue(this._address + 12, framePoses, '*')
-      }
 
-  
-      get name () {
-        return mod.UTF8ToString(this._address + 16)
-      }
-      set name (name) {
-        mod.stringToUTF8(this._address + 16, name)
-      }
+    get frameCount() {
+      return mod.getValue(this._address + 4, 'i32')
+    }
+    set frameCount(frameCount) {
+      mod.setValue(this._address + 4, frameCount, 'i32')
+    }
+
+
+
+    get framePoses() {
+      return mod.getValue(this._address + 12, '*')
+    }
+    set framePoses(framePoses) {
+      mod.setValue(this._address + 12, framePoses, '*')
+    }
+
+
+    get name() {
+      return mod.UTF8ToString(this._address + 16)
+    }
+    set name(name) {
+      mod.stringToUTF8(this._address + 16, name)
+    }
 
   }
 
@@ -1083,8 +1077,8 @@ export async function raylib_run(canvas, userInit, userUpdate) {
       this.position = new raylib.Vector3(init.position || {}, this._address + 0)
       this.direction = new raylib.Vector3(init.direction || {}, this._address + 12)
     }
-    
-  
+
+
   }
 
   // RayCollision, ray hit information
@@ -1098,24 +1092,24 @@ export async function raylib_run(canvas, userInit, userUpdate) {
       this.point = new raylib.Vector3(init.point || {}, this._address + 5)
       this.normal = new raylib.Vector3(init.normal || {}, this._address + 17)
     }
-    
-      get hit () {
-        return mod.getValue(this._address + 0, 'i1')
-      }
-      set hit (hit) {
-        mod.setValue(this._address + 0, hit, 'i1')
-      }
 
-  
-      get distance () {
-        return mod.getValue(this._address + 1, 'float')
-      }
-      set distance (distance) {
-        mod.setValue(this._address + 1, distance, 'float')
-      }
+    get hit() {
+      return mod.getValue(this._address + 0, 'i1')
+    }
+    set hit(hit) {
+      mod.setValue(this._address + 0, hit, 'i1')
+    }
 
-  
-  
+
+    get distance() {
+      return mod.getValue(this._address + 1, 'float')
+    }
+    set distance(distance) {
+      mod.setValue(this._address + 1, distance, 'float')
+    }
+
+
+
   }
 
   // BoundingBox
@@ -1127,8 +1121,8 @@ export async function raylib_run(canvas, userInit, userUpdate) {
       this.min = new raylib.Vector3(init.min || {}, this._address + 0)
       this.max = new raylib.Vector3(init.max || {}, this._address + 12)
     }
-    
-  
+
+
   }
 
   // Wave, audio wave data
@@ -1143,45 +1137,45 @@ export async function raylib_run(canvas, userInit, userUpdate) {
       this.channels = init.channels || 0
       this.data = init.data || 0
     }
-    
-      get frameCount () {
-        return mod.HEAPU32[this._address + 0]
-      }
-      set frameCount (frameCount) {
-        mod.HEAPU32[this._address + 0] = frameCount
-      }
 
-  
-      get sampleRate () {
-        return mod.HEAPU32[this._address + 4]
-      }
-      set sampleRate (sampleRate) {
-        mod.HEAPU32[this._address + 4] = sampleRate
-      }
+    get frameCount() {
+      return mod.HEAPU32[this._address + 0]
+    }
+    set frameCount(frameCount) {
+      mod.HEAPU32[this._address + 0] = frameCount
+    }
 
-  
-      get sampleSize () {
-        return mod.HEAPU32[this._address + 8]
-      }
-      set sampleSize (sampleSize) {
-        mod.HEAPU32[this._address + 8] = sampleSize
-      }
 
-  
-      get channels () {
-        return mod.HEAPU32[this._address + 12]
-      }
-      set channels (channels) {
-        mod.HEAPU32[this._address + 12] = channels
-      }
+    get sampleRate() {
+      return mod.HEAPU32[this._address + 4]
+    }
+    set sampleRate(sampleRate) {
+      mod.HEAPU32[this._address + 4] = sampleRate
+    }
 
-  
-      get data () {
-        return mod.getValue(this._address + 16, '*')
-      }
-      set data (data) {
-        mod.setValue(this._address + 16, data, '*')
-      }
+
+    get sampleSize() {
+      return mod.HEAPU32[this._address + 8]
+    }
+    set sampleSize(sampleSize) {
+      mod.HEAPU32[this._address + 8] = sampleSize
+    }
+
+
+    get channels() {
+      return mod.HEAPU32[this._address + 12]
+    }
+    set channels(channels) {
+      mod.HEAPU32[this._address + 12] = channels
+    }
+
+
+    get data() {
+      return mod.getValue(this._address + 16, '*')
+    }
+    set data(data) {
+      mod.setValue(this._address + 16, data, '*')
+    }
 
   }
 
@@ -1197,45 +1191,45 @@ export async function raylib_run(canvas, userInit, userUpdate) {
       this.sampleSize = init.sampleSize || 0
       this.channels = init.channels || 0
     }
-    
-      get buffer () {
-        return mod.getValue(this._address + 0, '*')
-      }
-      set buffer (buffer) {
-        mod.setValue(this._address + 0, buffer, '*')
-      }
 
-  
-      get processor () {
-        return mod.getValue(this._address + 4, '*')
-      }
-      set processor (processor) {
-        mod.setValue(this._address + 4, processor, '*')
-      }
+    get buffer() {
+      return mod.getValue(this._address + 0, '*')
+    }
+    set buffer(buffer) {
+      mod.setValue(this._address + 0, buffer, '*')
+    }
 
-  
-      get sampleRate () {
-        return mod.HEAPU32[this._address + 8]
-      }
-      set sampleRate (sampleRate) {
-        mod.HEAPU32[this._address + 8] = sampleRate
-      }
 
-  
-      get sampleSize () {
-        return mod.HEAPU32[this._address + 12]
-      }
-      set sampleSize (sampleSize) {
-        mod.HEAPU32[this._address + 12] = sampleSize
-      }
+    get processor() {
+      return mod.getValue(this._address + 4, '*')
+    }
+    set processor(processor) {
+      mod.setValue(this._address + 4, processor, '*')
+    }
 
-  
-      get channels () {
-        return mod.HEAPU32[this._address + 16]
-      }
-      set channels (channels) {
-        mod.HEAPU32[this._address + 16] = channels
-      }
+
+    get sampleRate() {
+      return mod.HEAPU32[this._address + 8]
+    }
+    set sampleRate(sampleRate) {
+      mod.HEAPU32[this._address + 8] = sampleRate
+    }
+
+
+    get sampleSize() {
+      return mod.HEAPU32[this._address + 12]
+    }
+    set sampleSize(sampleSize) {
+      mod.HEAPU32[this._address + 12] = sampleSize
+    }
+
+
+    get channels() {
+      return mod.HEAPU32[this._address + 16]
+    }
+    set channels(channels) {
+      mod.HEAPU32[this._address + 16] = channels
+    }
 
   }
 
@@ -1248,14 +1242,14 @@ export async function raylib_run(canvas, userInit, userUpdate) {
       this.stream = new raylib.AudioStream(init.stream || {}, this._address + 0)
       this.frameCount = init.frameCount || 0
     }
-    
-  
-      get frameCount () {
-        return mod.HEAPU32[this._address + 20]
-      }
-      set frameCount (frameCount) {
-        mod.HEAPU32[this._address + 20] = frameCount
-      }
+
+
+    get frameCount() {
+      return mod.HEAPU32[this._address + 20]
+    }
+    set frameCount(frameCount) {
+      mod.HEAPU32[this._address + 20] = frameCount
+    }
 
   }
 
@@ -1271,38 +1265,38 @@ export async function raylib_run(canvas, userInit, userUpdate) {
       this.ctxType = init.ctxType || 0
       this.ctxData = init.ctxData || 0
     }
-    
-  
-      get frameCount () {
-        return mod.HEAPU32[this._address + 20]
-      }
-      set frameCount (frameCount) {
-        mod.HEAPU32[this._address + 20] = frameCount
-      }
 
-  
-      get looping () {
-        return mod.getValue(this._address + 24, 'i1')
-      }
-      set looping (looping) {
-        mod.setValue(this._address + 24, looping, 'i1')
-      }
 
-  
-      get ctxType () {
-        return mod.getValue(this._address + 25, 'i32')
-      }
-      set ctxType (ctxType) {
-        mod.setValue(this._address + 25, ctxType, 'i32')
-      }
+    get frameCount() {
+      return mod.HEAPU32[this._address + 20]
+    }
+    set frameCount(frameCount) {
+      mod.HEAPU32[this._address + 20] = frameCount
+    }
 
-  
-      get ctxData () {
-        return mod.getValue(this._address + 29, '*')
-      }
-      set ctxData (ctxData) {
-        mod.setValue(this._address + 29, ctxData, '*')
-      }
+
+    get looping() {
+      return mod.getValue(this._address + 24, 'i1')
+    }
+    set looping(looping) {
+      mod.setValue(this._address + 24, looping, 'i1')
+    }
+
+
+    get ctxType() {
+      return mod.getValue(this._address + 25, 'i32')
+    }
+    set ctxType(ctxType) {
+      mod.setValue(this._address + 25, ctxType, 'i32')
+    }
+
+
+    get ctxData() {
+      return mod.getValue(this._address + 29, '*')
+    }
+    set ctxData(ctxData) {
+      mod.setValue(this._address + 29, ctxData, '*')
+    }
 
   }
 
@@ -1322,77 +1316,77 @@ export async function raylib_run(canvas, userInit, userUpdate) {
       this.lensDistortionValues = init.lensDistortionValues || [0, 0, 0, 0]
       this.chromaAbCorrection = init.chromaAbCorrection || [0, 0, 0, 0]
     }
-    
-      get hResolution () {
-        return mod.getValue(this._address + 0, 'i32')
-      }
-      set hResolution (hResolution) {
-        mod.setValue(this._address + 0, hResolution, 'i32')
-      }
 
-  
-      get vResolution () {
-        return mod.getValue(this._address + 4, 'i32')
-      }
-      set vResolution (vResolution) {
-        mod.setValue(this._address + 4, vResolution, 'i32')
-      }
+    get hResolution() {
+      return mod.getValue(this._address + 0, 'i32')
+    }
+    set hResolution(hResolution) {
+      mod.setValue(this._address + 0, hResolution, 'i32')
+    }
 
-  
-      get hScreenSize () {
-        return mod.getValue(this._address + 8, 'float')
-      }
-      set hScreenSize (hScreenSize) {
-        mod.setValue(this._address + 8, hScreenSize, 'float')
-      }
 
-  
-      get vScreenSize () {
-        return mod.getValue(this._address + 12, 'float')
-      }
-      set vScreenSize (vScreenSize) {
-        mod.setValue(this._address + 12, vScreenSize, 'float')
-      }
+    get vResolution() {
+      return mod.getValue(this._address + 4, 'i32')
+    }
+    set vResolution(vResolution) {
+      mod.setValue(this._address + 4, vResolution, 'i32')
+    }
 
-  
-      get eyeToScreenDistance () {
-        return mod.getValue(this._address + 16, 'float')
-      }
-      set eyeToScreenDistance (eyeToScreenDistance) {
-        mod.setValue(this._address + 16, eyeToScreenDistance, 'float')
-      }
 
-  
-      get lensSeparationDistance () {
-        return mod.getValue(this._address + 20, 'float')
-      }
-      set lensSeparationDistance (lensSeparationDistance) {
-        mod.setValue(this._address + 20, lensSeparationDistance, 'float')
-      }
+    get hScreenSize() {
+      return mod.getValue(this._address + 8, 'float')
+    }
+    set hScreenSize(hScreenSize) {
+      mod.setValue(this._address + 8, hScreenSize, 'float')
+    }
 
-  
-      get interpupillaryDistance () {
-        return mod.getValue(this._address + 24, 'float')
-      }
-      set interpupillaryDistance (interpupillaryDistance) {
-        mod.setValue(this._address + 24, interpupillaryDistance, 'float')
-      }
 
-  
-      get lensDistortionValues () {
-        return mod.getValue(this._address + 28, '*')
-      }
-      set lensDistortionValues (lensDistortionValues) {
-        mod.setValue(this._address + 28, lensDistortionValues, '*')
-      }
+    get vScreenSize() {
+      return mod.getValue(this._address + 12, 'float')
+    }
+    set vScreenSize(vScreenSize) {
+      mod.setValue(this._address + 12, vScreenSize, 'float')
+    }
 
-  
-      get chromaAbCorrection () {
-        return mod.getValue(this._address + 44, '*')
-      }
-      set chromaAbCorrection (chromaAbCorrection) {
-        mod.setValue(this._address + 44, chromaAbCorrection, '*')
-      }
+
+    get eyeToScreenDistance() {
+      return mod.getValue(this._address + 16, 'float')
+    }
+    set eyeToScreenDistance(eyeToScreenDistance) {
+      mod.setValue(this._address + 16, eyeToScreenDistance, 'float')
+    }
+
+
+    get lensSeparationDistance() {
+      return mod.getValue(this._address + 20, 'float')
+    }
+    set lensSeparationDistance(lensSeparationDistance) {
+      mod.setValue(this._address + 20, lensSeparationDistance, 'float')
+    }
+
+
+    get interpupillaryDistance() {
+      return mod.getValue(this._address + 24, 'float')
+    }
+    set interpupillaryDistance(interpupillaryDistance) {
+      mod.setValue(this._address + 24, interpupillaryDistance, 'float')
+    }
+
+
+    get lensDistortionValues() {
+      return mod.getValue(this._address + 28, '*')
+    }
+    set lensDistortionValues(lensDistortionValues) {
+      mod.setValue(this._address + 28, lensDistortionValues, '*')
+    }
+
+
+    get chromaAbCorrection() {
+      return mod.getValue(this._address + 44, '*')
+    }
+    set chromaAbCorrection(chromaAbCorrection) {
+      mod.setValue(this._address + 44, chromaAbCorrection, '*')
+    }
 
   }
 
@@ -1411,69 +1405,69 @@ export async function raylib_run(canvas, userInit, userUpdate) {
       this.scale = init.scale || [0, 0]
       this.scaleIn = init.scaleIn || [0, 0]
     }
-    
-      get projection () {
-        return mod.getValue(this._address + 0, '*')
-      }
-      set projection (projection) {
-        mod.setValue(this._address + 0, projection, '*')
-      }
 
-  
-      get viewOffset () {
-        return mod.getValue(this._address + 128, '*')
-      }
-      set viewOffset (viewOffset) {
-        mod.setValue(this._address + 128, viewOffset, '*')
-      }
+    get projection() {
+      return mod.getValue(this._address + 0, '*')
+    }
+    set projection(projection) {
+      mod.setValue(this._address + 0, projection, '*')
+    }
 
-  
-      get leftLensCenter () {
-        return mod.getValue(this._address + 256, '*')
-      }
-      set leftLensCenter (leftLensCenter) {
-        mod.setValue(this._address + 256, leftLensCenter, '*')
-      }
 
-  
-      get rightLensCenter () {
-        return mod.getValue(this._address + 264, '*')
-      }
-      set rightLensCenter (rightLensCenter) {
-        mod.setValue(this._address + 264, rightLensCenter, '*')
-      }
+    get viewOffset() {
+      return mod.getValue(this._address + 128, '*')
+    }
+    set viewOffset(viewOffset) {
+      mod.setValue(this._address + 128, viewOffset, '*')
+    }
 
-  
-      get leftScreenCenter () {
-        return mod.getValue(this._address + 272, '*')
-      }
-      set leftScreenCenter (leftScreenCenter) {
-        mod.setValue(this._address + 272, leftScreenCenter, '*')
-      }
 
-  
-      get rightScreenCenter () {
-        return mod.getValue(this._address + 280, '*')
-      }
-      set rightScreenCenter (rightScreenCenter) {
-        mod.setValue(this._address + 280, rightScreenCenter, '*')
-      }
+    get leftLensCenter() {
+      return mod.getValue(this._address + 256, '*')
+    }
+    set leftLensCenter(leftLensCenter) {
+      mod.setValue(this._address + 256, leftLensCenter, '*')
+    }
 
-  
-      get scale () {
-        return mod.getValue(this._address + 288, '*')
-      }
-      set scale (scale) {
-        mod.setValue(this._address + 288, scale, '*')
-      }
 
-  
-      get scaleIn () {
-        return mod.getValue(this._address + 296, '*')
-      }
-      set scaleIn (scaleIn) {
-        mod.setValue(this._address + 296, scaleIn, '*')
-      }
+    get rightLensCenter() {
+      return mod.getValue(this._address + 264, '*')
+    }
+    set rightLensCenter(rightLensCenter) {
+      mod.setValue(this._address + 264, rightLensCenter, '*')
+    }
+
+
+    get leftScreenCenter() {
+      return mod.getValue(this._address + 272, '*')
+    }
+    set leftScreenCenter(leftScreenCenter) {
+      mod.setValue(this._address + 272, leftScreenCenter, '*')
+    }
+
+
+    get rightScreenCenter() {
+      return mod.getValue(this._address + 280, '*')
+    }
+    set rightScreenCenter(rightScreenCenter) {
+      mod.setValue(this._address + 280, rightScreenCenter, '*')
+    }
+
+
+    get scale() {
+      return mod.getValue(this._address + 288, '*')
+    }
+    set scale(scale) {
+      mod.setValue(this._address + 288, scale, '*')
+    }
+
+
+    get scaleIn() {
+      return mod.getValue(this._address + 296, '*')
+    }
+    set scaleIn(scaleIn) {
+      mod.setValue(this._address + 296, scaleIn, '*')
+    }
 
   }
 
@@ -1487,29 +1481,29 @@ export async function raylib_run(canvas, userInit, userUpdate) {
       this.count = init.count || 0
       this.paths = init.paths || 0
     }
-    
-      get capacity () {
-        return mod.HEAPU32[this._address + 0]
-      }
-      set capacity (capacity) {
-        mod.HEAPU32[this._address + 0] = capacity
-      }
 
-  
-      get count () {
-        return mod.HEAPU32[this._address + 4]
-      }
-      set count (count) {
-        mod.HEAPU32[this._address + 4] = count
-      }
+    get capacity() {
+      return mod.HEAPU32[this._address + 0]
+    }
+    set capacity(capacity) {
+      mod.HEAPU32[this._address + 0] = capacity
+    }
 
-  
-      get paths () {
-        return mod.getValue(this._address + 8, '*')
-      }
-      set paths (paths) {
-        mod.setValue(this._address + 8, paths, '*')
-      }
+
+    get count() {
+      return mod.HEAPU32[this._address + 4]
+    }
+    set count(count) {
+      mod.HEAPU32[this._address + 4] = count
+    }
+
+
+    get paths() {
+      return mod.getValue(this._address + 8, '*')
+    }
+    set paths(paths) {
+      mod.setValue(this._address + 8, paths, '*')
+    }
 
   }
 
@@ -1523,29 +1517,29 @@ export async function raylib_run(canvas, userInit, userUpdate) {
       this.type = init.type || 0
       this.params = init.params || [0, 0, 0, 0]
     }
-    
-      get frame () {
-        return mod.HEAPU32[this._address + 0]
-      }
-      set frame (frame) {
-        mod.HEAPU32[this._address + 0] = frame
-      }
 
-  
-      get type () {
-        return mod.HEAPU32[this._address + 4]
-      }
-      set type (type) {
-        mod.HEAPU32[this._address + 4] = type
-      }
+    get frame() {
+      return mod.HEAPU32[this._address + 0]
+    }
+    set frame(frame) {
+      mod.HEAPU32[this._address + 0] = frame
+    }
 
-  
-      get params () {
-        return mod.getValue(this._address + 8, '*')
-      }
-      set params (params) {
-        mod.setValue(this._address + 8, params, '*')
-      }
+
+    get type() {
+      return mod.HEAPU32[this._address + 4]
+    }
+    set type(type) {
+      mod.HEAPU32[this._address + 4] = type
+    }
+
+
+    get params() {
+      return mod.getValue(this._address + 8, '*')
+    }
+    set params(params) {
+      mod.setValue(this._address + 8, params, '*')
+    }
 
   }
 
@@ -1559,23 +1553,23 @@ export async function raylib_run(canvas, userInit, userUpdate) {
       this.count = init.count || 0
       this.events = new raylib.AutomationEvent(init.events || {}, this._address + 8)
     }
-    
-      get capacity () {
-        return mod.HEAPU32[this._address + 0]
-      }
-      set capacity (capacity) {
-        mod.HEAPU32[this._address + 0] = capacity
-      }
 
-  
-      get count () {
-        return mod.HEAPU32[this._address + 4]
-      }
-      set count (count) {
-        mod.HEAPU32[this._address + 4] = count
-      }
+    get capacity() {
+      return mod.HEAPU32[this._address + 0]
+    }
+    set capacity(capacity) {
+      mod.HEAPU32[this._address + 0] = capacity
+    }
 
-  
+
+    get count() {
+      return mod.HEAPU32[this._address + 4]
+    }
+    set count(count) {
+      mod.HEAPU32[this._address + 4] = count
+    }
+
+
   }
 
   // Texture2D, same as Texture
@@ -1590,45 +1584,45 @@ export async function raylib_run(canvas, userInit, userUpdate) {
       this.mipmaps = init.mipmaps || 0
       this.format = init.format || 0
     }
-    
-      get id () {
-        return mod.HEAPU32[this._address + 0]
-      }
-      set id (id) {
-        mod.HEAPU32[this._address + 0] = id
-      }
 
-  
-      get width () {
-        return mod.getValue(this._address + 4, 'i32')
-      }
-      set width (width) {
-        mod.setValue(this._address + 4, width, 'i32')
-      }
+    get id() {
+      return mod.HEAPU32[this._address + 0]
+    }
+    set id(id) {
+      mod.HEAPU32[this._address + 0] = id
+    }
 
-  
-      get height () {
-        return mod.getValue(this._address + 8, 'i32')
-      }
-      set height (height) {
-        mod.setValue(this._address + 8, height, 'i32')
-      }
 
-  
-      get mipmaps () {
-        return mod.getValue(this._address + 12, 'i32')
-      }
-      set mipmaps (mipmaps) {
-        mod.setValue(this._address + 12, mipmaps, 'i32')
-      }
+    get width() {
+      return mod.getValue(this._address + 4, 'i32')
+    }
+    set width(width) {
+      mod.setValue(this._address + 4, width, 'i32')
+    }
 
-  
-      get format () {
-        return mod.getValue(this._address + 16, 'i32')
-      }
-      set format (format) {
-        mod.setValue(this._address + 16, format, 'i32')
-      }
+
+    get height() {
+      return mod.getValue(this._address + 8, 'i32')
+    }
+    set height(height) {
+      mod.setValue(this._address + 8, height, 'i32')
+    }
+
+
+    get mipmaps() {
+      return mod.getValue(this._address + 12, 'i32')
+    }
+    set mipmaps(mipmaps) {
+      mod.setValue(this._address + 12, mipmaps, 'i32')
+    }
+
+
+    get format() {
+      return mod.getValue(this._address + 16, 'i32')
+    }
+    set format(format) {
+      mod.setValue(this._address + 16, format, 'i32')
+    }
 
   }
 
@@ -1642,29 +1636,29 @@ export async function raylib_run(canvas, userInit, userUpdate) {
       this.propertyId = init.propertyId || 0
       this.propertyValue = init.propertyValue || 0
     }
-    
-      get controlId () {
-        return mod.getValue(this._address + 0, '*')
-      }
-      set controlId (controlId) {
-        mod.setValue(this._address + 0, controlId, '*')
-      }
 
-  
-      get propertyId () {
-        return mod.getValue(this._address + 0, '*')
-      }
-      set propertyId (propertyId) {
-        mod.setValue(this._address + 0, propertyId, '*')
-      }
+    get controlId() {
+      return mod.getValue(this._address + 0, '*')
+    }
+    set controlId(controlId) {
+      mod.setValue(this._address + 0, controlId, '*')
+    }
 
-  
-      get propertyValue () {
-        return mod.getValue(this._address + 0, 'i32')
-      }
-      set propertyValue (propertyValue) {
-        mod.setValue(this._address + 0, propertyValue, 'i32')
-      }
+
+    get propertyId() {
+      return mod.getValue(this._address + 0, '*')
+    }
+    set propertyId(propertyId) {
+      mod.setValue(this._address + 0, propertyId, '*')
+    }
+
+
+    get propertyValue() {
+      return mod.getValue(this._address + 0, 'i32')
+    }
+    set propertyValue(propertyValue) {
+      mod.setValue(this._address + 0, propertyValue, 'i32')
+    }
 
   }
 
@@ -1681,53 +1675,53 @@ export async function raylib_run(canvas, userInit, userUpdate) {
       this.alignmentV = init.alignmentV || 0
       this.padding = init.padding || 0
     }
-    
-      get size () {
-        return mod.HEAPU32[this._address + 0]
-      }
-      set size (size) {
-        mod.HEAPU32[this._address + 0] = size
-      }
 
-  
-      get charSpacing () {
-        return mod.getValue(this._address + 4, 'i32')
-      }
-      set charSpacing (charSpacing) {
-        mod.setValue(this._address + 4, charSpacing, 'i32')
-      }
+    get size() {
+      return mod.HEAPU32[this._address + 0]
+    }
+    set size(size) {
+      mod.HEAPU32[this._address + 0] = size
+    }
 
-  
-      get lineSpacing () {
-        return mod.getValue(this._address + 8, 'i32')
-      }
-      set lineSpacing (lineSpacing) {
-        mod.setValue(this._address + 8, lineSpacing, 'i32')
-      }
 
-  
-      get alignmentH () {
-        return mod.getValue(this._address + 12, 'i32')
-      }
-      set alignmentH (alignmentH) {
-        mod.setValue(this._address + 12, alignmentH, 'i32')
-      }
+    get charSpacing() {
+      return mod.getValue(this._address + 4, 'i32')
+    }
+    set charSpacing(charSpacing) {
+      mod.setValue(this._address + 4, charSpacing, 'i32')
+    }
 
-  
-      get alignmentV () {
-        return mod.getValue(this._address + 16, 'i32')
-      }
-      set alignmentV (alignmentV) {
-        mod.setValue(this._address + 16, alignmentV, 'i32')
-      }
 
-  
-      get padding () {
-        return mod.getValue(this._address + 20, 'i32')
-      }
-      set padding (padding) {
-        mod.setValue(this._address + 20, padding, 'i32')
-      }
+    get lineSpacing() {
+      return mod.getValue(this._address + 8, 'i32')
+    }
+    set lineSpacing(lineSpacing) {
+      mod.setValue(this._address + 8, lineSpacing, 'i32')
+    }
+
+
+    get alignmentH() {
+      return mod.getValue(this._address + 12, 'i32')
+    }
+    set alignmentH(alignmentH) {
+      mod.setValue(this._address + 12, alignmentH, 'i32')
+    }
+
+
+    get alignmentV() {
+      return mod.getValue(this._address + 16, 'i32')
+    }
+    set alignmentV(alignmentV) {
+      mod.setValue(this._address + 16, alignmentV, 'i32')
+    }
+
+
+    get padding() {
+      return mod.getValue(this._address + 20, 'i32')
+    }
+    set padding(padding) {
+      mod.setValue(this._address + 20, padding, 'i32')
+    }
 
   }
 
@@ -1751,109 +1745,109 @@ export async function raylib_run(canvas, userInit, userUpdate) {
       this.vaoId = init.vaoId || 0
       this.vboId = init.vboId || [0, 0, 0, 0, 0]
     }
-    
-      get elementCount () {
-        return mod.getValue(this._address + 0, 'i32')
-      }
-      set elementCount (elementCount) {
-        mod.setValue(this._address + 0, elementCount, 'i32')
-      }
 
-  
-      get vertices () {
-        return mod.getValue(this._address + 4, '*')
-      }
-      set vertices (vertices) {
-        mod.setValue(this._address + 4, vertices, '*')
-      }
+    get elementCount() {
+      return mod.getValue(this._address + 0, 'i32')
+    }
+    set elementCount(elementCount) {
+      mod.setValue(this._address + 0, elementCount, 'i32')
+    }
 
-  
-      get texcoords () {
-        return mod.getValue(this._address + 8, '*')
-      }
-      set texcoords (texcoords) {
-        mod.setValue(this._address + 8, texcoords, '*')
-      }
 
-  
-      get normals () {
-        return mod.getValue(this._address + 12, '*')
-      }
-      set normals (normals) {
-        mod.setValue(this._address + 12, normals, '*')
-      }
+    get vertices() {
+      return mod.getValue(this._address + 4, '*')
+    }
+    set vertices(vertices) {
+      mod.setValue(this._address + 4, vertices, '*')
+    }
 
-  
-      get colors () {
-        return mod.getValue(this._address + 16, '*')
-      }
-      set colors (colors) {
-        mod.setValue(this._address + 16, colors, '*')
-      }
 
-  
-      get indices () {
-        return mod.getValue(this._address + 20, '*')
-      }
-      set indices (indices) {
-        mod.setValue(this._address + 20, indices, '*')
-      }
+    get texcoords() {
+      return mod.getValue(this._address + 8, '*')
+    }
+    set texcoords(texcoords) {
+      mod.setValue(this._address + 8, texcoords, '*')
+    }
 
-  
-      get indices () {
-        return mod.getValue(this._address + 24, '*')
-      }
-      set indices (indices) {
-        mod.setValue(this._address + 24, indices, '*')
-      }
 
-  
-      get indices () {
-        return mod.getValue(this._address + 28, '*')
-      }
-      set indices (indices) {
-        mod.setValue(this._address + 28, indices, '*')
-      }
+    get normals() {
+      return mod.getValue(this._address + 12, '*')
+    }
+    set normals(normals) {
+      mod.setValue(this._address + 12, normals, '*')
+    }
 
-  
-      get indices () {
-        return mod.getValue(this._address + 28, '*')
-      }
-      set indices (indices) {
-        mod.setValue(this._address + 28, indices, '*')
-      }
 
-  
-      get indices () {
-        return mod.getValue(this._address + 28, '*')
-      }
-      set indices (indices) {
-        mod.setValue(this._address + 28, indices, '*')
-      }
+    get colors() {
+      return mod.getValue(this._address + 16, '*')
+    }
+    set colors(colors) {
+      mod.setValue(this._address + 16, colors, '*')
+    }
 
-  
-      get vaoId () {
-        return mod.getValue(this._address + 32, '*')
-      }
-      set vaoId (vaoId) {
-        mod.setValue(this._address + 32, vaoId, '*')
-      }
 
-  
-      get vaoId () {
-        return mod.HEAPU32[this._address + 32]
-      }
-      set vaoId (vaoId) {
-        mod.HEAPU32[this._address + 32] = vaoId
-      }
+    get indices() {
+      return mod.getValue(this._address + 20, '*')
+    }
+    set indices(indices) {
+      mod.setValue(this._address + 20, indices, '*')
+    }
 
-  
-      get vboId () {
-        return mod.getValue(this._address + 36, '*')
-      }
-      set vboId (vboId) {
-        mod.setValue(this._address + 36, vboId, '*')
-      }
+
+    get indices() {
+      return mod.getValue(this._address + 24, '*')
+    }
+    set indices(indices) {
+      mod.setValue(this._address + 24, indices, '*')
+    }
+
+
+    get indices() {
+      return mod.getValue(this._address + 28, '*')
+    }
+    set indices(indices) {
+      mod.setValue(this._address + 28, indices, '*')
+    }
+
+
+    get indices() {
+      return mod.getValue(this._address + 28, '*')
+    }
+    set indices(indices) {
+      mod.setValue(this._address + 28, indices, '*')
+    }
+
+
+    get indices() {
+      return mod.getValue(this._address + 28, '*')
+    }
+    set indices(indices) {
+      mod.setValue(this._address + 28, indices, '*')
+    }
+
+
+    get vaoId() {
+      return mod.getValue(this._address + 32, '*')
+    }
+    set vaoId(vaoId) {
+      mod.setValue(this._address + 32, vaoId, '*')
+    }
+
+
+    get vaoId() {
+      return mod.HEAPU32[this._address + 32]
+    }
+    set vaoId(vaoId) {
+      mod.HEAPU32[this._address + 32] = vaoId
+    }
+
+
+    get vboId() {
+      return mod.getValue(this._address + 36, '*')
+    }
+    set vboId(vboId) {
+      mod.setValue(this._address + 36, vboId, '*')
+    }
 
   }
 
@@ -1868,37 +1862,37 @@ export async function raylib_run(canvas, userInit, userUpdate) {
       this.vertexAlignment = init.vertexAlignment || 0
       this.textureId = init.textureId || 0
     }
-    
-      get mode () {
-        return mod.getValue(this._address + 0, 'i32')
-      }
-      set mode (mode) {
-        mod.setValue(this._address + 0, mode, 'i32')
-      }
 
-  
-      get vertexCount () {
-        return mod.getValue(this._address + 4, 'i32')
-      }
-      set vertexCount (vertexCount) {
-        mod.setValue(this._address + 4, vertexCount, 'i32')
-      }
+    get mode() {
+      return mod.getValue(this._address + 0, 'i32')
+    }
+    set mode(mode) {
+      mod.setValue(this._address + 0, mode, 'i32')
+    }
 
-  
-      get vertexAlignment () {
-        return mod.getValue(this._address + 8, 'i32')
-      }
-      set vertexAlignment (vertexAlignment) {
-        mod.setValue(this._address + 8, vertexAlignment, 'i32')
-      }
 
-  
-      get textureId () {
-        return mod.HEAPU32[this._address + 12]
-      }
-      set textureId (textureId) {
-        mod.HEAPU32[this._address + 12] = textureId
-      }
+    get vertexCount() {
+      return mod.getValue(this._address + 4, 'i32')
+    }
+    set vertexCount(vertexCount) {
+      mod.setValue(this._address + 4, vertexCount, 'i32')
+    }
+
+
+    get vertexAlignment() {
+      return mod.getValue(this._address + 8, 'i32')
+    }
+    set vertexAlignment(vertexAlignment) {
+      mod.setValue(this._address + 8, vertexAlignment, 'i32')
+    }
+
+
+    get textureId() {
+      return mod.HEAPU32[this._address + 12]
+    }
+    set textureId(textureId) {
+      mod.HEAPU32[this._address + 12] = textureId
+    }
 
   }
 
@@ -1915,39 +1909,39 @@ export async function raylib_run(canvas, userInit, userUpdate) {
       this.drawCounter = init.drawCounter || 0
       this.currentDepth = init.currentDepth || 0
     }
-    
-      get bufferCount () {
-        return mod.getValue(this._address + 0, 'i32')
-      }
-      set bufferCount (bufferCount) {
-        mod.setValue(this._address + 0, bufferCount, 'i32')
-      }
 
-  
-      get currentBuffer () {
-        return mod.getValue(this._address + 4, 'i32')
-      }
-      set currentBuffer (currentBuffer) {
-        mod.setValue(this._address + 4, currentBuffer, 'i32')
-      }
+    get bufferCount() {
+      return mod.getValue(this._address + 0, 'i32')
+    }
+    set bufferCount(bufferCount) {
+      mod.setValue(this._address + 0, bufferCount, 'i32')
+    }
 
-  
-  
-  
-      get drawCounter () {
-        return mod.getValue(this._address + 16, 'i32')
-      }
-      set drawCounter (drawCounter) {
-        mod.setValue(this._address + 16, drawCounter, 'i32')
-      }
 
-  
-      get currentDepth () {
-        return mod.getValue(this._address + 20, 'float')
-      }
-      set currentDepth (currentDepth) {
-        mod.setValue(this._address + 20, currentDepth, 'float')
-      }
+    get currentBuffer() {
+      return mod.getValue(this._address + 4, 'i32')
+    }
+    set currentBuffer(currentBuffer) {
+      mod.setValue(this._address + 4, currentBuffer, 'i32')
+    }
+
+
+
+
+    get drawCounter() {
+      return mod.getValue(this._address + 16, 'i32')
+    }
+    set drawCounter(drawCounter) {
+      mod.setValue(this._address + 16, drawCounter, 'i32')
+    }
+
+
+    get currentDepth() {
+      return mod.getValue(this._address + 20, 'float')
+    }
+    set currentDepth(currentDepth) {
+      mod.setValue(this._address + 20, currentDepth, 'float')
+    }
 
   }
 
@@ -1962,37 +1956,37 @@ export async function raylib_run(canvas, userInit, userUpdate) {
       this.z = init.z || 0
       this.w = init.w || 0
     }
-    
-      get x () {
-        return mod.getValue(this._address + 0, 'float')
-      }
-      set x (x) {
-        mod.setValue(this._address + 0, x, 'float')
-      }
 
-  
-      get y () {
-        return mod.getValue(this._address + 4, 'float')
-      }
-      set y (y) {
-        mod.setValue(this._address + 4, y, 'float')
-      }
+    get x() {
+      return mod.getValue(this._address + 0, 'float')
+    }
+    set x(x) {
+      mod.setValue(this._address + 0, x, 'float')
+    }
 
-  
-      get z () {
-        return mod.getValue(this._address + 8, 'float')
-      }
-      set z (z) {
-        mod.setValue(this._address + 8, z, 'float')
-      }
 
-  
-      get w () {
-        return mod.getValue(this._address + 12, 'float')
-      }
-      set w (w) {
-        mod.setValue(this._address + 12, w, 'float')
-      }
+    get y() {
+      return mod.getValue(this._address + 4, 'float')
+    }
+    set y(y) {
+      mod.setValue(this._address + 4, y, 'float')
+    }
+
+
+    get z() {
+      return mod.getValue(this._address + 8, 'float')
+    }
+    set z(z) {
+      mod.setValue(this._address + 8, z, 'float')
+    }
+
+
+    get w() {
+      return mod.getValue(this._address + 12, 'float')
+    }
+    set w(w) {
+      mod.setValue(this._address + 12, w, 'float')
+    }
 
   }
 
@@ -2008,45 +2002,45 @@ export async function raylib_run(canvas, userInit, userUpdate) {
       this.mipmaps = init.mipmaps || 0
       this.format = init.format || 0
     }
-    
-      get id () {
-        return mod.HEAPU32[this._address + 0]
-      }
-      set id (id) {
-        mod.HEAPU32[this._address + 0] = id
-      }
 
-  
-      get width () {
-        return mod.getValue(this._address + 4, 'i32')
-      }
-      set width (width) {
-        mod.setValue(this._address + 4, width, 'i32')
-      }
+    get id() {
+      return mod.HEAPU32[this._address + 0]
+    }
+    set id(id) {
+      mod.HEAPU32[this._address + 0] = id
+    }
 
-  
-      get height () {
-        return mod.getValue(this._address + 8, 'i32')
-      }
-      set height (height) {
-        mod.setValue(this._address + 8, height, 'i32')
-      }
 
-  
-      get mipmaps () {
-        return mod.getValue(this._address + 12, 'i32')
-      }
-      set mipmaps (mipmaps) {
-        mod.setValue(this._address + 12, mipmaps, 'i32')
-      }
+    get width() {
+      return mod.getValue(this._address + 4, 'i32')
+    }
+    set width(width) {
+      mod.setValue(this._address + 4, width, 'i32')
+    }
 
-  
-      get format () {
-        return mod.getValue(this._address + 16, 'i32')
-      }
-      set format (format) {
-        mod.setValue(this._address + 16, format, 'i32')
-      }
+
+    get height() {
+      return mod.getValue(this._address + 8, 'i32')
+    }
+    set height(height) {
+      mod.setValue(this._address + 8, height, 'i32')
+    }
+
+
+    get mipmaps() {
+      return mod.getValue(this._address + 12, 'i32')
+    }
+    set mipmaps(mipmaps) {
+      mod.setValue(this._address + 12, mipmaps, 'i32')
+    }
+
+
+    get format() {
+      return mod.getValue(this._address + 16, 'i32')
+    }
+    set format(format) {
+      mod.setValue(this._address + 16, format, 'i32')
+    }
 
   }
 
@@ -2060,16 +2054,16 @@ export async function raylib_run(canvas, userInit, userUpdate) {
       this.texture = new raylib.Texture(init.texture || {}, this._address + 4)
       this.depth = new raylib.Texture(init.depth || {}, this._address + 24)
     }
-    
-      get id () {
-        return mod.HEAPU32[this._address + 0]
-      }
-      set id (id) {
-        mod.HEAPU32[this._address + 0] = id
-      }
 
-  
-  
+    get id() {
+      return mod.HEAPU32[this._address + 0]
+    }
+    set id(id) {
+      mod.HEAPU32[this._address + 0] = id
+    }
+
+
+
   }
 
   // Camera type fallback, defaults to Camera3D
@@ -2084,24 +2078,24 @@ export async function raylib_run(canvas, userInit, userUpdate) {
       this.fovy = init.fovy || 0
       this.projection = init.projection || 0
     }
-    
-  
-  
-  
-      get fovy () {
-        return mod.getValue(this._address + 36, 'float')
-      }
-      set fovy (fovy) {
-        mod.setValue(this._address + 36, fovy, 'float')
-      }
 
-  
-      get projection () {
-        return mod.getValue(this._address + 40, 'i32')
-      }
-      set projection (projection) {
-        mod.setValue(this._address + 40, projection, 'i32')
-      }
+
+
+
+    get fovy() {
+      return mod.getValue(this._address + 36, 'float')
+    }
+    set fovy(fovy) {
+      mod.setValue(this._address + 36, fovy, 'float')
+    }
+
+
+    get projection() {
+      return mod.getValue(this._address + 40, 'i32')
+    }
+    set projection(projection) {
+      mod.setValue(this._address + 40, projection, 'i32')
+    }
 
   }
 
@@ -3008,32 +3002,32 @@ export async function raylib_run(canvas, userInit, userUpdate) {
   raylib.RL_CULL_FACE_BACK = 1 // 
 
 
-  raylib.LIGHTGRAY = new raylib.Color({r: 200, g: 200, b: 200, a: 255}) // Light Gray
-  raylib.GRAY = new raylib.Color({r: 130, g: 130, b: 130, a: 255}) // Gray
-  raylib.DARKGRAY = new raylib.Color({r: 80, g: 80, b: 80, a: 255}) // Dark Gray
-  raylib.YELLOW = new raylib.Color({r: 253, g: 249, b: 0, a: 255}) // Yellow
-  raylib.GOLD = new raylib.Color({r: 255, g: 203, b: 0, a: 255}) // Gold
-  raylib.ORANGE = new raylib.Color({r: 255, g: 161, b: 0, a: 255}) // Orange
-  raylib.PINK = new raylib.Color({r: 255, g: 109, b: 194, a: 255}) // Pink
-  raylib.RED = new raylib.Color({r: 230, g: 41, b: 55, a: 255}) // Red
-  raylib.MAROON = new raylib.Color({r: 190, g: 33, b: 55, a: 255}) // Maroon
-  raylib.GREEN = new raylib.Color({r: 0, g: 228, b: 48, a: 255}) // Green
-  raylib.LIME = new raylib.Color({r: 0, g: 158, b: 47, a: 255}) // Lime
-  raylib.DARKGREEN = new raylib.Color({r: 0, g: 117, b: 44, a: 255}) // Dark Green
-  raylib.SKYBLUE = new raylib.Color({r: 102, g: 191, b: 255, a: 255}) // Sky Blue
-  raylib.BLUE = new raylib.Color({r: 0, g: 121, b: 241, a: 255}) // Blue
-  raylib.DARKBLUE = new raylib.Color({r: 0, g: 82, b: 172, a: 255}) // Dark Blue
-  raylib.PURPLE = new raylib.Color({r: 200, g: 122, b: 255, a: 255}) // Purple
-  raylib.VIOLET = new raylib.Color({r: 135, g: 60, b: 190, a: 255}) // Violet
-  raylib.DARKPURPLE = new raylib.Color({r: 112, g: 31, b: 126, a: 255}) // Dark Purple
-  raylib.BEIGE = new raylib.Color({r: 211, g: 176, b: 131, a: 255}) // Beige
-  raylib.BROWN = new raylib.Color({r: 127, g: 106, b: 79, a: 255}) // Brown
-  raylib.DARKBROWN = new raylib.Color({r: 76, g: 63, b: 47, a: 255}) // Dark Brown
-  raylib.WHITE = new raylib.Color({r: 255, g: 255, b: 255, a: 255}) // White
-  raylib.BLACK = new raylib.Color({r: 0, g: 0, b: 0, a: 255}) // Black
-  raylib.BLANK = new raylib.Color({r: 0, g: 0, b: 0, a: 0}) // Blank (Transparent)
-  raylib.MAGENTA = new raylib.Color({r: 255, g: 0, b: 255, a: 255}) // Magenta
-  raylib.RAYWHITE = new raylib.Color({r: 245, g: 245, b: 245, a: 255}) // My own White (raylib logo)
+  raylib.LIGHTGRAY = new raylib.Color({ r: 200, g: 200, b: 200, a: 255 }) // Light Gray
+  raylib.GRAY = new raylib.Color({ r: 130, g: 130, b: 130, a: 255 }) // Gray
+  raylib.DARKGRAY = new raylib.Color({ r: 80, g: 80, b: 80, a: 255 }) // Dark Gray
+  raylib.YELLOW = new raylib.Color({ r: 253, g: 249, b: 0, a: 255 }) // Yellow
+  raylib.GOLD = new raylib.Color({ r: 255, g: 203, b: 0, a: 255 }) // Gold
+  raylib.ORANGE = new raylib.Color({ r: 255, g: 161, b: 0, a: 255 }) // Orange
+  raylib.PINK = new raylib.Color({ r: 255, g: 109, b: 194, a: 255 }) // Pink
+  raylib.RED = new raylib.Color({ r: 230, g: 41, b: 55, a: 255 }) // Red
+  raylib.MAROON = new raylib.Color({ r: 190, g: 33, b: 55, a: 255 }) // Maroon
+  raylib.GREEN = new raylib.Color({ r: 0, g: 228, b: 48, a: 255 }) // Green
+  raylib.LIME = new raylib.Color({ r: 0, g: 158, b: 47, a: 255 }) // Lime
+  raylib.DARKGREEN = new raylib.Color({ r: 0, g: 117, b: 44, a: 255 }) // Dark Green
+  raylib.SKYBLUE = new raylib.Color({ r: 102, g: 191, b: 255, a: 255 }) // Sky Blue
+  raylib.BLUE = new raylib.Color({ r: 0, g: 121, b: 241, a: 255 }) // Blue
+  raylib.DARKBLUE = new raylib.Color({ r: 0, g: 82, b: 172, a: 255 }) // Dark Blue
+  raylib.PURPLE = new raylib.Color({ r: 200, g: 122, b: 255, a: 255 }) // Purple
+  raylib.VIOLET = new raylib.Color({ r: 135, g: 60, b: 190, a: 255 }) // Violet
+  raylib.DARKPURPLE = new raylib.Color({ r: 112, g: 31, b: 126, a: 255 }) // Dark Purple
+  raylib.BEIGE = new raylib.Color({ r: 211, g: 176, b: 131, a: 255 }) // Beige
+  raylib.BROWN = new raylib.Color({ r: 127, g: 106, b: 79, a: 255 }) // Brown
+  raylib.DARKBROWN = new raylib.Color({ r: 76, g: 63, b: 47, a: 255 }) // Dark Brown
+  raylib.WHITE = new raylib.Color({ r: 255, g: 255, b: 255, a: 255 }) // White
+  raylib.BLACK = new raylib.Color({ r: 0, g: 0, b: 0, a: 255 }) // Black
+  raylib.BLANK = new raylib.Color({ r: 0, g: 0, b: 0, a: 0 }) // Blank (Transparent)
+  raylib.MAGENTA = new raylib.Color({ r: 255, g: 0, b: 255, a: 255 }) // Magenta
+  raylib.RAYWHITE = new raylib.Color({ r: 245, g: 245, b: 245, a: 255 }) // My own White (raylib logo)
 
   // Initialize window and OpenGL context: InitWindow(int, int, const char *) => void
   const _InitWindow = mod.cwrap('InitWindow', 'pointer', ['number', 'number', 'string'])
@@ -3555,7 +3549,7 @@ export async function raylib_run(canvas, userInit, userUpdate) {
   const _LoadFileData = mod.cwrap('LoadFileData', 'pointer', ['string', 'pointer'])
   raylib.LoadFileData = async (fileName, dataSize) => {
     await raylib.addFile(fileName)
-  return _LoadFileData(fileName, dataSize._address)
+    return _LoadFileData(fileName, dataSize._address)
   }
 
   // Unload file data allocated by LoadFileData(): UnloadFileData(unsigned char *) => void
@@ -3574,7 +3568,7 @@ export async function raylib_run(canvas, userInit, userUpdate) {
   const _LoadFileText = mod.cwrap('LoadFileText', 'string', ['string'])
   raylib.LoadFileText = async (fileName) => {
     await raylib.addFile(fileName)
-  return _LoadFileText(fileName)
+    return _LoadFileText(fileName)
   }
 
   // Unload file text data allocated by LoadFileText(): UnloadFileText(char *) => void
@@ -6902,11 +6896,11 @@ export async function raylib_run(canvas, userInit, userUpdate) {
       this._loc = raylib.GetShaderLocation(shader, name)
     }
 
-    get value () {
+    get value() {
       return mod.HEAPF32[this._address / 4]
     }
 
-    set value (v) {
+    set value(v) {
       mod.HEAPF32[this._address / 4] = v
       raylib.SetShaderValue(this._shader, this._loc, this, raylib.SHADER_UNIFORM_FLOAT)
     }
@@ -6919,20 +6913,20 @@ export async function raylib_run(canvas, userInit, userUpdate) {
       this._loc = raylib.GetShaderLocation(shader, name)
     }
 
-    get x () {
+    get x() {
       return this._val.x
     }
-    
-    set x (v) {
+
+    set x(v) {
       this._val.x = v
       raylib.SetShaderValue(this._shader, this._loc, this._val, raylib.SHADER_UNIFORM_VEC2)
     }
 
-    get y () {
+    get y() {
       return this._val.y
     }
-    
-    set y (v) {
+
+    set y(v) {
       this._val.y = v
       raylib.SetShaderValue(this._shader, this._loc, this._val, raylib.SHADER_UNIFORM_VEC2)
     }
@@ -6945,29 +6939,29 @@ export async function raylib_run(canvas, userInit, userUpdate) {
       this._loc = raylib.GetShaderLocation(shader, name)
     }
 
-    get x () {
+    get x() {
       return this._val.x
     }
-    
-    set x (v) {
+
+    set x(v) {
       this._val.x = v
       raylib.SetShaderValue(this._shader, this._loc, this._val, raylib.SHADER_UNIFORM_VEC3)
     }
 
-    get y () {
+    get y() {
       return this._val.y
     }
-    
-    set y (v) {
+
+    set y(v) {
       this._val.y = v
       raylib.SetShaderValue(this._shader, this._loc, this._val, raylib.SHADER_UNIFORM_VEC3)
     }
 
-    get z () {
+    get z() {
       return this._val.z
     }
-    
-    set y (v) {
+
+    set y(v) {
       this._val.z = v
       raylib.SetShaderValue(this._shader, this._loc, this._val, raylib.SHADER_UNIFORM_VEC3)
     }
@@ -6980,38 +6974,38 @@ export async function raylib_run(canvas, userInit, userUpdate) {
       this._loc = raylib.GetShaderLocation(shader, name)
     }
 
-    get x () {
+    get x() {
       return this._val.x
     }
-    
-    set x (v) {
+
+    set x(v) {
       this._val.x = v
       raylib.SetShaderValue(this._shader, this._loc, this._val, raylib.SHADER_UNIFORM_VEC4)
     }
 
-    get y () {
+    get y() {
       return this._val.y
     }
-    
-    set y (v) {
+
+    set y(v) {
       this._val.y = v
       raylib.SetShaderValue(this._shader, this._loc, this._val, raylib.SHADER_UNIFORM_VEC4)
     }
 
-    get z () {
+    get z() {
       return this._val.z
     }
-    
-    set y (v) {
+
+    set y(v) {
       this._val.z = v
       raylib.SetShaderValue(this._shader, this._loc, this._val, raylib.SHADER_UNIFORM_VEC4)
     }
 
-    get w () {
+    get w() {
       return this._val.w
     }
-    
-    set w (v) {
+
+    set w(v) {
       this._val.w = v
       raylib.SetShaderValue(this._shader, this._loc, this._val, raylib.SHADER_UNIFORM_VEC4)
     }
@@ -7024,38 +7018,38 @@ export async function raylib_run(canvas, userInit, userUpdate) {
       this._loc = raylib.GetShaderLocation(shader, name)
     }
 
-    get r () {
+    get r() {
       return this._val.x
     }
-    
-    set r (v) {
+
+    set r(v) {
       this._val.x = v
       raylib.SetShaderValue(this._shader, this._loc, this._val, raylib.SHADER_UNIFORM_VEC4)
     }
 
-    get g () {
+    get g() {
       return this._val.y
     }
-    
-    set g (v) {
+
+    set g(v) {
       this._val.y = v
       raylib.SetShaderValue(this._shader, this._loc, this._val, raylib.SHADER_UNIFORM_VEC4)
     }
 
-    get b () {
+    get b() {
       return this._val.z
     }
-    
-    set b (v) {
+
+    set b(v) {
       this._val.z = v
       raylib.SetShaderValue(this._shader, this._loc, this._val, raylib.SHADER_UNIFORM_VEC4)
     }
 
-    get a () {
+    get a() {
       return this._val.w
     }
-    
-    set a (v) {
+
+    set a(v) {
       this._val.w = v
       raylib.SetShaderValue(this._shader, this._loc, this._val, raylib.SHADER_UNIFORM_VEC4)
     }
@@ -7069,23 +7063,23 @@ export async function raylib_run(canvas, userInit, userUpdate) {
       this._loc = raylib.GetShaderLocation(shader, name)
     }
 
-    get value () {
+    get value() {
       return mod.HEAP32[this._address / 4]
     }
 
-    set value (v) {
+    set value(v) {
       mod.HEAP32[this._address / 4] = v
       raylib.SetShaderValue(this._shader, this._loc, this, raylib.SHADER_UNIFORM_INT)
     }
   }
 
   raylib.UniformTexture = class UniformTexture {
-    constructor (shader, name, address) {
+    constructor(shader, name, address) {
       this._shader = shader
       this._loc = raylib.GetShaderLocation(shader, name)
     }
 
-    set texture (t) {
+    set texture(t) {
       raylib.SetShaderValueTexture(this._shader, this._loc, t)
     }
   }
@@ -7095,13 +7089,13 @@ export async function raylib_run(canvas, userInit, userUpdate) {
     if (!target) {
       target = filename
     }
-    const p = target.split('/').slice(0,-1)
+    const p = target.split('/').slice(0, -1)
     let dir = ''
     for (const d of p) {
       dir = dir + '/' + d
-      try{
+      try {
         mod.FS.mkdir(dir)
-      }catch(e){}
+      } catch (e) { }
     }
     mod.FS.writeFile(target, new Uint8Array(await fetch(filename).then(r => r.arrayBuffer())))
   }
@@ -8816,6 +8810,6 @@ export function raylib_run_string(canvas, userCode) {
   f(raylib_run, canvas)
 }
 
-export { RaylibComponent, Module }
+export { Module }
 export default raylib_run
 

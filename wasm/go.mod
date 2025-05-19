@@ -1,3 +1,3 @@
-module github.com/BrownNPC/Raylib-Go-Wasm/wasm
+module github.com/gen2brain/raylib-go/wasm
 
 go 1.24.1
