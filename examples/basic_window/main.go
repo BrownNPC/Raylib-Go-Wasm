@@ -3,10 +3,8 @@ package main
 import "github.com/gen2brain/raylib-go/raylib"
 
 func main() {
-	rl.SetConfigFlags(rl.FlagVsyncHint)
-	rl.InitWindow(800, 450, "raylib [core] example - basic window")
-
-	//rl.SetTargetFPS(60)
+	rl.SetConfigFlags(rl.FlagVsyncHint | rl.FlagWindowResizable)
+	rl.InitWindow(0, 0, "raylib [core] example - basic window")
 
 	var update = func() {
 		rl.BeginDrawing()
@@ -17,6 +15,11 @@ func main() {
 
 		rl.EndDrawing()
 	}
+
 	rl.SetMainLoop(update)
+
+	for !rl.WindowShouldClose() {
+		update()
+	}
 	rl.CloseWindow()
 }
