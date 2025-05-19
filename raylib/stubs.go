@@ -1,2787 +1,2906 @@
-package fake
+//go:build !js
 
+package rl
+
+import (
+	"image/color"
+	"unsafe"
+)
 
 // CloseWindow - Close window and unload OpenGL context
 func CloseWindow() {
-	closeWindow()
+	// empty code to make gopls happy on non-web
 }
 
 // IsWindowReady - Check if window has been initialized successfully
 func IsWindowReady() bool {
-	return isWindowReady()
+	// empty code to make gopls happy on non-web
+	var zero bool
+	return zero
 }
 
 // IsWindowFullscreen - Check if window is currently fullscreen
 func IsWindowFullscreen() bool {
-	return isWindowFullscreen()
+	// empty code to make gopls happy on non-web
+	var zero bool
+	return zero
 }
 
 // IsWindowHidden - Check if window is currently hidden (only PLATFORM_DESKTOP)
 func IsWindowHidden() bool {
-	return isWindowHidden()
+	// empty code to make gopls happy on non-web
+	var zero bool
+	return zero
 }
 
 // IsWindowMinimized - Check if window is currently minimized (only PLATFORM_DESKTOP)
 func IsWindowMinimized() bool {
-	return isWindowMinimized()
+	// empty code to make gopls happy on non-web
+	var zero bool
+	return zero
 }
 
 // IsWindowMaximized - Check if window is currently maximized (only PLATFORM_DESKTOP)
 func IsWindowMaximized() bool {
-	return isWindowMaximized()
+	// empty code to make gopls happy on non-web
+	var zero bool
+	return zero
 }
 
 // IsWindowFocused - Check if window is currently focused (only PLATFORM_DESKTOP)
 func IsWindowFocused() bool {
-	return isWindowFocused()
+	// empty code to make gopls happy on non-web
+	var zero bool
+	return zero
 }
 
 // IsWindowResized - Check if window has been resized last frame
 func IsWindowResized() bool {
-	return isWindowResized()
+	// empty code to make gopls happy on non-web
+	var zero bool
+	return zero
 }
 
 // IsWindowState - Check if one specific window flag is enabled
 func IsWindowState(flag uint32) bool {
-	return isWindowState(flag)
+	// empty code to make gopls happy on non-web
+	var zero bool
+	return zero
 }
 
 // SetWindowState - Set window configuration state using flags (only PLATFORM_DESKTOP)
 func SetWindowState(flags uint32) {
-	setWindowState(flags)
+	// empty code to make gopls happy on non-web
 }
 
 // ClearWindowState - Clear window configuration state flags
 func ClearWindowState(flags uint32) {
-	clearWindowState(flags)
+	// empty code to make gopls happy on non-web
 }
 
 // ToggleFullscreen - Toggle window state: fullscreen/windowed (only PLATFORM_DESKTOP)
 func ToggleFullscreen() {
-	toggleFullscreen()
+	// empty code to make gopls happy on non-web
 }
 
 // ToggleBorderlessWindowed - Toggle window state: borderless windowed (only PLATFORM_DESKTOP)
 func ToggleBorderlessWindowed() {
-	toggleBorderlessWindowed()
+	// empty code to make gopls happy on non-web
 }
 
 // MaximizeWindow - Set window state: maximized, if resizable (only PLATFORM_DESKTOP)
 func MaximizeWindow() {
-	maximizeWindow()
+	// empty code to make gopls happy on non-web
 }
 
 // MinimizeWindow - Set window state: minimized, if resizable (only PLATFORM_DESKTOP)
 func MinimizeWindow() {
-	minimizeWindow()
+	// empty code to make gopls happy on non-web
 }
 
 // RestoreWindow - Set window state: not minimized/maximized (only PLATFORM_DESKTOP)
 func RestoreWindow() {
-	restoreWindow()
+	// empty code to make gopls happy on non-web
 }
 
 // SetWindowIcon - Set icon for window (single image, RGBA 32bit, (only PLATFORM_DESKTOP)
 func SetWindowIcon(image Image) {
-	setWindowIcon(uintptr(unsafe.Pointer(&image)))
+	// empty code to make gopls happy on non-web
 }
 
 // SetWindowIcons - Set icon for window (multiple images, RGBA 32bit, only PLATFORM_DESKTOP)
 func SetWindowIcons(images []Image, count int32) {
-	setWindowIcons(uintptr(unsafe.Pointer(&images[0])), int32(len(images)))
+	// empty code to make gopls happy on non-web
 }
 
 // SetWindowTitle - Set title for window (only PLATFORM_DESKTOP and PLATFORM_WEB)
 func SetWindowTitle(title string) {
-	setWindowTitle(title)
+	// empty code to make gopls happy on non-web
 }
 
 // SetWindowPosition - Set window position on screen (only PLATFORM_DESKTOP)
 func SetWindowPosition(x int, y int) {
-	setWindowPosition(int32(x), int32(y))
+	// empty code to make gopls happy on non-web
 }
 
 // SetWindowMonitor - Set monitor for the current window
 func SetWindowMonitor(monitor int) {
-	setWindowMonitor(int32(monitor))
+	// empty code to make gopls happy on non-web
 }
 
 // SetWindowMinSize - Set window minimum dimensions (for FLAG_WINDOW_RESIZABLE)
 func SetWindowMinSize(width int, height int) {
-	setWindowMinSize(int32(width), int32(height))
+	// empty code to make gopls happy on non-web
 }
 
 // SetWindowMaxSize - Set window maximum dimensions (for FLAG_WINDOW_RESIZABLE)
 func SetWindowMaxSize(width int, height int) {
-	setWindowMaxSize(int32(width), int32(height))
+	// empty code to make gopls happy on non-web
 }
 
 // SetWindowSize - Set window dimensions
 func SetWindowSize(width int, height int) {
-	setWindowSize(int32(width), int32(height))
+	// empty code to make gopls happy on non-web
 }
 
 // SetWindowOpacity - Set window opacity [0.0f..1.0f] (only PLATFORM_DESKTOP)
 func SetWindowOpacity(opacity float32) {
-	setWindowOpacity(opacity)
+	// empty code to make gopls happy on non-web
 }
 
 // SetWindowFocused - Set window focused (only PLATFORM_DESKTOP)
 func SetWindowFocused() {
-	setWindowFocused()
+	// empty code to make gopls happy on non-web
 }
 
 // GetWindowHandle - Get native window handle (only PLATFORM_DESKTOP)
 func GetWindowHandle() unsafe.Pointer {
-	return getWindowHandle()
+	// empty code to make gopls happy on non-web
+	var zero unsafe.Pointer
+	return zero
 }
 
 // GetScreenWidth - Get current screen width
 func GetScreenWidth() int {
-	return int(getScreenWidth())
+	// empty code to make gopls happy on non-web
+	var zero int
+	return zero
 }
 
 // GetScreenHeight - Get current screen height
 func GetScreenHeight() int {
-	return int(getScreenHeight())
+	// empty code to make gopls happy on non-web
+	var zero int
+	return zero
 }
 
 // GetRenderWidth - Get current render width (it considers HiDPI)
 func GetRenderWidth() int {
-	return int(getRenderWidth())
+	// empty code to make gopls happy on non-web
+	var zero int
+	return zero
 }
 
 // GetRenderHeight - Get current render height (it considers HiDPI)
 func GetRenderHeight() int {
-	return int(getRenderHeight())
+	// empty code to make gopls happy on non-web
+	var zero int
+	return zero
 }
 
 // GetMonitorCount - Get number of connected monitors
 func GetMonitorCount() int {
-	return int(getMonitorCount())
+	// empty code to make gopls happy on non-web
+	var zero int
+	return zero
 }
 
 // GetCurrentMonitor - Get current monitor where window is placed
 func GetCurrentMonitor() int {
-	return int(getCurrentMonitor())
+	// empty code to make gopls happy on non-web
+	var zero int
+	return zero
 }
 
 // GetMonitorPosition - Get specified monitor position
 func GetMonitorPosition(monitor int) Vector2 {
-	ret := getMonitorPosition(int32(monitor))
-	return *(*Vector2)(unsafe.Pointer(&ret))
+	// empty code to make gopls happy on non-web
+	var zero Vector2
+	return zero
 }
 
 // GetMonitorWidth - Get specified monitor width (current video mode used by monitor)
 func GetMonitorWidth(monitor int) int {
-	return int(getMonitorWidth(int32(monitor)))
+	// empty code to make gopls happy on non-web
+	var zero int
+	return zero
 }
 
 // GetMonitorHeight - Get specified monitor height (current video mode used by monitor)
 func GetMonitorHeight(monitor int) int {
-	return int(getMonitorHeight(int32(monitor)))
+	// empty code to make gopls happy on non-web
+	var zero int
+	return zero
 }
 
 // GetMonitorPhysicalWidth - Get specified monitor physical width in millimetres
 func GetMonitorPhysicalWidth(monitor int) int {
-	return int(getMonitorPhysicalWidth(int32(monitor)))
+	// empty code to make gopls happy on non-web
+	var zero int
+	return zero
 }
 
 // GetMonitorPhysicalHeight - Get specified monitor physical height in millimetres
 func GetMonitorPhysicalHeight(monitor int) int {
-	return int(getMonitorPhysicalHeight(int32(monitor)))
+	// empty code to make gopls happy on non-web
+	var zero int
+	return zero
 }
 
 // GetMonitorRefreshRate - Get specified monitor refresh rate
 func GetMonitorRefreshRate(monitor int) int {
-	return int(getMonitorRefreshRate(int32(monitor)))
+	// empty code to make gopls happy on non-web
+	var zero int
+	return zero
 }
 
 // GetWindowPosition - Get window position XY on monitor
 func GetWindowPosition() Vector2 {
-	ret := getWindowPosition()
-	return *(*Vector2)(unsafe.Pointer(&ret))
+	// empty code to make gopls happy on non-web
+	var zero Vector2
+	return zero
 }
 
 // GetWindowScaleDPI - Get window scale DPI factor
 func GetWindowScaleDPI() Vector2 {
-	ret := getWindowScaleDPI()
-	return *(*Vector2)(unsafe.Pointer(&ret))
+	// empty code to make gopls happy on non-web
+	var zero Vector2
+	return zero
 }
 
 // GetMonitorName - Get the human-readable, UTF-8 encoded name of the specified monitor
 func GetMonitorName(monitor int) string {
-	return getMonitorName(int32(monitor))
+	// empty code to make gopls happy on non-web
+	var zero string
+	return zero
 }
 
 // SetClipboardText - Set clipboard text content
 func SetClipboardText(text string) {
-	setClipboardText(text)
+	// empty code to make gopls happy on non-web
 }
 
 // GetClipboardText - Get clipboard text content
 func GetClipboardText() string {
-	return getClipboardText()
+	// empty code to make gopls happy on non-web
+	var zero string
+	return zero
 }
 
 // GetClipboardImage - Get clipboard image content
 //
 // Only works with SDL3 backend or Windows with RGFW/GLFW
 func GetClipboardImage() Image {
-	var img Image
-	getClipboardImage(uintptr(unsafe.Pointer(&img)))
-	return img
+	// empty code to make gopls happy on non-web
+	var zero Image
+	return zero
 }
 
 // EnableEventWaiting - Enable waiting for events on EndDrawing(), no automatic event polling
 func EnableEventWaiting() {
-	enableEventWaiting()
+	// empty code to make gopls happy on non-web
 }
 
 // DisableEventWaiting - Disable waiting for events on EndDrawing(), automatic events polling
 func DisableEventWaiting() {
-	disableEventWaiting()
+	// empty code to make gopls happy on non-web
 }
 
 // ShowCursor - Shows cursor
 func ShowCursor() {
-	showCursor()
+	// empty code to make gopls happy on non-web
 }
 
 // HideCursor - Hides cursor
 func HideCursor() {
-	hideCursor()
+	// empty code to make gopls happy on non-web
 }
 
 // IsCursorHidden - Check if cursor is not visible
 func IsCursorHidden() bool {
-	return isCursorHidden()
+	// empty code to make gopls happy on non-web
+	var zero bool
+	return zero
 }
 
 // EnableCursor - Enables cursor (unlock cursor)
 func EnableCursor() {
-	enableCursor()
+	// empty code to make gopls happy on non-web
 }
 
 // DisableCursor - Disables cursor (lock cursor)
 func DisableCursor() {
-	disableCursor()
+	// empty code to make gopls happy on non-web
 }
 
 // IsCursorOnScreen - Check if cursor is on the screen
 func IsCursorOnScreen() bool {
-	return isCursorOnScreen()
+	// empty code to make gopls happy on non-web
+	var zero bool
+	return zero
 }
 
 // ClearBackground - Set background color (framebuffer clear color)
 func ClearBackground(col color.RGBA) {
-	clearBackground(*(*uintptr)(unsafe.Pointer(&col)))
+	// empty code to make gopls happy on non-web
 }
 
 // BeginDrawing - Setup canvas (framebuffer) to start drawing
 func BeginDrawing() {
-	beginDrawing()
+	// empty code to make gopls happy on non-web
 }
 
 // EndDrawing - End canvas drawing and swap buffers (double buffering)
 func EndDrawing() {
-	endDrawing()
+	// empty code to make gopls happy on non-web
 }
 
 // BeginMode2D - Begin 2D mode with custom camera (2D)
 func BeginMode2D(camera Camera2D) {
-	beginMode2D(uintptr(unsafe.Pointer(&camera)))
+	// empty code to make gopls happy on non-web
 }
 
 // EndMode2D - Ends 2D mode with custom camera
 func EndMode2D() {
-	endMode2D()
+	// empty code to make gopls happy on non-web
 }
 
 // BeginMode3D - Begin 3D mode with custom camera (3D)
 func BeginMode3D(camera Camera3D) {
-	beginMode3D(uintptr(unsafe.Pointer(&camera)))
+	// empty code to make gopls happy on non-web
 }
 
 // EndMode3D - Ends 3D mode and returns to default 2D orthographic mode
 func EndMode3D() {
-	endMode3D()
+	// empty code to make gopls happy on non-web
 }
 
 // BeginTextureMode - Begin drawing to render texture
 func BeginTextureMode(target RenderTexture2D) {
-	beginTextureMode(uintptr(unsafe.Pointer(&target)))
+	// empty code to make gopls happy on non-web
 }
 
 // EndTextureMode - Ends drawing to render texture
 func EndTextureMode() {
-	endTextureMode()
+	// empty code to make gopls happy on non-web
 }
 
 // BeginShaderMode - Begin custom shader drawing
 func BeginShaderMode(shader Shader) {
-	beginShaderMode(uintptr(unsafe.Pointer(&shader)))
+	// empty code to make gopls happy on non-web
 }
 
 // EndShaderMode - End custom shader drawing (use default shader)
 func EndShaderMode() {
-	endShaderMode()
+	// empty code to make gopls happy on non-web
 }
 
 // BeginBlendMode - Begin blending mode (alpha, additive, multiplied, subtract, custom)
 func BeginBlendMode(mode BlendMode) {
-	beginBlendMode(int32(mode))
+	// empty code to make gopls happy on non-web
 }
 
 // EndBlendMode - End blending mode (reset to default: alpha blending)
 func EndBlendMode() {
-	endBlendMode()
+	// empty code to make gopls happy on non-web
 }
 
 // BeginScissorMode - Begin scissor mode (define screen area for following drawing)
 func BeginScissorMode(x int32, y int32, width int32, height int32) {
-	beginScissorMode(x, y, width, height)
+	// empty code to make gopls happy on non-web
 }
 
 // EndScissorMode - End scissor mode
 func EndScissorMode() {
-	endScissorMode()
+	// empty code to make gopls happy on non-web
 }
 
 // BeginVrStereoMode - Begin stereo rendering (requires VR simulator)
 func BeginVrStereoMode(config VrStereoConfig) {
-	beginVrStereoMode(uintptr(unsafe.Pointer(&config)))
+	// empty code to make gopls happy on non-web
 }
 
 // EndVrStereoMode - End stereo rendering (requires VR simulator)
 func EndVrStereoMode() {
-	endVrStereoMode()
+	// empty code to make gopls happy on non-web
 }
 
 // LoadVrStereoConfig - Load VR stereo config for VR simulator device parameters
 func LoadVrStereoConfig(device VrDeviceInfo) VrStereoConfig {
-	var config VrStereoConfig
-	loadVrStereoConfig(uintptr(unsafe.Pointer(&config)), uintptr(unsafe.Pointer(&device)))
-	return config
+	// empty code to make gopls happy on non-web
+	var zero VrStereoConfig
+	return zero
 }
 
 // UnloadVrStereoConfig - Unload VR stereo config
 func UnloadVrStereoConfig(config VrStereoConfig) {
-	unloadVrStereoConfig(uintptr(unsafe.Pointer(&config)))
+	// empty code to make gopls happy on non-web
 }
 
 // LoadShader - Load shader from files and bind default locations
 func LoadShader(vsFileName string, fsFileName string) Shader {
-	var shader Shader
-	var cvsFileName, cfsFileName *byte
-	if vsFileName != "" {
-		var err error
-		cvsFileName, err = windows.BytePtrFromString(vsFileName)
-		if err != nil {
-			panic(err)
-		}
-	}
-	if fsFileName != "" {
-		var err error
-		cfsFileName, err = windows.BytePtrFromString(fsFileName)
-		if err != nil {
-			panic(err)
-		}
-	}
-	loadShader(uintptr(unsafe.Pointer(&shader)), uintptr(unsafe.Pointer(cvsFileName)), uintptr(unsafe.Pointer(cfsFileName)))
-	return shader
+	// empty code to make gopls happy on non-web
+	var zero Shader
+	return zero
 }
 
 // LoadShaderFromMemory - Load shader from code strings and bind default locations
 func LoadShaderFromMemory(vsCode string, fsCode string) Shader {
-	var shader Shader
-	var cvsCode, cfsCode *byte
-	if vsCode != "" {
-		var err error
-		cvsCode, err = windows.BytePtrFromString(vsCode)
-		if err != nil {
-			panic(err)
-		}
-	}
-	if fsCode != "" {
-		var err error
-		cfsCode, err = windows.BytePtrFromString(fsCode)
-		if err != nil {
-			panic(err)
-		}
-	}
-	loadShaderFromMemory(uintptr(unsafe.Pointer(&shader)), uintptr(unsafe.Pointer(cvsCode)), uintptr(unsafe.Pointer(cfsCode)))
-	return shader
+	// empty code to make gopls happy on non-web
+	var zero Shader
+	return zero
 }
 
 // IsShaderValid - Check if a shader is valid (loaded on GPU)
 func IsShaderValid(shader Shader) bool {
-	return isShaderValid(uintptr(unsafe.Pointer(&shader)))
+	// empty code to make gopls happy on non-web
+	var zero bool
+	return zero
 }
 
 // GetShaderLocation - Get shader uniform location
 func GetShaderLocation(shader Shader, uniformName string) int32 {
-	return getShaderLocation(uintptr(unsafe.Pointer(&shader)), uniformName)
+	// empty code to make gopls happy on non-web
+	var zero int32
+	return zero
 }
 
 // GetShaderLocationAttrib - Get shader attribute location
 func GetShaderLocationAttrib(shader Shader, attribName string) int32 {
-	return getShaderLocationAttrib(uintptr(unsafe.Pointer(&shader)), attribName)
+	// empty code to make gopls happy on non-web
+	var zero int32
+	return zero
 }
 
 // SetShaderValue - Set shader uniform value
 func SetShaderValue(shader Shader, locIndex int32, value []float32, uniformType ShaderUniformDataType) {
-	setShaderValue(uintptr(unsafe.Pointer(&shader)), locIndex, value, int32(uniformType))
+	// empty code to make gopls happy on non-web
 }
 
 // SetShaderValueV - Set shader uniform value vector
 func SetShaderValueV(shader Shader, locIndex int32, value []float32, uniformType ShaderUniformDataType, count int32) {
-	setShaderValueV(uintptr(unsafe.Pointer(&shader)), locIndex, value, int32(uniformType), count)
+	// empty code to make gopls happy on non-web
 }
 
 // SetShaderValueMatrix - Set shader uniform value (matrix 4x4)
 func SetShaderValueMatrix(shader Shader, locIndex int32, mat Matrix) {
-	setShaderValueMatrix(uintptr(unsafe.Pointer(&shader)), locIndex, uintptr(unsafe.Pointer(&mat)))
+	// empty code to make gopls happy on non-web
 }
 
 // SetShaderValueTexture - Set shader uniform value for texture (sampler2d)
 func SetShaderValueTexture(shader Shader, locIndex int32, texture Texture2D) {
-	setShaderValueTexture(uintptr(unsafe.Pointer(&shader)), locIndex, uintptr(unsafe.Pointer(&texture)))
+	// empty code to make gopls happy on non-web
 }
 
 // UnloadShader - Unload shader from GPU memory (VRAM)
 func UnloadShader(shader Shader) {
-	unloadShader(uintptr(unsafe.Pointer(&shader)))
+	// empty code to make gopls happy on non-web
 }
 
 // GetMouseRay - Get a ray trace from mouse position
 //
 // Deprecated: Use [GetScreenToWorldRay] instead.
 func GetMouseRay(mousePosition Vector2, camera Camera) Ray {
-	return GetScreenToWorldRay(mousePosition, camera)
+	// empty code to make gopls happy on non-web
+	var zero Ray
+	return zero
 }
 
 // GetScreenToWorldRay - Get a ray trace from screen position (i.e mouse)
 func GetScreenToWorldRay(position Vector2, camera Camera) Ray {
-	var ray Ray
-	getScreenToWorldRay(uintptr(unsafe.Pointer(&ray)), *(*uintptr)(unsafe.Pointer(&position)), uintptr(unsafe.Pointer(&camera)))
-	return ray
+	// empty code to make gopls happy on non-web
+	var zero Ray
+	return zero
 }
 
 // GetScreenToWorldRayEx - Get a ray trace from screen position (i.e mouse) in a viewport
-func GetScreenToWorldRayEx(position Vector2, camera Camera, width, height int32) Ray {
-	var ray Ray
-	getScreenToWorldRayEx(uintptr(unsafe.Pointer(&ray)), *(*uintptr)(unsafe.Pointer(&position)), uintptr(unsafe.Pointer(&camera)), width, height)
-	return ray
+func GetScreenToWorldRayEx(position Vector2, camera Camera, width int32, height int32) Ray {
+	// empty code to make gopls happy on non-web
+	var zero Ray
+	return zero
 }
 
 // GetCameraMatrix - Get camera transform matrix (view matrix)
 func GetCameraMatrix(camera Camera) Matrix {
-	var mat Matrix
-	getCameraMatrix(uintptr(unsafe.Pointer(&mat)), uintptr(unsafe.Pointer(&camera)))
-	return mat
+	// empty code to make gopls happy on non-web
+	var zero Matrix
+	return zero
 }
 
 // GetCameraMatrix2D - Get camera 2d transform matrix
 func GetCameraMatrix2D(camera Camera2D) Matrix {
-	var mat Matrix
-	getCameraMatrix2D(uintptr(unsafe.Pointer(&mat)), uintptr(unsafe.Pointer(&camera)))
-	return mat
+	// empty code to make gopls happy on non-web
+	var zero Matrix
+	return zero
 }
 
 // GetWorldToScreen - Get the screen space position for a 3d world space position
 func GetWorldToScreen(position Vector3, camera Camera) Vector2 {
-	ret := getWorldToScreen(uintptr(unsafe.Pointer(&position)), uintptr(unsafe.Pointer(&camera)))
-	return *(*Vector2)(unsafe.Pointer(&ret))
+	// empty code to make gopls happy on non-web
+	var zero Vector2
+	return zero
 }
 
 // GetScreenToWorld2D - Get the world space position for a 2d camera screen space position
 func GetScreenToWorld2D(position Vector2, camera Camera2D) Vector2 {
-	ret := getScreenToWorld2D(*(*uintptr)(unsafe.Pointer(&position)), uintptr(unsafe.Pointer(&camera)))
-	return *(*Vector2)(unsafe.Pointer(&ret))
+	// empty code to make gopls happy on non-web
+	var zero Vector2
+	return zero
 }
 
 // GetWorldToScreenEx - Get size position for a 3d world space position
 func GetWorldToScreenEx(position Vector3, camera Camera, width int32, height int32) Vector2 {
-	ret := getWorldToScreenEx(uintptr(unsafe.Pointer(&position)), uintptr(unsafe.Pointer(&camera)), width, height)
-	return *(*Vector2)(unsafe.Pointer(&ret))
+	// empty code to make gopls happy on non-web
+	var zero Vector2
+	return zero
 }
 
 // GetWorldToScreen2D - Get the screen space position for a 2d camera world space position
 func GetWorldToScreen2D(position Vector2, camera Camera2D) Vector2 {
-	ret := getWorldToScreen2D(*(*uintptr)(unsafe.Pointer(&position)), uintptr(unsafe.Pointer(&camera)))
-	return *(*Vector2)(unsafe.Pointer(&ret))
+	// empty code to make gopls happy on non-web
+	var zero Vector2
+	return zero
 }
 
 // SetTargetFPS - Set target FPS (maximum)
 func SetTargetFPS(fps int32) {
-	setTargetFPS(fps)
+	// empty code to make gopls happy on non-web
 }
 
 // GetFrameTime - Get time in seconds for last frame drawn (delta time)
 func GetFrameTime() float32 {
-	return getFrameTime()
+	// empty code to make gopls happy on non-web
+	var zero float32
+	return zero
 }
 
 // GetTime - Get elapsed time in seconds since InitWindow()
 func GetTime() float64 {
-	return getTime()
+	// empty code to make gopls happy on non-web
+	var zero float64
+	return zero
 }
 
 // GetFPS - Get current FPS
 func GetFPS() int32 {
-	return getFPS()
+	// empty code to make gopls happy on non-web
+	var zero int32
+	return zero
 }
-
-// Custom frame control functions
-// NOTE: SwapScreenBuffer and PollInputEvents are intended for advanced users that want full control over the frame processing
-// By default EndDrawing() does this job: draws everything + SwapScreenBuffer() + manage frame timing + PollInputEvents()
-// To avoid that behaviour and control frame processes manually you must recompile raylib with SUPPORT_CUSTOM_FRAME_CONTROL enabled in config.h
 
 // SwapScreenBuffer - Swap back buffer with front buffer (screen drawing)
 func SwapScreenBuffer() {
-	swapScreenBuffer()
+	// empty code to make gopls happy on non-web
 }
 
 // PollInputEvents - Register all input events
 func PollInputEvents() {
-	pollInputEvents()
+	// empty code to make gopls happy on non-web
 }
 
 // WaitTime - Wait for some time (halt program execution)
 func WaitTime(seconds float64) {
-	waitTime(seconds)
+	// empty code to make gopls happy on non-web
 }
 
 // SetRandomSeed - Set the seed for the random number generator
 //
 // Note: You can use go's math/rand package instead
 func SetRandomSeed(seed uint32) {
-	setRandomSeed(seed)
+	// empty code to make gopls happy on non-web
 }
 
 // GetRandomValue - Get a random value between min and max (both included)
 //
 // Note: You can use go's math/rand package instead
 func GetRandomValue(minimum int32, maximum int32) int32 {
-	return getRandomValue(minimum, maximum)
+	// empty code to make gopls happy on non-web
+	var zero int32
+	return zero
 }
 
 // LoadRandomSequence - Load random values sequence, no values repeated
 //
 // Note: Use UnloadRandomSequence if you don't need the sequence any more. You can use go's math/rand.Perm function instead.
 func LoadRandomSequence(count uint32, minimum int32, maximum int32) []int32 {
-	ret := loadRandomSequence(count, minimum, maximum)
-	return unsafe.Slice(ret, 10)
+	// empty code to make gopls happy on non-web
+	var zero []int32
+	return zero
 }
 
 // UnloadRandomSequence - Unload random values sequence
 func UnloadRandomSequence(sequence []int32) {
-	unloadRandomSequence(unsafe.SliceData(sequence))
+	// empty code to make gopls happy on non-web
 }
 
 // TakeScreenshot - Takes a screenshot of current screen (filename extension defines format)
 func TakeScreenshot(fileName string) {
-	takeScreenshot(fileName)
+	// empty code to make gopls happy on non-web
 }
 
 // SetConfigFlags - Setup init configuration flags (view FLAGS)
 func SetConfigFlags(flags uint32) {
-	setConfigFlags(flags)
+	// empty code to make gopls happy on non-web
 }
 
 // OpenURL - Open URL with default system browser (if available)
 func OpenURL(url string) {
-	openURL(url)
+	// empty code to make gopls happy on non-web
 }
 
 // TraceLog - Show trace log messages (LOG_DEBUG, LOG_INFO, LOG_WARNING, LOG_ERROR...)
 func TraceLog(logLevel TraceLogLevel, text string, args ...any) {
-	traceLog(int32(logLevel), fmt.Sprintf(text, args...))
+	// empty code to make gopls happy on non-web
 }
 
 // SetTraceLogLevel - Set the current threshold (minimum) log level
 func SetTraceLogLevel(logLevel TraceLogLevel) {
-	setTraceLogLevel(int32(logLevel))
+	// empty code to make gopls happy on non-web
 }
 
 // MemAlloc - Internal memory allocator
 func MemAlloc(size uint32) unsafe.Pointer {
-	return memAlloc(size)
+	// empty code to make gopls happy on non-web
+	var zero unsafe.Pointer
+	return zero
 }
 
 // MemRealloc - Internal memory reallocator
 func MemRealloc(ptr unsafe.Pointer, size uint32) unsafe.Pointer {
-	return memRealloc(ptr, size)
+	// empty code to make gopls happy on non-web
+	var zero unsafe.Pointer
+	return zero
 }
 
 // MemFree - Internal memory free
 func MemFree(ptr unsafe.Pointer) {
-	memFree(ptr)
+	// empty code to make gopls happy on non-web
 }
 
 // IsFileDropped - Check if a file has been dropped into window
 func IsFileDropped() bool {
-	return isFileDropped()
+	// empty code to make gopls happy on non-web
+	var zero bool
+	return zero
 }
 
 // LoadDroppedFiles - Load dropped filepaths
 func LoadDroppedFiles() []string {
-	var filePathList = struct {
-		capacity uint32
-		count    uint32
-		paths    **byte
-	}{}
-	loadDroppedFiles(uintptr(unsafe.Pointer(&filePathList)))
-	defer unloadDroppedFiles(uintptr(unsafe.Pointer(&filePathList)))
-
-	tmpslice := (*[1 << 24]*byte)(unsafe.Pointer(filePathList.paths))[:filePathList.count:filePathList.count]
-
-	gostrings := make([]string, filePathList.count)
-	for i, s := range tmpslice {
-		gostrings[i] = func(p *byte) string {
-			if p == nil || *p == 0 {
-				return ""
-			}
-
-			n := 0
-			for ptr := unsafe.Pointer(p); *(*byte)(ptr) != 0; n++ {
-				ptr = unsafe.Pointer(uintptr(ptr) + 1)
-			}
-
-			return string(unsafe.Slice(p, n))
-		}(s)
-	}
-
-	return gostrings
+	// empty code to make gopls happy on non-web
+	var zero []string
+	return zero
 }
 
 // UnloadDroppedFiles - Unload dropped filepaths
-func UnloadDroppedFiles() {}
+func UnloadDroppedFiles() {
+	// empty code to make gopls happy on non-web
+}
 
 // LoadAutomationEventList - Load automation events list from file, NULL for empty list, capacity = MAX_AUTOMATION_EVENTS
 func LoadAutomationEventList(fileName string) AutomationEventList {
-	var automationEventList AutomationEventList
-	loadAutomationEventList(uintptr(unsafe.Pointer(&automationEventList)), fileName)
-	return automationEventList
+	// empty code to make gopls happy on non-web
+	var zero AutomationEventList
+	return zero
 }
 
 // UnloadAutomationEventList - Unload automation events list from file
 func UnloadAutomationEventList(list *AutomationEventList) {
-	unloadAutomationEventList(uintptr(unsafe.Pointer(&list)))
+	// empty code to make gopls happy on non-web
 }
 
 // ExportAutomationEventList - Export automation events list as text file
 func ExportAutomationEventList(list AutomationEventList, fileName string) bool {
-	return exportAutomationEventList(uintptr(unsafe.Pointer(&list)), fileName)
+	// empty code to make gopls happy on non-web
+	var zero bool
+	return zero
 }
 
 // SetAutomationEventList - Set automation event list to record to
 func SetAutomationEventList(list *AutomationEventList) {
-	setAutomationEventList(uintptr(unsafe.Pointer(&list)))
+	// empty code to make gopls happy on non-web
 }
 
 // SetAutomationEventBaseFrame - Set automation event internal base frame to start recording
 func SetAutomationEventBaseFrame(frame int) {
-	setAutomationEventBaseFrame(int32(frame))
+	// empty code to make gopls happy on non-web
 }
 
 // StartAutomationEventRecording - Start recording automation events (AutomationEventList must be set)
 func StartAutomationEventRecording() {
-	startAutomationEventRecording()
+	// empty code to make gopls happy on non-web
 }
 
 // StopAutomationEventRecording - Stop recording automation events
 func StopAutomationEventRecording() {
-	stopAutomationEventRecording()
+	// empty code to make gopls happy on non-web
 }
 
 // PlayAutomationEvent - Play a recorded automation event
 func PlayAutomationEvent(event AutomationEvent) {
-	playAutomationEvent(uintptr(unsafe.Pointer(&event)))
+	// empty code to make gopls happy on non-web
 }
 
 // IsKeyPressed - Check if a key has been pressed once
 func IsKeyPressed(key int32) bool {
-	return isKeyPressed(key)
+	// empty code to make gopls happy on non-web
+	var zero bool
+	return zero
 }
 
 // IsKeyPressedRepeat - Check if a key has been pressed again (Only PLATFORM_DESKTOP)
 func IsKeyPressedRepeat(key int32) bool {
-	return isKeyPressedRepeat(key)
+	// empty code to make gopls happy on non-web
+	var zero bool
+	return zero
 }
 
 // IsKeyDown - Check if a key is being pressed
 func IsKeyDown(key int32) bool {
-	return isKeyDown(key)
+	// empty code to make gopls happy on non-web
+	var zero bool
+	return zero
 }
 
 // IsKeyReleased - Check if a key has been released once
 func IsKeyReleased(key int32) bool {
-	return isKeyReleased(key)
+	// empty code to make gopls happy on non-web
+	var zero bool
+	return zero
 }
 
 // IsKeyUp - Check if a key is NOT being pressed
 func IsKeyUp(key int32) bool {
-	return isKeyUp(key)
+	// empty code to make gopls happy on non-web
+	var zero bool
+	return zero
 }
 
 // GetKeyPressed - Get key pressed (keycode), call it multiple times for keys queued, returns 0 when the queue is empty
 func GetKeyPressed() int32 {
-	return getKeyPressed()
+	// empty code to make gopls happy on non-web
+	var zero int32
+	return zero
 }
 
 // GetCharPressed - Get char pressed (unicode), call it multiple times for chars queued, returns 0 when the queue is empty
 func GetCharPressed() int32 {
-	return getCharPressed()
+	// empty code to make gopls happy on non-web
+	var zero int32
+	return zero
 }
 
 // SetExitKey - Set a custom key to exit program (default is ESC)
 func SetExitKey(key int32) {
-	setExitKey(key)
+	// empty code to make gopls happy on non-web
 }
 
 // IsGamepadAvailable - Check if a gamepad is available
 func IsGamepadAvailable(gamepad int32) bool {
-	return isGamepadAvailable(gamepad)
+	// empty code to make gopls happy on non-web
+	var zero bool
+	return zero
 }
 
 // GetGamepadName - Get gamepad internal name id
 func GetGamepadName(gamepad int32) string {
-	return getGamepadName(gamepad)
+	// empty code to make gopls happy on non-web
+	var zero string
+	return zero
 }
 
 // IsGamepadButtonPressed - Check if a gamepad button has been pressed once
 func IsGamepadButtonPressed(gamepad int32, button int32) bool {
-	return isGamepadButtonPressed(gamepad, button)
+	// empty code to make gopls happy on non-web
+	var zero bool
+	return zero
 }
 
 // IsGamepadButtonDown - Check if a gamepad button is being pressed
 func IsGamepadButtonDown(gamepad int32, button int32) bool {
-	return isGamepadButtonDown(gamepad, button)
+	// empty code to make gopls happy on non-web
+	var zero bool
+	return zero
 }
 
 // IsGamepadButtonReleased - Check if a gamepad button has been released once
 func IsGamepadButtonReleased(gamepad int32, button int32) bool {
-	return isGamepadButtonReleased(gamepad, button)
+	// empty code to make gopls happy on non-web
+	var zero bool
+	return zero
 }
 
 // IsGamepadButtonUp - Check if a gamepad button is NOT being pressed
 func IsGamepadButtonUp(gamepad int32, button int32) bool {
-	return isGamepadButtonUp(gamepad, button)
+	// empty code to make gopls happy on non-web
+	var zero bool
+	return zero
 }
 
 // GetGamepadButtonPressed - Get the last gamepad button pressed
 func GetGamepadButtonPressed() int32 {
-	return getGamepadButtonPressed()
+	// empty code to make gopls happy on non-web
+	var zero int32
+	return zero
 }
 
 // GetGamepadAxisCount - Get gamepad axis count for a gamepad
 func GetGamepadAxisCount(gamepad int32) int32 {
-	return getGamepadAxisCount(gamepad)
+	// empty code to make gopls happy on non-web
+	var zero int32
+	return zero
 }
 
 // GetGamepadAxisMovement - Get axis movement value for a gamepad axis
 func GetGamepadAxisMovement(gamepad int32, axis int32) float32 {
-	return getGamepadAxisMovement(gamepad, axis)
+	// empty code to make gopls happy on non-web
+	var zero float32
+	return zero
 }
 
 // SetGamepadMappings - Set internal gamepad mappings (SDL_GameControllerDB)
 func SetGamepadMappings(mappings string) int32 {
-	return setGamepadMappings(mappings)
+	// empty code to make gopls happy on non-web
+	var zero int32
+	return zero
 }
 
 // SetGamepadVibration - Set gamepad vibration for both motors (duration in seconds)
-func SetGamepadVibration(gamepad int32, leftMotor, rightMotor, duration float32) {
-	setGamepadVibration(gamepad, leftMotor, rightMotor, duration)
+func SetGamepadVibration(gamepad int32, leftMotor float32, rightMotor float32, duration float32) {
+	// empty code to make gopls happy on non-web
 }
 
 // IsMouseButtonPressed - Check if a mouse button has been pressed once
 func IsMouseButtonPressed(button MouseButton) bool {
-	return isMouseButtonPressed(int32(button))
+	// empty code to make gopls happy on non-web
+	var zero bool
+	return zero
 }
 
 // IsMouseButtonDown - Check if a mouse button is being pressed
 func IsMouseButtonDown(button MouseButton) bool {
-	return isMouseButtonDown(int32(button))
+	// empty code to make gopls happy on non-web
+	var zero bool
+	return zero
 }
 
 // IsMouseButtonReleased - Check if a mouse button has been released once
 func IsMouseButtonReleased(button MouseButton) bool {
-	return isMouseButtonReleased(int32(button))
+	// empty code to make gopls happy on non-web
+	var zero bool
+	return zero
 }
 
 // IsMouseButtonUp - Check if a mouse button is NOT being pressed
 func IsMouseButtonUp(button MouseButton) bool {
-	return isMouseButtonUp(int32(button))
+	// empty code to make gopls happy on non-web
+	var zero bool
+	return zero
 }
 
 // GetMouseX - Get mouse position X
 func GetMouseX() int32 {
-	return getMouseX()
+	// empty code to make gopls happy on non-web
+	var zero int32
+	return zero
 }
 
 // GetMouseY - Get mouse position Y
 func GetMouseY() int32 {
-	return getMouseY()
+	// empty code to make gopls happy on non-web
+	var zero int32
+	return zero
 }
 
 // GetMousePosition - Get mouse position XY
 func GetMousePosition() Vector2 {
-	ret := getMousePosition()
-	return *(*Vector2)(unsafe.Pointer(&ret))
+	// empty code to make gopls happy on non-web
+	var zero Vector2
+	return zero
 }
 
 // GetMouseDelta - Get mouse delta between frames
 func GetMouseDelta() Vector2 {
-	ret := getMouseDelta()
-	return *(*Vector2)(unsafe.Pointer(&ret))
+	// empty code to make gopls happy on non-web
+	var zero Vector2
+	return zero
 }
 
 // SetMousePosition - Set mouse position XY
 func SetMousePosition(x int32, y int32) {
-	setMousePosition(x, y)
+	// empty code to make gopls happy on non-web
 }
 
 // SetMouseOffset - Set mouse offset
 func SetMouseOffset(offsetX int32, offsetY int32) {
-	setMouseOffset(offsetX, offsetY)
+	// empty code to make gopls happy on non-web
 }
 
 // SetMouseScale - Set mouse scaling
 func SetMouseScale(scaleX float32, scaleY float32) {
-	setMouseScale(scaleX, scaleY)
+	// empty code to make gopls happy on non-web
 }
 
 // GetMouseWheelMove - Get mouse wheel movement for X or Y, whichever is larger
 func GetMouseWheelMove() float32 {
-	return getMouseWheelMove()
+	// empty code to make gopls happy on non-web
+	var zero float32
+	return zero
 }
 
 // GetMouseWheelMoveV - Get mouse wheel movement for both X and Y
 func GetMouseWheelMoveV() Vector2 {
-	ret := getMouseWheelMoveV()
-	return *(*Vector2)(unsafe.Pointer(&ret))
+	// empty code to make gopls happy on non-web
+	var zero Vector2
+	return zero
 }
 
 // SetMouseCursor - Set mouse cursor
 func SetMouseCursor(cursor int32) {
-	setMouseCursor(cursor)
+	// empty code to make gopls happy on non-web
 }
 
 // GetTouchX - Get touch position X for touch point 0 (relative to screen size)
 func GetTouchX() int32 {
-	return getTouchX()
+	// empty code to make gopls happy on non-web
+	var zero int32
+	return zero
 }
 
 // GetTouchY - Get touch position Y for touch point 0 (relative to screen size)
 func GetTouchY() int32 {
-	return getTouchY()
+	// empty code to make gopls happy on non-web
+	var zero int32
+	return zero
 }
 
 // GetTouchPosition - Get touch position XY for a touch point index (relative to screen size)
 func GetTouchPosition(index int32) Vector2 {
-	ret := getTouchPosition(index)
-	return *(*Vector2)(unsafe.Pointer(&ret))
+	// empty code to make gopls happy on non-web
+	var zero Vector2
+	return zero
 }
 
 // GetTouchPointId - Get touch point identifier for given index
 func GetTouchPointId(index int32) int32 {
-	return getTouchPointId(index)
+	// empty code to make gopls happy on non-web
+	var zero int32
+	return zero
 }
 
 // GetTouchPointCount - Get number of touch points
 func GetTouchPointCount() int32 {
-	return getTouchPointCount()
+	// empty code to make gopls happy on non-web
+	var zero int32
+	return zero
 }
 
 // SetGesturesEnabled - Enable a set of gestures using flags
 func SetGesturesEnabled(flags uint32) {
-	setGesturesEnabled(flags)
+	// empty code to make gopls happy on non-web
 }
 
 // IsGestureDetected - Check if a gesture have been detected
 func IsGestureDetected(gesture Gestures) bool {
-	return isGestureDetected(uint32(gesture))
+	// empty code to make gopls happy on non-web
+	var zero bool
+	return zero
 }
 
 // GetGestureDetected - Get latest detected gesture
 func GetGestureDetected() Gestures {
-	return Gestures(getGestureDetected())
+	// empty code to make gopls happy on non-web
+	var zero Gestures
+	return zero
 }
 
 // GetGestureHoldDuration - Get gesture hold time in milliseconds
 func GetGestureHoldDuration() float32 {
-	return getGestureHoldDuration()
+	// empty code to make gopls happy on non-web
+	var zero float32
+	return zero
 }
 
 // GetGestureDragVector - Get gesture drag vector
 func GetGestureDragVector() Vector2 {
-	ret := getGestureDragVector()
-	return *(*Vector2)(unsafe.Pointer(&ret))
+	// empty code to make gopls happy on non-web
+	var zero Vector2
+	return zero
 }
 
 // GetGestureDragAngle - Get gesture drag angle
 func GetGestureDragAngle() float32 {
-	return getGestureDragAngle()
+	// empty code to make gopls happy on non-web
+	var zero float32
+	return zero
 }
 
 // GetGesturePinchVector - Get gesture pinch delta
 func GetGesturePinchVector() Vector2 {
-	ret := getGesturePinchVector()
-	return *(*Vector2)(unsafe.Pointer(&ret))
+	// empty code to make gopls happy on non-web
+	var zero Vector2
+	return zero
 }
 
 // GetGesturePinchAngle - Get gesture pinch angle
 func GetGesturePinchAngle() float32 {
-	return getGesturePinchAngle()
+	// empty code to make gopls happy on non-web
+	var zero float32
+	return zero
 }
 
 // SetShapesTexture - Set texture and rectangle to be used on shapes drawing
 func SetShapesTexture(texture Texture2D, source Rectangle) {
-	setShapesTexture(uintptr(unsafe.Pointer(&texture)), uintptr(unsafe.Pointer(&source)))
+	// empty code to make gopls happy on non-web
 }
 
 // GetShapesTexture - Get texture that is used for shapes drawing
 func GetShapesTexture() Texture2D {
-	var texture Texture2D
-	getShapesTexture(uintptr(unsafe.Pointer(&texture)))
-	return texture
+	// empty code to make gopls happy on non-web
+	var zero Texture2D
+	return zero
 }
 
 // GetShapesTextureRectangle - Get texture source rectangle that is used for shapes drawing
 func GetShapesTextureRectangle() Rectangle {
-	var rec Rectangle
-	getShapesTextureRectangle(uintptr(unsafe.Pointer(&rec)))
-	return rec
+	// empty code to make gopls happy on non-web
+	var zero Rectangle
+	return zero
 }
 
 // DrawPixel - Draw a pixel
 func DrawPixel(posX int32, posY int32, col color.RGBA) {
-	drawPixel(posX, posY, *(*uintptr)(unsafe.Pointer(&col)))
+	// empty code to make gopls happy on non-web
 }
 
 // DrawPixelV - Draw a pixel (Vector version)
 func DrawPixelV(position Vector2, col color.RGBA) {
-	drawPixelV(*(*uintptr)(unsafe.Pointer(&position)), *(*uintptr)(unsafe.Pointer(&col)))
+	// empty code to make gopls happy on non-web
 }
 
 // DrawLine - Draw a line
 func DrawLine(startPosX int32, startPosY int32, endPosX int32, endPosY int32, col color.RGBA) {
-	drawLine(startPosX, startPosY, endPosX, endPosY, *(*uintptr)(unsafe.Pointer(&col)))
+	// empty code to make gopls happy on non-web
 }
 
 // DrawLineV - Draw a line (using gl lines)
 func DrawLineV(startPos Vector2, endPos Vector2, col color.RGBA) {
-	drawLineV(*(*uintptr)(unsafe.Pointer(&startPos)), *(*uintptr)(unsafe.Pointer(&endPos)), *(*uintptr)(unsafe.Pointer(&col)))
+	// empty code to make gopls happy on non-web
 }
 
 // DrawLineEx - Draw a line (using triangles/quads)
 func DrawLineEx(startPos Vector2, endPos Vector2, thick float32, col color.RGBA) {
-	drawLineEx(*(*uintptr)(unsafe.Pointer(&startPos)), *(*uintptr)(unsafe.Pointer(&endPos)), thick, *(*uintptr)(unsafe.Pointer(&col)))
+	// empty code to make gopls happy on non-web
 }
 
 // DrawLineStrip - Draw lines sequence (using gl lines)
 func DrawLineStrip(points []Vector2, col color.RGBA) {
-	pointCount := int32(len(points))
-	drawLineStrip((unsafe.SliceData(points)), pointCount, *(*uintptr)(unsafe.Pointer(&col)))
+	// empty code to make gopls happy on non-web
 }
 
 // DrawLineBezier - Draw line segment cubic-bezier in-out interpolation
 func DrawLineBezier(startPos Vector2, endPos Vector2, thick float32, col color.RGBA) {
-	drawLineBezier(*(*uintptr)(unsafe.Pointer(&startPos)), *(*uintptr)(unsafe.Pointer(&endPos)), thick, *(*uintptr)(unsafe.Pointer(&col)))
+	// empty code to make gopls happy on non-web
 }
 
 // DrawCircle - Draw a color-filled circle
 func DrawCircle(centerX int32, centerY int32, radius float32, col color.RGBA) {
-	drawCircle(centerX, centerY, radius, *(*uintptr)(unsafe.Pointer(&col)))
+	// empty code to make gopls happy on non-web
 }
 
 // DrawCircleSector - Draw a piece of a circle
 func DrawCircleSector(center Vector2, radius float32, startAngle float32, endAngle float32, segments int32, col color.RGBA) {
-	drawCircleSector(*(*uintptr)(unsafe.Pointer(&center)), radius, startAngle, endAngle, segments, *(*uintptr)(unsafe.Pointer(&col)))
+	// empty code to make gopls happy on non-web
 }
 
 // DrawCircleSectorLines - Draw circle sector outline
 func DrawCircleSectorLines(center Vector2, radius float32, startAngle float32, endAngle float32, segments int32, col color.RGBA) {
-	drawCircleSectorLines(*(*uintptr)(unsafe.Pointer(&center)), radius, startAngle, endAngle, segments, *(*uintptr)(unsafe.Pointer(&col)))
+	// empty code to make gopls happy on non-web
 }
 
 // DrawCircleGradient - Draw a gradient-filled circle
 func DrawCircleGradient(centerX int32, centerY int32, radius float32, inner color.RGBA, outer color.RGBA) {
-	drawCircleGradient(centerX, centerY, radius, *(*uintptr)(unsafe.Pointer(&inner)), *(*uintptr)(unsafe.Pointer(&outer)))
+	// empty code to make gopls happy on non-web
 }
 
 // DrawCircleV - Draw a color-filled circle (Vector version)
 func DrawCircleV(center Vector2, radius float32, col color.RGBA) {
-	drawCircleV(*(*uintptr)(unsafe.Pointer(&center)), radius, *(*uintptr)(unsafe.Pointer(&col)))
+	// empty code to make gopls happy on non-web
 }
 
 // DrawCircleLines - Draw circle outline
 func DrawCircleLines(centerX int32, centerY int32, radius float32, col color.RGBA) {
-	drawCircleLines(centerX, centerY, radius, *(*uintptr)(unsafe.Pointer(&col)))
+	// empty code to make gopls happy on non-web
 }
 
 // DrawCircleLinesV - Draw circle outline (Vector version)
 func DrawCircleLinesV(center Vector2, radius float32, col color.RGBA) {
-	drawCircleLinesV(*(*uintptr)(unsafe.Pointer(&center)), radius, *(*uintptr)(unsafe.Pointer(&col)))
+	// empty code to make gopls happy on non-web
 }
 
 // DrawEllipse - Draw ellipse
 func DrawEllipse(centerX int32, centerY int32, radiusH float32, radiusV float32, col color.RGBA) {
-	drawEllipse(centerX, centerY, radiusH, radiusV, *(*uintptr)(unsafe.Pointer(&col)))
+	// empty code to make gopls happy on non-web
 }
 
 // DrawEllipseLines - Draw ellipse outline
 func DrawEllipseLines(centerX int32, centerY int32, radiusH float32, radiusV float32, col color.RGBA) {
-	drawEllipseLines(centerX, centerY, radiusH, radiusV, *(*uintptr)(unsafe.Pointer(&col)))
+	// empty code to make gopls happy on non-web
 }
 
 // DrawRing - Draw ring
 func DrawRing(center Vector2, innerRadius float32, outerRadius float32, startAngle float32, endAngle float32, segments int32, col color.RGBA) {
-	drawRing(*(*uintptr)(unsafe.Pointer(&center)), innerRadius, outerRadius, startAngle, endAngle, segments, *(*uintptr)(unsafe.Pointer(&col)))
+	// empty code to make gopls happy on non-web
 }
 
 // DrawRingLines - Draw ring outline
 func DrawRingLines(center Vector2, innerRadius float32, outerRadius float32, startAngle float32, endAngle float32, segments int32, col color.RGBA) {
-	drawRingLines(*(*uintptr)(unsafe.Pointer(&center)), innerRadius, outerRadius, startAngle, endAngle, segments, *(*uintptr)(unsafe.Pointer(&col)))
+	// empty code to make gopls happy on non-web
 }
 
 // DrawRectangle - Draw a color-filled rectangle
 func DrawRectangle(posX int32, posY int32, width int32, height int32, col color.RGBA) {
-	drawRectangle(posX, posY, width, height, *(*uintptr)(unsafe.Pointer(&col)))
+	// empty code to make gopls happy on non-web
 }
 
 // DrawRectangleV - Draw a color-filled rectangle (Vector version)
 func DrawRectangleV(position Vector2, size Vector2, col color.RGBA) {
-	drawRectangleV(*(*uintptr)(unsafe.Pointer(&position)), *(*uintptr)(unsafe.Pointer(&size)), *(*uintptr)(unsafe.Pointer(&col)))
+	// empty code to make gopls happy on non-web
 }
 
 // DrawRectangleRec - Draw a color-filled rectangle
 func DrawRectangleRec(rec Rectangle, col color.RGBA) {
-	drawRectangleRec(uintptr(unsafe.Pointer(&rec)), *(*uintptr)(unsafe.Pointer(&col)))
+	// empty code to make gopls happy on non-web
 }
 
 // DrawRectanglePro - Draw a color-filled rectangle with pro parameters
 func DrawRectanglePro(rec Rectangle, origin Vector2, rotation float32, col color.RGBA) {
-	drawRectanglePro(uintptr(unsafe.Pointer(&rec)), *(*uintptr)(unsafe.Pointer(&origin)), rotation, *(*uintptr)(unsafe.Pointer(&col)))
+	// empty code to make gopls happy on non-web
 }
 
 // DrawRectangleGradientV - Draw a vertical-gradient-filled rectangle
 func DrawRectangleGradientV(posX int32, posY int32, width int32, height int32, top color.RGBA, bottom color.RGBA) {
-	drawRectangleGradientV(posX, posY, width, height, *(*uintptr)(unsafe.Pointer(&top)), *(*uintptr)(unsafe.Pointer(&bottom)))
+	// empty code to make gopls happy on non-web
 }
 
 // DrawRectangleGradientH - Draw a horizontal-gradient-filled rectangle
 func DrawRectangleGradientH(posX int32, posY int32, width int32, height int32, left color.RGBA, right color.RGBA) {
-	drawRectangleGradientH(posX, posY, width, height, *(*uintptr)(unsafe.Pointer(&left)), *(*uintptr)(unsafe.Pointer(&right)))
+	// empty code to make gopls happy on non-web
 }
 
 // DrawRectangleGradientEx - Draw a gradient-filled rectangle with custom vertex colors
 func DrawRectangleGradientEx(rec Rectangle, topLeft color.RGBA, bottomLeft color.RGBA, topRight color.RGBA, bottomRight color.RGBA) {
-	drawRectangleGradientEx(uintptr(unsafe.Pointer(&rec)), *(*uintptr)(unsafe.Pointer(&topLeft)), *(*uintptr)(unsafe.Pointer(&bottomLeft)), *(*uintptr)(unsafe.Pointer(&topRight)), *(*uintptr)(unsafe.Pointer(&bottomRight)))
+	// empty code to make gopls happy on non-web
 }
 
 // DrawRectangleLines - Draw rectangle outline
 func DrawRectangleLines(posX int32, posY int32, width int32, height int32, col color.RGBA) {
-	drawRectangleLines(posX, posY, width, height, *(*uintptr)(unsafe.Pointer(&col)))
+	// empty code to make gopls happy on non-web
 }
 
 // DrawRectangleLinesEx - Draw rectangle outline with extended parameters
 func DrawRectangleLinesEx(rec Rectangle, lineThick float32, col color.RGBA) {
-	drawRectangleLinesEx(uintptr(unsafe.Pointer(&rec)), lineThick, *(*uintptr)(unsafe.Pointer(&col)))
+	// empty code to make gopls happy on non-web
 }
 
 // DrawRectangleRounded - Draw rectangle with rounded edges
 func DrawRectangleRounded(rec Rectangle, roundness float32, segments int32, col color.RGBA) {
-	drawRectangleRounded(uintptr(unsafe.Pointer(&rec)), roundness, segments, *(*uintptr)(unsafe.Pointer(&col)))
+	// empty code to make gopls happy on non-web
 }
 
 // DrawRectangleRoundedLines - Draw rectangle lines with rounded edges
 func DrawRectangleRoundedLines(rec Rectangle, roundness float32, segments int32, col color.RGBA) {
-	drawRectangleRoundedLines(uintptr(unsafe.Pointer(&rec)), roundness, segments, *(*uintptr)(unsafe.Pointer(&col)))
+	// empty code to make gopls happy on non-web
 }
 
 // DrawRectangleRoundedLinesEx - Draw rectangle with rounded edges outline
 func DrawRectangleRoundedLinesEx(rec Rectangle, roundness float32, segments int32, lineThick float32, col color.RGBA) {
-	drawRectangleRoundedLinesEx(uintptr(unsafe.Pointer(&rec)), roundness, segments, lineThick, *(*uintptr)(unsafe.Pointer(&col)))
+	// empty code to make gopls happy on non-web
 }
 
 // DrawTriangle - Draw a color-filled triangle (vertex in counter-clockwise order!)
 func DrawTriangle(v1 Vector2, v2 Vector2, v3 Vector2, col color.RGBA) {
-	drawTriangle(*(*uintptr)(unsafe.Pointer(&v1)), *(*uintptr)(unsafe.Pointer(&v2)), *(*uintptr)(unsafe.Pointer(&v3)), *(*uintptr)(unsafe.Pointer(&col)))
+	// empty code to make gopls happy on non-web
 }
 
 // DrawTriangleLines - Draw triangle outline (vertex in counter-clockwise order!)
 func DrawTriangleLines(v1 Vector2, v2 Vector2, v3 Vector2, col color.RGBA) {
-	drawTriangleLines(*(*uintptr)(unsafe.Pointer(&v1)), *(*uintptr)(unsafe.Pointer(&v2)), *(*uintptr)(unsafe.Pointer(&v3)), *(*uintptr)(unsafe.Pointer(&col)))
+	// empty code to make gopls happy on non-web
 }
 
 // DrawTriangleFan - Draw a triangle fan defined by points (first vertex is the center)
 func DrawTriangleFan(points []Vector2, col color.RGBA) {
-	pointCount := int32(len(points))
-	drawTriangleFan(unsafe.SliceData(points), pointCount, *(*uintptr)(unsafe.Pointer(&col)))
+	// empty code to make gopls happy on non-web
 }
 
 // DrawTriangleStrip - Draw a triangle strip defined by points
 func DrawTriangleStrip(points []Vector2, col color.RGBA) {
-	pointCount := int32(len(points))
-	drawTriangleStrip(unsafe.SliceData(points), pointCount, *(*uintptr)(unsafe.Pointer(&col)))
+	// empty code to make gopls happy on non-web
 }
 
 // DrawPoly - Draw a regular polygon (Vector version)
 func DrawPoly(center Vector2, sides int32, radius float32, rotation float32, col color.RGBA) {
-	drawPoly(*(*uintptr)(unsafe.Pointer(&center)), sides, radius, rotation, *(*uintptr)(unsafe.Pointer(&col)))
+	// empty code to make gopls happy on non-web
 }
 
 // DrawPolyLines - Draw a polygon outline of n sides
 func DrawPolyLines(center Vector2, sides int32, radius float32, rotation float32, col color.RGBA) {
-	drawPolyLines(*(*uintptr)(unsafe.Pointer(&center)), sides, radius, rotation, *(*uintptr)(unsafe.Pointer(&col)))
+	// empty code to make gopls happy on non-web
 }
 
 // DrawPolyLinesEx - Draw a polygon outline of n sides with extended parameters
 func DrawPolyLinesEx(center Vector2, sides int32, radius float32, rotation float32, lineThick float32, col color.RGBA) {
-	drawPolyLinesEx(*(*uintptr)(unsafe.Pointer(&center)), sides, radius, rotation, lineThick, *(*uintptr)(unsafe.Pointer(&col)))
+	// empty code to make gopls happy on non-web
 }
 
 // DrawSplineLinear - Draw spline: Linear, minimum 2 points
 func DrawSplineLinear(points []Vector2, thick float32, col color.RGBA) {
-	pointCount := int32(len(points))
-	drawSplineLinear(unsafe.SliceData(points), pointCount, thick, *(*uintptr)(unsafe.Pointer(&col)))
+	// empty code to make gopls happy on non-web
 }
 
 // DrawSplineBasis - Draw spline: B-Spline, minimum 4 points
 func DrawSplineBasis(points []Vector2, thick float32, col color.RGBA) {
-	pointCount := int32(len(points))
-	drawSplineBasis(unsafe.SliceData(points), pointCount, thick, *(*uintptr)(unsafe.Pointer(&col)))
+	// empty code to make gopls happy on non-web
 }
 
 // DrawSplineCatmullRom - Draw spline: Catmull-Rom, minimum 4 points
 func DrawSplineCatmullRom(points []Vector2, thick float32, col color.RGBA) {
-	pointCount := int32(len(points))
-	drawSplineCatmullRom(unsafe.SliceData(points), pointCount, thick, *(*uintptr)(unsafe.Pointer(&col)))
+	// empty code to make gopls happy on non-web
 }
 
 // DrawSplineBezierQuadratic - Draw spline: Quadratic Bezier, minimum 3 points (1 control point): [p1, c2, p3, c4...]
 func DrawSplineBezierQuadratic(points []Vector2, thick float32, col color.RGBA) {
-	pointCount := int32(len(points))
-	drawSplineBezierQuadratic(unsafe.SliceData(points), pointCount, thick, *(*uintptr)(unsafe.Pointer(&col)))
+	// empty code to make gopls happy on non-web
 }
 
 // DrawSplineBezierCubic - Draw spline: Cubic Bezier, minimum 4 points (2 control points): [p1, c2, c3, p4, c5, c6...]
 func DrawSplineBezierCubic(points []Vector2, thick float32, col color.RGBA) {
-	pointCount := int32(len(points))
-	drawSplineBezierCubic(unsafe.SliceData(points), pointCount, thick, *(*uintptr)(unsafe.Pointer(&col)))
+	// empty code to make gopls happy on non-web
 }
 
 // DrawSplineSegmentLinear - Draw spline segment: Linear, 2 points
 func DrawSplineSegmentLinear(p1 Vector2, p2 Vector2, thick float32, col color.RGBA) {
-	drawSplineSegmentLinear(*(*uintptr)(unsafe.Pointer(&p1)), *(*uintptr)(unsafe.Pointer(&p2)), thick, *(*uintptr)(unsafe.Pointer(&col)))
+	// empty code to make gopls happy on non-web
 }
 
 // DrawSplineSegmentBasis - Draw spline segment: B-Spline, 4 points
 func DrawSplineSegmentBasis(p1 Vector2, p2 Vector2, p3 Vector2, p4 Vector2, thick float32, col color.RGBA) {
-	drawSplineSegmentBasis(*(*uintptr)(unsafe.Pointer(&p1)), *(*uintptr)(unsafe.Pointer(&p2)), *(*uintptr)(unsafe.Pointer(&p3)), *(*uintptr)(unsafe.Pointer(&p4)), thick, *(*uintptr)(unsafe.Pointer(&col)))
+	// empty code to make gopls happy on non-web
 }
 
 // DrawSplineSegmentCatmullRom - Draw spline segment: Catmull-Rom, 4 points
 func DrawSplineSegmentCatmullRom(p1 Vector2, p2 Vector2, p3 Vector2, p4 Vector2, thick float32, col color.RGBA) {
-	drawSplineSegmentCatmullRom(*(*uintptr)(unsafe.Pointer(&p1)), *(*uintptr)(unsafe.Pointer(&p2)), *(*uintptr)(unsafe.Pointer(&p3)), *(*uintptr)(unsafe.Pointer(&p4)), thick, *(*uintptr)(unsafe.Pointer(&col)))
+	// empty code to make gopls happy on non-web
 }
 
 // DrawSplineSegmentBezierQuadratic - Draw spline segment: Quadratic Bezier, 2 points, 1 control point
 func DrawSplineSegmentBezierQuadratic(p1 Vector2, c2 Vector2, p3 Vector2, thick float32, col color.RGBA) {
-	drawSplineSegmentBezierQuadratic(*(*uintptr)(unsafe.Pointer(&p1)), *(*uintptr)(unsafe.Pointer(&c2)), *(*uintptr)(unsafe.Pointer(&p3)), thick, *(*uintptr)(unsafe.Pointer(&col)))
+	// empty code to make gopls happy on non-web
 }
 
 // DrawSplineSegmentBezierCubic - Draw spline segment: Cubic Bezier, 2 points, 2 control points
 func DrawSplineSegmentBezierCubic(p1 Vector2, c2 Vector2, c3 Vector2, p4 Vector2, thick float32, col color.RGBA) {
-	drawSplineSegmentBezierCubic(*(*uintptr)(unsafe.Pointer(&p1)), *(*uintptr)(unsafe.Pointer(&c2)), *(*uintptr)(unsafe.Pointer(&c3)), *(*uintptr)(unsafe.Pointer(&p4)), thick, *(*uintptr)(unsafe.Pointer(&col)))
+	// empty code to make gopls happy on non-web
 }
 
 // GetSplinePointLinear - Get (evaluate) spline point: Linear
 func GetSplinePointLinear(startPos Vector2, endPos Vector2, t float32) Vector2 {
-	ret := getSplinePointLinear(*(*uintptr)(unsafe.Pointer(&startPos)), *(*uintptr)(unsafe.Pointer(&endPos)), t)
-	return *(*Vector2)(unsafe.Pointer(&ret))
+	// empty code to make gopls happy on non-web
+	var zero Vector2
+	return zero
 }
 
 // GetSplinePointBasis - Get (evaluate) spline point: B-Spline
 func GetSplinePointBasis(p1 Vector2, p2 Vector2, p3 Vector2, p4 Vector2, t float32) Vector2 {
-	ret := getSplinePointBasis(*(*uintptr)(unsafe.Pointer(&p1)), *(*uintptr)(unsafe.Pointer(&p2)), *(*uintptr)(unsafe.Pointer(&p3)), *(*uintptr)(unsafe.Pointer(&p4)), t)
-	return *(*Vector2)(unsafe.Pointer(&ret))
+	// empty code to make gopls happy on non-web
+	var zero Vector2
+	return zero
 }
 
 // GetSplinePointCatmullRom - Get (evaluate) spline point: Catmull-Rom
 func GetSplinePointCatmullRom(p1 Vector2, p2 Vector2, p3 Vector2, p4 Vector2, t float32) Vector2 {
-	ret := getSplinePointCatmullRom(*(*uintptr)(unsafe.Pointer(&p1)), *(*uintptr)(unsafe.Pointer(&p2)), *(*uintptr)(unsafe.Pointer(&p3)), *(*uintptr)(unsafe.Pointer(&p4)), t)
-	return *(*Vector2)(unsafe.Pointer(&ret))
+	// empty code to make gopls happy on non-web
+	var zero Vector2
+	return zero
 }
 
 // GetSplinePointBezierQuad - Get (evaluate) spline point: Quadratic Bezier
 func GetSplinePointBezierQuad(p1 Vector2, c2 Vector2, p3 Vector2, t float32) Vector2 {
-	ret := getSplinePointBezierQuad(*(*uintptr)(unsafe.Pointer(&p1)), *(*uintptr)(unsafe.Pointer(&c2)), *(*uintptr)(unsafe.Pointer(&p3)), t)
-	return *(*Vector2)(unsafe.Pointer(&ret))
+	// empty code to make gopls happy on non-web
+	var zero Vector2
+	return zero
 }
 
 // GetSplinePointBezierCubic - Get (evaluate) spline point: Cubic Bezier
 func GetSplinePointBezierCubic(p1 Vector2, c2 Vector2, c3 Vector2, p4 Vector2, t float32) Vector2 {
-	ret := getSplinePointBezierCubic(*(*uintptr)(unsafe.Pointer(&p1)), *(*uintptr)(unsafe.Pointer(&c2)), *(*uintptr)(unsafe.Pointer(&c3)), *(*uintptr)(unsafe.Pointer(&p4)), t)
-	return *(*Vector2)(unsafe.Pointer(&ret))
+	// empty code to make gopls happy on non-web
+	var zero Vector2
+	return zero
 }
 
 // CheckCollisionRecs - Check collision between two rectangles
 func CheckCollisionRecs(rec1 Rectangle, rec2 Rectangle) bool {
-	return checkCollisionRecs(uintptr(unsafe.Pointer(&rec1)), uintptr(unsafe.Pointer(&rec2)))
+	// empty code to make gopls happy on non-web
+	var zero bool
+	return zero
 }
 
 // CheckCollisionCircles - Check collision between two circles
 func CheckCollisionCircles(center1 Vector2, radius1 float32, center2 Vector2, radius2 float32) bool {
-	return checkCollisionCircles(*(*uintptr)(unsafe.Pointer(&center1)), radius1, *(*uintptr)(unsafe.Pointer(&center2)), radius2)
+	// empty code to make gopls happy on non-web
+	var zero bool
+	return zero
 }
 
 // CheckCollisionCircleRec - Check collision between circle and rectangle
 func CheckCollisionCircleRec(center Vector2, radius float32, rec Rectangle) bool {
-	return checkCollisionCircleRec(*(*uintptr)(unsafe.Pointer(&center)), radius, uintptr(unsafe.Pointer(&rec)))
+	// empty code to make gopls happy on non-web
+	var zero bool
+	return zero
 }
 
 // CheckCollisionCircleLine - Check if circle collides with a line created betweeen two points [p1] and [p2]
-func CheckCollisionCircleLine(center Vector2, radius float32, p1, p2 Vector2) bool {
-	return checkCollisionCircleLine(*(*uintptr)(unsafe.Pointer(&center)), radius, *(*uintptr)(unsafe.Pointer(&p1)), *(*uintptr)(unsafe.Pointer(&p2)))
+func CheckCollisionCircleLine(center Vector2, radius float32, p1 Vector2, p2 Vector2) bool {
+	// empty code to make gopls happy on non-web
+	var zero bool
+	return zero
 }
 
 // CheckCollisionPointRec - Check if point is inside rectangle
 func CheckCollisionPointRec(point Vector2, rec Rectangle) bool {
-	return checkCollisionPointRec(*(*uintptr)(unsafe.Pointer(&point)), uintptr(unsafe.Pointer(&rec)))
+	// empty code to make gopls happy on non-web
+	var zero bool
+	return zero
 }
 
 // CheckCollisionPointCircle - Check if point is inside circle
 func CheckCollisionPointCircle(point Vector2, center Vector2, radius float32) bool {
-	return checkCollisionPointCircle(*(*uintptr)(unsafe.Pointer(&point)), *(*uintptr)(unsafe.Pointer(&center)), radius)
+	// empty code to make gopls happy on non-web
+	var zero bool
+	return zero
 }
 
 // CheckCollisionPointTriangle - Check if point is inside a triangle
 func CheckCollisionPointTriangle(point Vector2, p1 Vector2, p2 Vector2, p3 Vector2) bool {
-	return checkCollisionPointTriangle(*(*uintptr)(unsafe.Pointer(&point)), *(*uintptr)(unsafe.Pointer(&p1)), *(*uintptr)(unsafe.Pointer(&p2)), *(*uintptr)(unsafe.Pointer(&p3)))
+	// empty code to make gopls happy on non-web
+	var zero bool
+	return zero
 }
 
 // CheckCollisionPointPoly - Check if point is within a polygon described by array of vertices
 func CheckCollisionPointPoly(point Vector2, points []Vector2) bool {
-	pointCount := int32(len(points))
-	return checkCollisionPointPoly(*(*uintptr)(unsafe.Pointer(&point)), unsafe.SliceData(points), pointCount)
+	// empty code to make gopls happy on non-web
+	var zero bool
+	return zero
 }
 
 // CheckCollisionLines - Check the collision between two lines defined by two points each, returns collision point by reference
 func CheckCollisionLines(startPos1 Vector2, endPos1 Vector2, startPos2 Vector2, endPos2 Vector2, collisionPoint *Vector2) bool {
-	return checkCollisionLines(*(*uintptr)(unsafe.Pointer(&startPos1)), *(*uintptr)(unsafe.Pointer(&endPos1)), *(*uintptr)(unsafe.Pointer(&startPos2)), *(*uintptr)(unsafe.Pointer(&endPos2)), collisionPoint)
+	// empty code to make gopls happy on non-web
+	var zero bool
+	return zero
 }
 
 // CheckCollisionPointLine - Check if point belongs to line created between two points [p1] and [p2] with defined margin in pixels [threshold]
 func CheckCollisionPointLine(point Vector2, p1 Vector2, p2 Vector2, threshold int32) bool {
-	return checkCollisionPointLine(*(*uintptr)(unsafe.Pointer(&point)), *(*uintptr)(unsafe.Pointer(&p1)), *(*uintptr)(unsafe.Pointer(&p2)), threshold)
+	// empty code to make gopls happy on non-web
+	var zero bool
+	return zero
 }
 
 // GetCollisionRec - Get collision rectangle for two rectangles collision
 func GetCollisionRec(rec1 Rectangle, rec2 Rectangle) Rectangle {
-	var rec Rectangle
-	getCollisionRec(uintptr(unsafe.Pointer(&rec)), uintptr(unsafe.Pointer(&rec1)), uintptr(unsafe.Pointer(&rec2)))
-	return rec
+	// empty code to make gopls happy on non-web
+	var zero Rectangle
+	return zero
 }
 
 // LoadImageAnimFromMemory - Load image sequence from memory buffer
 func LoadImageAnimFromMemory(fileType string, fileData []byte, dataSize int32, frames *int32) *Image {
-	var img Image
-	loadImageAnimFromMemory(uintptr(unsafe.Pointer(&img)), fileType, fileData, dataSize, frames)
-	return &img
+	// empty code to make gopls happy on non-web
+	var zero *Image
+	return zero
 }
 
 // LoadImageFromMemory - Load image from memory buffer, fileType refers to extension: i.e. '.png'
 func LoadImageFromMemory(fileType string, fileData []byte, dataSize int32) *Image {
-	var img Image
-	loadImageFromMemory(uintptr(unsafe.Pointer(&img)), fileType, fileData, dataSize)
-	return &img
+	// empty code to make gopls happy on non-web
+	var zero *Image
+	return zero
 }
 
 // LoadImageFromTexture - Load image from GPU texture data
 func LoadImageFromTexture(texture Texture2D) *Image {
-	var img Image
-	loadImageFromTexture(uintptr(unsafe.Pointer(&img)), uintptr(unsafe.Pointer(&texture)))
-	return &img
+	// empty code to make gopls happy on non-web
+	var zero *Image
+	return zero
 }
 
 // LoadImageFromScreen - Load image from screen buffer and (screenshot)
 func LoadImageFromScreen() *Image {
-	var img Image
-	loadImageFromScreen(uintptr(unsafe.Pointer(&img)))
-	return &img
+	// empty code to make gopls happy on non-web
+	var zero *Image
+	return zero
 }
 
 // IsImageValid - Check if an image is valid (data and parameters)
 func IsImageValid(image *Image) bool {
-	return isImageValid(uintptr(unsafe.Pointer(image)))
+	// empty code to make gopls happy on non-web
+	var zero bool
+	return zero
 }
 
 // UnloadImage - Unload image from CPU memory (RAM)
 func UnloadImage(image *Image) {
-	unloadImage(uintptr(unsafe.Pointer(image)))
+	// empty code to make gopls happy on non-web
 }
 
 // ExportImage - Export image data to file, returns true on success
 func ExportImage(image Image, fileName string) bool {
-	return exportImage(uintptr(unsafe.Pointer(&image)), fileName)
+	// empty code to make gopls happy on non-web
+	var zero bool
+	return zero
 }
 
 // ExportImageToMemory - Export image to memory buffer
 func ExportImageToMemory(image Image, fileType string) []byte {
-	var fileSize int32
-	ret := exportImageToMemory(uintptr(unsafe.Pointer(&image)), fileType, &fileSize)
-	return unsafe.Slice(ret, fileSize)
+	// empty code to make gopls happy on non-web
+	var zero []byte
+	return zero
 }
 
 // GenImageColor - Generate image: plain color
 func GenImageColor(width int, height int, col color.RGBA) *Image {
-	var image Image
-	genImageColor(uintptr(unsafe.Pointer(&image)), int32(width), int32(height), *(*uintptr)(unsafe.Pointer(&col)))
-	return &image
+	// empty code to make gopls happy on non-web
+	var zero *Image
+	return zero
 }
 
 // GenImageGradientLinear - Generate image: linear gradient, direction in degrees [0..360], 0=Vertical gradient
 func GenImageGradientLinear(width int, height int, direction int, start color.RGBA, end color.RGBA) *Image {
-	var image Image
-	genImageGradientLinear(uintptr(unsafe.Pointer(&image)), int32(width), int32(height), int32(direction), *(*uintptr)(unsafe.Pointer(&start)), *(*uintptr)(unsafe.Pointer(&end)))
-	return &image
+	// empty code to make gopls happy on non-web
+	var zero *Image
+	return zero
 }
 
 // GenImageGradientRadial - Generate image: radial gradient
 func GenImageGradientRadial(width int, height int, density float32, inner color.RGBA, outer color.RGBA) *Image {
-	var image Image
-	genImageGradientRadial(uintptr(unsafe.Pointer(&image)), int32(width), int32(height), density, *(*uintptr)(unsafe.Pointer(&inner)), *(*uintptr)(unsafe.Pointer(&outer)))
-	return &image
+	// empty code to make gopls happy on non-web
+	var zero *Image
+	return zero
 }
 
 // GenImageGradientSquare - Generate image: square gradient
 func GenImageGradientSquare(width int, height int, density float32, inner color.RGBA, outer color.RGBA) *Image {
-	var image Image
-	genImageGradientSquare(uintptr(unsafe.Pointer(&image)), int32(width), int32(height), density, *(*uintptr)(unsafe.Pointer(&inner)), *(*uintptr)(unsafe.Pointer(&outer)))
-	return &image
+	// empty code to make gopls happy on non-web
+	var zero *Image
+	return zero
 }
 
 // GenImageChecked - Generate image: checked
 func GenImageChecked(width int, height int, checksX int, checksY int, col1 color.RGBA, col2 color.RGBA) *Image {
-	var image Image
-	genImageChecked(uintptr(unsafe.Pointer(&image)), int32(width), int32(height), int32(checksX), int32(checksY), *(*uintptr)(unsafe.Pointer(&col1)), *(*uintptr)(unsafe.Pointer(&col2)))
-	return &image
+	// empty code to make gopls happy on non-web
+	var zero *Image
+	return zero
 }
 
 // GenImageWhiteNoise - Generate image: white noise
 func GenImageWhiteNoise(width int, height int, factor float32) *Image {
-	var image Image
-	genImageWhiteNoise(uintptr(unsafe.Pointer(&image)), int32(width), int32(height), factor)
-	return &image
+	// empty code to make gopls happy on non-web
+	var zero *Image
+	return zero
 }
 
 // GenImagePerlinNoise - Generate image: perlin noise
 func GenImagePerlinNoise(width int, height int, offsetX int32, offsetY int32, scale float32) *Image {
-	var image Image
-	genImagePerlinNoise(uintptr(unsafe.Pointer(&image)), int32(width), int32(height), offsetX, offsetY, scale)
-	return &image
+	// empty code to make gopls happy on non-web
+	var zero *Image
+	return zero
 }
 
 // GenImageCellular - Generate image: cellular algorithm, bigger tileSize means bigger cells
 func GenImageCellular(width int, height int, tileSize int) *Image {
-	var image Image
-	genImageCellular(uintptr(unsafe.Pointer(&image)), int32(width), int32(height), int32(tileSize))
-	return &image
+	// empty code to make gopls happy on non-web
+	var zero *Image
+	return zero
 }
 
 // GenImageText - Generate image: grayscale image from text data
 func GenImageText(width int, height int, text string) Image {
-	var image Image
-	genImageText(uintptr(unsafe.Pointer(&image)), int32(width), int32(height), text)
-	return image
+	// empty code to make gopls happy on non-web
+	var zero Image
+	return zero
 }
 
 // ImageCopy - Create an image duplicate (useful for transformations)
 func ImageCopy(image *Image) *Image {
-	var retImage Image
-	imageCopy(uintptr(unsafe.Pointer(&retImage)), uintptr(unsafe.Pointer(image)))
-	return &retImage
+	// empty code to make gopls happy on non-web
+	var zero *Image
+	return zero
 }
 
 // ImageFromImage - Create an image from another image piece
 func ImageFromImage(image Image, rec Rectangle) Image {
-	var retImage Image
-	imageFromImage(uintptr(unsafe.Pointer(&retImage)), uintptr(unsafe.Pointer(&image)), uintptr(unsafe.Pointer(&rec)))
-	return retImage
+	// empty code to make gopls happy on non-web
+	var zero Image
+	return zero
 }
 
 // ImageFromChannel - Create an image from a selected channel of another image (GRAYSCALE)
 func ImageFromChannel(image Image, selectedChannel int32) Image {
-	var retImage Image
-	imageFromChannel(uintptr(unsafe.Pointer(&retImage)), uintptr(unsafe.Pointer(&image)), selectedChannel)
-	return retImage
+	// empty code to make gopls happy on non-web
+	var zero Image
+	return zero
 }
 
 // ImageText - Create an image from text (default font)
 func ImageText(text string, fontSize int32, col color.RGBA) Image {
-	var retImage Image
-	imageText(uintptr(unsafe.Pointer(&retImage)), text, fontSize, *(*uintptr)(unsafe.Pointer(&col)))
-	return retImage
+	// empty code to make gopls happy on non-web
+	var zero Image
+	return zero
 }
 
 // ImageTextEx - Create an image from text (custom sprite font)
 func ImageTextEx(font Font, text string, fontSize float32, spacing float32, tint color.RGBA) Image {
-	var retImage Image
-	imageTextEx(uintptr(unsafe.Pointer(&retImage)), uintptr(unsafe.Pointer(&font)), text, fontSize, spacing, *(*uintptr)(unsafe.Pointer(&tint)))
-	return retImage
+	// empty code to make gopls happy on non-web
+	var zero Image
+	return zero
 }
 
 // ImageFormat - Convert image data to desired format
 func ImageFormat(image *Image, newFormat PixelFormat) {
-	imageFormat(image, int32(newFormat))
+	// empty code to make gopls happy on non-web
 }
 
 // ImageToPOT - Convert image to POT (power-of-two)
 func ImageToPOT(image *Image, fill color.RGBA) {
-	imageToPOT(image, *(*uintptr)(unsafe.Pointer(&fill)))
+	// empty code to make gopls happy on non-web
 }
 
 // ImageCrop - Crop an image to a defined rectangle
 func ImageCrop(image *Image, crop Rectangle) {
-	imageCrop(image, uintptr(unsafe.Pointer(&crop)))
+	// empty code to make gopls happy on non-web
 }
 
 // ImageAlphaCrop - Crop image depending on alpha value
 func ImageAlphaCrop(image *Image, threshold float32) {
-	imageAlphaCrop(image, threshold)
+	// empty code to make gopls happy on non-web
 }
 
 // ImageAlphaClear - Clear alpha channel to desired color
 func ImageAlphaClear(image *Image, col color.RGBA, threshold float32) {
-	imageAlphaClear(image, *(*uintptr)(unsafe.Pointer(&col)), threshold)
+	// empty code to make gopls happy on non-web
 }
 
 // ImageAlphaMask - Apply alpha mask to image
 func ImageAlphaMask(image *Image, alphaMask *Image) {
-	imageAlphaMask(image, uintptr(unsafe.Pointer(alphaMask)))
+	// empty code to make gopls happy on non-web
 }
 
 // ImageAlphaPremultiply - Premultiply alpha channel
 func ImageAlphaPremultiply(image *Image) {
-	imageAlphaPremultiply(image)
+	// empty code to make gopls happy on non-web
 }
 
 // ImageBlurGaussian - Apply Gaussian blur using a box blur approximation
 func ImageBlurGaussian(image *Image, blurSize int32) {
-	imageBlurGaussian(image, blurSize)
+	// empty code to make gopls happy on non-web
 }
 
 // ImageKernelConvolution - Apply custom square convolution kernel to image
 func ImageKernelConvolution(image *Image, kernel []float32) {
-	imageKernelConvolution(image, kernel, int32(len(kernel)))
+	// empty code to make gopls happy on non-web
 }
 
 // ImageResize - Resize image (Bicubic scaling algorithm)
 func ImageResize(image *Image, newWidth int32, newHeight int32) {
-	imageResize(image, newWidth, newHeight)
+	// empty code to make gopls happy on non-web
 }
 
 // ImageResizeNN - Resize image (Nearest-Neighbor scaling algorithm)
 func ImageResizeNN(image *Image, newWidth int32, newHeight int32) {
-	imageResizeNN(image, newWidth, newHeight)
+	// empty code to make gopls happy on non-web
 }
 
 // ImageResizeCanvas - Resize canvas and fill with color
 func ImageResizeCanvas(image *Image, newWidth int32, newHeight int32, offsetX int32, offsetY int32, fill color.RGBA) {
-	imageResizeCanvas(image, newWidth, newHeight, offsetX, offsetY, *(*uintptr)(unsafe.Pointer(&fill)))
+	// empty code to make gopls happy on non-web
 }
 
 // ImageMipmaps - Compute all mipmap levels for a provided image
 func ImageMipmaps(image *Image) {
-	imageMipmaps(image)
+	// empty code to make gopls happy on non-web
 }
 
 // ImageDither - Dither image data to 16bpp or lower (Floyd-Steinberg dithering)
 func ImageDither(image *Image, rBpp int32, gBpp int32, bBpp int32, aBpp int32) {
-	imageDither(image, rBpp, gBpp, bBpp, aBpp)
+	// empty code to make gopls happy on non-web
 }
 
 // ImageFlipVertical - Flip image vertically
 func ImageFlipVertical(image *Image) {
-	imageFlipVertical(image)
+	// empty code to make gopls happy on non-web
 }
 
 // ImageFlipHorizontal - Flip image horizontally
 func ImageFlipHorizontal(image *Image) {
-	imageFlipHorizontal(image)
+	// empty code to make gopls happy on non-web
 }
 
 // ImageRotate - Rotate image by input angle in degrees (-359 to 359)
 func ImageRotate(image *Image, degrees int32) {
-	imageRotate(image, degrees)
+	// empty code to make gopls happy on non-web
 }
 
 // ImageRotateCW - Rotate image clockwise 90deg
 func ImageRotateCW(image *Image) {
-	imageRotateCW(image)
+	// empty code to make gopls happy on non-web
 }
 
 // ImageRotateCCW - Rotate image counter-clockwise 90deg
 func ImageRotateCCW(image *Image) {
-	imageRotateCCW(image)
+	// empty code to make gopls happy on non-web
 }
 
 // ImageColorTint - Modify image color: tint
 func ImageColorTint(image *Image, col color.RGBA) {
-	imageColorTint(image, *(*uintptr)(unsafe.Pointer(&col)))
+	// empty code to make gopls happy on non-web
 }
 
 // ImageColorInvert - Modify image color: invert
 func ImageColorInvert(image *Image) {
-	imageColorInvert(image)
+	// empty code to make gopls happy on non-web
 }
 
 // ImageColorGrayscale - Modify image color: grayscale
 func ImageColorGrayscale(image *Image) {
-	imageColorGrayscale(image)
+	// empty code to make gopls happy on non-web
 }
 
 // ImageColorContrast - Modify image color: contrast (-100 to 100)
 func ImageColorContrast(image *Image, contrast float32) {
-	imageColorContrast(image, contrast)
+	// empty code to make gopls happy on non-web
 }
 
 // ImageColorBrightness - Modify image color: brightness (-255 to 255)
 func ImageColorBrightness(image *Image, brightness int32) {
-	imageColorBrightness(image, brightness)
+	// empty code to make gopls happy on non-web
 }
 
 // ImageColorReplace - Modify image color: replace color
 func ImageColorReplace(image *Image, col color.RGBA, replace color.RGBA) {
-	imageColorReplace(image, *(*uintptr)(unsafe.Pointer(&col)), *(*uintptr)(unsafe.Pointer(&replace)))
+	// empty code to make gopls happy on non-web
 }
 
 // LoadImageColors - Load color data from image as a Color array (RGBA - 32bit)
 //
 // NOTE: Memory allocated should be freed using UnloadImageColors()
 func LoadImageColors(image *Image) []color.RGBA {
-	ret := loadImageColors(uintptr(unsafe.Pointer(image)))
-	return unsafe.Slice(ret, image.Width*image.Height)
+	// empty code to make gopls happy on non-web
+	var zero []color.RGBA
+	return zero
 }
 
 // LoadImagePalette - Load colors palette from image as a Color array (RGBA - 32bit)
 //
 // NOTE: Memory allocated should be freed using UnloadImagePalette()
 func LoadImagePalette(image Image, maxPaletteSize int32) []color.RGBA {
-	var colorCount int32
-	ret := loadImagePalette(uintptr(unsafe.Pointer(&image)), maxPaletteSize, &colorCount)
-	return unsafe.Slice(ret, colorCount)
+	// empty code to make gopls happy on non-web
+	var zero []color.RGBA
+	return zero
 }
 
 // UnloadImageColors - Unload color data loaded with LoadImageColors()
 func UnloadImageColors(colors []color.RGBA) {
-	unloadImageColors(unsafe.SliceData(colors))
+	// empty code to make gopls happy on non-web
 }
 
 // UnloadImagePalette - Unload colors palette loaded with LoadImagePalette()
 func UnloadImagePalette(colors []color.RGBA) {
-	unloadImagePalette(unsafe.SliceData(colors))
+	// empty code to make gopls happy on non-web
 }
 
 // GetImageAlphaBorder - Get image alpha border rectangle
 func GetImageAlphaBorder(image Image, threshold float32) Rectangle {
-	var rec Rectangle
-	getImageAlphaBorder(uintptr(unsafe.Pointer(&rec)), uintptr(unsafe.Pointer(&image)), threshold)
-	return rec
+	// empty code to make gopls happy on non-web
+	var zero Rectangle
+	return zero
 }
 
 // GetImageColor - Get image pixel color at (x, y) position
 func GetImageColor(image Image, x int32, y int32) color.RGBA {
-	ret := getImageColor(uintptr(unsafe.Pointer(&image)), x, y)
-	return *(*color.RGBA)(unsafe.Pointer(&ret))
+	// empty code to make gopls happy on non-web
+	var zero color.RGBA
+	return zero
 }
 
 // ImageClearBackground - Clear image background with given color
 func ImageClearBackground(dst *Image, col color.RGBA) {
-	imageClearBackground(dst, *(*uintptr)(unsafe.Pointer(&col)))
+	// empty code to make gopls happy on non-web
 }
 
 // ImageDrawPixel - Draw pixel within an image
 func ImageDrawPixel(dst *Image, posX int32, posY int32, col color.RGBA) {
-	imageDrawPixel(dst, posX, posY, *(*uintptr)(unsafe.Pointer(&col)))
+	// empty code to make gopls happy on non-web
 }
 
 // ImageDrawPixelV - Draw pixel within an image (Vector version)
 func ImageDrawPixelV(dst *Image, position Vector2, col color.RGBA) {
-	imageDrawPixelV(dst, *(*uintptr)(unsafe.Pointer(&position)), *(*uintptr)(unsafe.Pointer(&col)))
+	// empty code to make gopls happy on non-web
 }
 
 // ImageDrawLine - Draw line within an image
 func ImageDrawLine(dst *Image, startPosX int32, startPosY int32, endPosX int32, endPosY int32, col color.RGBA) {
-	imageDrawLine(dst, startPosX, startPosY, endPosX, endPosY, *(*uintptr)(unsafe.Pointer(&col)))
+	// empty code to make gopls happy on non-web
 }
 
 // ImageDrawLineV - Draw line within an image (Vector version)
-func ImageDrawLineV(dst *Image, start, end Vector2, col color.RGBA) {
-	imageDrawLineV(dst, *(*uintptr)(unsafe.Pointer(&start)), *(*uintptr)(unsafe.Pointer(&end)), *(*uintptr)(unsafe.Pointer(&col)))
+func ImageDrawLineV(dst *Image, start Vector2, end Vector2, col color.RGBA) {
+	// empty code to make gopls happy on non-web
 }
 
 // ImageDrawLineEx - Draw a line defining thickness within an image
-func ImageDrawLineEx(dst *Image, start, end Vector2, thick int32, col color.RGBA) {
-	imageDrawLineEx(dst, *(*uintptr)(unsafe.Pointer(&start)), *(*uintptr)(unsafe.Pointer(&end)), thick, *(*uintptr)(unsafe.Pointer(&col)))
+func ImageDrawLineEx(dst *Image, start Vector2, end Vector2, thick int32, col color.RGBA) {
+	// empty code to make gopls happy on non-web
 }
 
 // ImageDrawCircle - Draw a filled circle within an image
 func ImageDrawCircle(dst *Image, centerX int32, centerY int32, radius int32, col color.RGBA) {
-	imageDrawCircle(dst, centerX, centerY, radius, *(*uintptr)(unsafe.Pointer(&col)))
+	// empty code to make gopls happy on non-web
 }
 
 // ImageDrawCircleV - Draw a filled circle within an image (Vector version)
 func ImageDrawCircleV(dst *Image, center Vector2, radius int32, col color.RGBA) {
-	imageDrawCircleV(dst, *(*uintptr)(unsafe.Pointer(&center)), radius, *(*uintptr)(unsafe.Pointer(&col)))
+	// empty code to make gopls happy on non-web
 }
 
 // ImageDrawCircleLines - Draw circle outline within an image
 func ImageDrawCircleLines(dst *Image, centerX int32, centerY int32, radius int32, col color.RGBA) {
-	imageDrawCircleLines(dst, centerX, centerY, radius, *(*uintptr)(unsafe.Pointer(&col)))
+	// empty code to make gopls happy on non-web
 }
 
 // ImageDrawCircleLinesV - Draw circle outline within an image (Vector version)
 func ImageDrawCircleLinesV(dst *Image, center Vector2, radius int32, col color.RGBA) {
-	imageDrawCircleLinesV(dst, *(*uintptr)(unsafe.Pointer(&center)), radius, *(*uintptr)(unsafe.Pointer(&col)))
+	// empty code to make gopls happy on non-web
 }
 
 // ImageDrawRectangle - Draw rectangle within an image
 func ImageDrawRectangle(dst *Image, posX int32, posY int32, width int32, height int32, col color.RGBA) {
-	imageDrawRectangle(dst, posX, posY, width, height, *(*uintptr)(unsafe.Pointer(&col)))
+	// empty code to make gopls happy on non-web
 }
 
 // ImageDrawRectangleV - Draw rectangle within an image (Vector version)
 func ImageDrawRectangleV(dst *Image, position Vector2, size Vector2, col color.RGBA) {
-	imageDrawRectangleV(dst, *(*uintptr)(unsafe.Pointer(&position)), *(*uintptr)(unsafe.Pointer(&size)), *(*uintptr)(unsafe.Pointer(&col)))
+	// empty code to make gopls happy on non-web
 }
 
 // ImageDrawRectangleRec - Draw rectangle within an image
 func ImageDrawRectangleRec(dst *Image, rec Rectangle, col color.RGBA) {
-	imageDrawRectangleRec(dst, uintptr(unsafe.Pointer(&rec)), *(*uintptr)(unsafe.Pointer(&col)))
+	// empty code to make gopls happy on non-web
 }
 
 // ImageDrawRectangleLines - Draw rectangle lines within an image
 func ImageDrawRectangleLines(dst *Image, rec Rectangle, thick int, col color.RGBA) {
-	imageDrawRectangleLines(dst, uintptr(unsafe.Pointer(&rec)), int32(thick), *(*uintptr)(unsafe.Pointer(&col)))
+	// empty code to make gopls happy on non-web
 }
 
 // ImageDrawTriangle - Draw triangle within an image
-func ImageDrawTriangle(dst *Image, v1, v2, v3 Vector2, col color.RGBA) {
-	imageDrawTriangle(dst, *(*uintptr)(unsafe.Pointer(&v1)), *(*uintptr)(unsafe.Pointer(&v2)), *(*uintptr)(unsafe.Pointer(&v3)), *(*uintptr)(unsafe.Pointer(&col)))
+func ImageDrawTriangle(dst *Image, v1 Vector2, v2 Vector2, v3 Vector2, col color.RGBA) {
+	// empty code to make gopls happy on non-web
 }
 
 // ImageDrawTriangleEx - Draw triangle with interpolated colors within an image
-func ImageDrawTriangleEx(dst *Image, v1, v2, v3 Vector2, c1, c2, c3 color.RGBA) {
-	imageDrawTriangleEx(dst, *(*uintptr)(unsafe.Pointer(&v1)), *(*uintptr)(unsafe.Pointer(&v2)), *(*uintptr)(unsafe.Pointer(&v3)), *(*uintptr)(unsafe.Pointer(&c1)), *(*uintptr)(unsafe.Pointer(&c2)), *(*uintptr)(unsafe.Pointer(&c3)))
+func ImageDrawTriangleEx(dst *Image, v1 Vector2, v2 Vector2, v3 Vector2, c1 color.RGBA, c2 color.RGBA, c3 color.RGBA) {
+	// empty code to make gopls happy on non-web
 }
 
 // ImageDrawTriangleLines - Draw triangle outline within an image
-func ImageDrawTriangleLines(dst *Image, v1, v2, v3 Vector2, col color.RGBA) {
-	imageDrawTriangleLines(dst, *(*uintptr)(unsafe.Pointer(&v1)), *(*uintptr)(unsafe.Pointer(&v2)), *(*uintptr)(unsafe.Pointer(&v3)), *(*uintptr)(unsafe.Pointer(&col)))
+func ImageDrawTriangleLines(dst *Image, v1 Vector2, v2 Vector2, v3 Vector2, col color.RGBA) {
+	// empty code to make gopls happy on non-web
 }
 
 // ImageDrawTriangleFan - Draw a triangle fan defined by points within an image (first vertex is the center)
 func ImageDrawTriangleFan(dst *Image, points []Vector2, col color.RGBA) {
-	pointCount := int32(len(points))
-	imageDrawTriangleFan(dst, (unsafe.SliceData(points)), pointCount, *(*uintptr)(unsafe.Pointer(&col)))
+	// empty code to make gopls happy on non-web
 }
 
 // ImageDrawTriangleStrip - Draw a triangle strip defined by points within an image
 func ImageDrawTriangleStrip(dst *Image, points []Vector2, col color.RGBA) {
-	pointCount := int32(len(points))
-	imageDrawTriangleStrip(dst, (unsafe.SliceData(points)), pointCount, *(*uintptr)(unsafe.Pointer(&col)))
+	// empty code to make gopls happy on non-web
 }
 
 // ImageDraw - Draw a source image within a destination image (tint applied to source)
 func ImageDraw(dst *Image, src *Image, srcRec Rectangle, dstRec Rectangle, tint color.RGBA) {
-	imageDraw(dst, uintptr(unsafe.Pointer(src)), uintptr(unsafe.Pointer(&srcRec)), uintptr(unsafe.Pointer(&dstRec)), *(*uintptr)(unsafe.Pointer(&tint)))
+	// empty code to make gopls happy on non-web
 }
 
 // ImageDrawText - Draw text (using default font) within an image (destination)
 func ImageDrawText(dst *Image, posX int32, posY int32, text string, fontSize int32, col color.RGBA) {
-	imageDrawText(dst, text, posX, posY, fontSize, *(*uintptr)(unsafe.Pointer(&col)))
-
+	// empty code to make gopls happy on non-web
 }
 
 // ImageDrawTextEx - Draw text (custom sprite font) within an image (destination)
 func ImageDrawTextEx(dst *Image, position Vector2, font Font, text string, fontSize float32, spacing float32, tint color.RGBA) {
-	imageDrawTextEx(dst, uintptr(unsafe.Pointer(&font)), text, *(*uintptr)(unsafe.Pointer(&position)), fontSize, spacing, *(*uintptr)(unsafe.Pointer(&tint)))
+	// empty code to make gopls happy on non-web
 }
-
 
 // LoadTextureFromImage - Load texture from image data
 func LoadTextureFromImage(image *Image) Texture2D {
-	var texture Texture2D
-	loadTextureFromImage(uintptr(unsafe.Pointer(&texture)), uintptr(unsafe.Pointer(image)))
-	return texture
+	// empty code to make gopls happy on non-web
+	var zero Texture2D
+	return zero
 }
 
 // LoadTextureCubemap - Load cubemap from image, multiple image cubemap layouts supported
 func LoadTextureCubemap(image *Image, layout int32) Texture2D {
-	var texture Texture2D
-	loadTextureCubemap(uintptr(unsafe.Pointer(&texture)), uintptr(unsafe.Pointer(image)), layout)
-	return texture
+	// empty code to make gopls happy on non-web
+	var zero Texture2D
+	return zero
 }
 
 // LoadRenderTexture - Load texture for rendering (framebuffer)
 func LoadRenderTexture(width int32, height int32) RenderTexture2D {
-	var texture RenderTexture2D
-	loadRenderTexture(uintptr(unsafe.Pointer(&texture)), width, height)
-	return texture
+	// empty code to make gopls happy on non-web
+	var zero RenderTexture2D
+	return zero
 }
 
 // IsTextureValid - Check if a texture is valid (loaded in GPU)
 func IsTextureValid(texture Texture2D) bool {
-	return isTextureValid(uintptr(unsafe.Pointer(&texture)))
+	// empty code to make gopls happy on non-web
+	var zero bool
+	return zero
 }
 
 // UnloadTexture - Unload texture from GPU memory (VRAM)
 func UnloadTexture(texture Texture2D) {
-	unloadTexture(uintptr(unsafe.Pointer(&texture)))
+	// empty code to make gopls happy on non-web
 }
 
 // IsRenderTextureValid - Check if a render texture is valid (loaded in GPU)
 func IsRenderTextureValid(target RenderTexture2D) bool {
-	return isRenderTextureValid(uintptr(unsafe.Pointer(&target)))
+	// empty code to make gopls happy on non-web
+	var zero bool
+	return zero
 }
 
 // UnloadRenderTexture - Unload render texture from GPU memory (VRAM)
 func UnloadRenderTexture(target RenderTexture2D) {
-	unloadRenderTexture(uintptr(unsafe.Pointer(&target)))
+	// empty code to make gopls happy on non-web
 }
 
 // UpdateTexture - Update GPU texture with new data
 func UpdateTexture(texture Texture2D, pixels []color.RGBA) {
-	updateTexture(uintptr(unsafe.Pointer(&texture)), unsafe.SliceData(pixels))
+	// empty code to make gopls happy on non-web
 }
 
 // UpdateTextureRec - Update GPU texture rectangle with new data
 func UpdateTextureRec(texture Texture2D, rec Rectangle, pixels []color.RGBA) {
-	updateTextureRec(uintptr(unsafe.Pointer(&texture)), uintptr(unsafe.Pointer(&rec)), unsafe.SliceData(pixels))
+	// empty code to make gopls happy on non-web
 }
 
 // GenTextureMipmaps - Generate GPU mipmaps for a texture
 func GenTextureMipmaps(texture *Texture2D) {
-	genTextureMipmaps(texture)
+	// empty code to make gopls happy on non-web
 }
 
 // SetTextureFilter - Set texture scaling filter mode
 func SetTextureFilter(texture Texture2D, filter TextureFilterMode) {
-	setTextureFilter(uintptr(unsafe.Pointer(&texture)), int32(filter))
+	// empty code to make gopls happy on non-web
 }
 
 // SetTextureWrap - Set texture wrapping mode
 func SetTextureWrap(texture Texture2D, wrap TextureWrapMode) {
-	setTextureWrap(uintptr(unsafe.Pointer(&texture)), int32(wrap))
+	// empty code to make gopls happy on non-web
 }
 
 // DrawTexture - Draw a Texture2D
 func DrawTexture(texture Texture2D, posX int32, posY int32, tint color.RGBA) {
-	drawTexture(uintptr(unsafe.Pointer(&texture)), posX, posY, *(*uintptr)(unsafe.Pointer(&tint)))
+	// empty code to make gopls happy on non-web
 }
 
 // DrawTextureV - Draw a Texture2D with position defined as Vector2
 func DrawTextureV(texture Texture2D, position Vector2, tint color.RGBA) {
-	drawTextureV(uintptr(unsafe.Pointer(&texture)), *(*uintptr)(unsafe.Pointer(&position)), *(*uintptr)(unsafe.Pointer(&tint)))
+	// empty code to make gopls happy on non-web
 }
 
 // DrawTextureEx - Draw a Texture2D with extended parameters
 func DrawTextureEx(texture Texture2D, position Vector2, rotation float32, scale float32, tint color.RGBA) {
-	drawTextureEx(uintptr(unsafe.Pointer(&texture)), *(*uintptr)(unsafe.Pointer(&position)), rotation, scale, *(*uintptr)(unsafe.Pointer(&tint)))
+	// empty code to make gopls happy on non-web
 }
 
 // DrawTextureRec - Draw a part of a texture defined by a rectangle
 func DrawTextureRec(texture Texture2D, source Rectangle, position Vector2, tint color.RGBA) {
-	drawTextureRec(uintptr(unsafe.Pointer(&texture)), uintptr(unsafe.Pointer(&source)), *(*uintptr)(unsafe.Pointer(&position)), *(*uintptr)(unsafe.Pointer(&tint)))
+	// empty code to make gopls happy on non-web
 }
 
 // DrawTexturePro - Draw a part of a texture defined by a rectangle with 'pro' parameters
 func DrawTexturePro(texture Texture2D, source Rectangle, dest Rectangle, origin Vector2, rotation float32, tint color.RGBA) {
-	drawTexturePro(uintptr(unsafe.Pointer(&texture)), uintptr(unsafe.Pointer(&source)), uintptr(unsafe.Pointer(&dest)), *(*uintptr)(unsafe.Pointer(&origin)), rotation, *(*uintptr)(unsafe.Pointer(&tint)))
+	// empty code to make gopls happy on non-web
 }
 
 // DrawTextureNPatch - Draws a texture (or part of it) that stretches or shrinks nicely
 func DrawTextureNPatch(texture Texture2D, nPatchInfo NPatchInfo, dest Rectangle, origin Vector2, rotation float32, tint color.RGBA) {
-	drawTextureNPatch(uintptr(unsafe.Pointer(&texture)), uintptr(unsafe.Pointer(&nPatchInfo)), uintptr(unsafe.Pointer(&dest)), *(*uintptr)(unsafe.Pointer(&origin)), rotation, *(*uintptr)(unsafe.Pointer(&tint)))
+	// empty code to make gopls happy on non-web
 }
 
 // Fade - Get color with alpha applied, alpha goes from 0.0f to 1.0f
 func Fade(col color.RGBA, alpha float32) color.RGBA {
-	ret := fade(*(*uintptr)(unsafe.Pointer(&col)), alpha)
-	return *(*color.RGBA)(unsafe.Pointer(&ret))
+	// empty code to make gopls happy on non-web
+	var zero color.RGBA
+	return zero
 }
 
 // ColorToInt - Get hexadecimal value for a Color (0xRRGGBBAA)
 func ColorToInt(col color.RGBA) int32 {
-	return colorToInt(*(*uintptr)(unsafe.Pointer(&col)))
+	// empty code to make gopls happy on non-web
+	var zero int32
+	return zero
 }
 
 // ColorNormalize - Get Color normalized as float [0..1]
 func ColorNormalize(col color.RGBA) Vector4 {
-	var vector4 Vector4
-	colorNormalize(uintptr(unsafe.Pointer(&vector4)), *(*uintptr)(unsafe.Pointer(&col)))
-	return vector4
+	// empty code to make gopls happy on non-web
+	var zero Vector4
+	return zero
 }
 
 // ColorFromNormalized - Get Color from normalized values [0..1]
 func ColorFromNormalized(normalized Vector4) color.RGBA {
-	ret := colorFromNormalized(uintptr(unsafe.Pointer(&normalized)))
-	return *(*color.RGBA)(unsafe.Pointer(&ret))
+	// empty code to make gopls happy on non-web
+	var zero color.RGBA
+	return zero
 }
 
 // ColorToHSV - Get HSV values for a Color, hue [0..360], saturation/value [0..1]
 func ColorToHSV(col color.RGBA) Vector3 {
-	var vector3 Vector3
-	colorToHSV(uintptr(unsafe.Pointer(&vector3)), *(*uintptr)(unsafe.Pointer(&col)))
-	return vector3
+	// empty code to make gopls happy on non-web
+	var zero Vector3
+	return zero
 }
 
 // ColorFromHSV - Get a Color from HSV values, hue [0..360], saturation/value [0..1]
 func ColorFromHSV(hue float32, saturation float32, value float32) color.RGBA {
-	ret := colorFromHSV(hue, saturation, value)
-	return *(*color.RGBA)(unsafe.Pointer(&ret))
+	// empty code to make gopls happy on non-web
+	var zero color.RGBA
+	return zero
 }
 
 // ColorTint - Get color multiplied with another color
 func ColorTint(col color.RGBA, tint color.RGBA) color.RGBA {
-	ret := colorTint(*(*uintptr)(unsafe.Pointer(&col)), *(*uintptr)(unsafe.Pointer(&tint)))
-	return *(*color.RGBA)(unsafe.Pointer(&ret))
+	// empty code to make gopls happy on non-web
+	var zero color.RGBA
+	return zero
 }
 
 // ColorBrightness - Get color with brightness correction, brightness factor goes from -1.0f to 1.0f
 func ColorBrightness(col color.RGBA, factor float32) color.RGBA {
-	ret := colorBrightness(*(*uintptr)(unsafe.Pointer(&col)), factor)
-	return *(*color.RGBA)(unsafe.Pointer(&ret))
+	// empty code to make gopls happy on non-web
+	var zero color.RGBA
+	return zero
 }
 
 // ColorContrast - Get color with contrast correction, contrast values between -1.0f and 1.0f
 func ColorContrast(col color.RGBA, contrast float32) color.RGBA {
-	ret := colorContrast(*(*uintptr)(unsafe.Pointer(&col)), contrast)
-	return *(*color.RGBA)(unsafe.Pointer(&ret))
+	// empty code to make gopls happy on non-web
+	var zero color.RGBA
+	return zero
 }
 
 // ColorAlpha - Get color with alpha applied, alpha goes from 0.0f to 1.0f
 func ColorAlpha(col color.RGBA, alpha float32) color.RGBA {
-	ret := colorAlpha(*(*uintptr)(unsafe.Pointer(&col)), alpha)
-	return *(*color.RGBA)(unsafe.Pointer(&ret))
+	// empty code to make gopls happy on non-web
+	var zero color.RGBA
+	return zero
 }
 
 // ColorAlphaBlend - Get src alpha-blended into dst color with tint
 func ColorAlphaBlend(dst color.RGBA, src color.RGBA, tint color.RGBA) color.RGBA {
-	ret := colorAlphaBlend(*(*uintptr)(unsafe.Pointer(&dst)), *(*uintptr)(unsafe.Pointer(&src)), *(*uintptr)(unsafe.Pointer(&tint)))
-	return *(*color.RGBA)(unsafe.Pointer(&ret))
+	// empty code to make gopls happy on non-web
+	var zero color.RGBA
+	return zero
 }
 
 // ColorLerp - Get color lerp interpolation between two colors, factor [0.0f..1.0f]
-func ColorLerp(col1, col2 color.RGBA, factor float32) color.RGBA {
-	ret := colorLerp(*(*uintptr)(unsafe.Pointer(&col1)), *(*uintptr)(unsafe.Pointer(&col2)), factor)
-	return *(*color.RGBA)(unsafe.Pointer(&ret))
+func ColorLerp(col1 color.RGBA, col2 color.RGBA, factor float32) color.RGBA {
+	// empty code to make gopls happy on non-web
+	var zero color.RGBA
+	return zero
 }
 
 // GetColor - Get Color structure from hexadecimal value
 func GetColor(hexValue uint) color.RGBA {
-	ret := getColor(uint32(hexValue))
-	return *(*color.RGBA)(unsafe.Pointer(&ret))
+	// empty code to make gopls happy on non-web
+	var zero color.RGBA
+	return zero
 }
 
 // GetPixelColor - Get Color from a source pixel pointer of certain format
 func GetPixelColor(srcPtr unsafe.Pointer, format int32) color.RGBA {
-	ret := getPixelColor(srcPtr, format)
-	return *(*color.RGBA)(unsafe.Pointer(&ret))
+	// empty code to make gopls happy on non-web
+	var zero color.RGBA
+	return zero
 }
 
 // SetPixelColor - Set color formatted into destination pixel pointer
 func SetPixelColor(dstPtr unsafe.Pointer, col color.RGBA, format int32) {
-	setPixelColor(dstPtr, *(*uintptr)(unsafe.Pointer(&col)), format)
+	// empty code to make gopls happy on non-web
 }
 
 // GetPixelDataSize - Get pixel data size in bytes for certain format
 func GetPixelDataSize(width int32, height int32, format int32) int32 {
-	return getPixelDataSize(width, height, format)
+	// empty code to make gopls happy on non-web
+	var zero int32
+	return zero
 }
 
 // GetFontDefault - Get the default Font
 func GetFontDefault() Font {
-	var font Font
-	getFontDefault(uintptr(unsafe.Pointer(&font)))
-	return font
+	// empty code to make gopls happy on non-web
+	var zero Font
+	return zero
 }
-
 
 // LoadFontFromImage - Load font from Image (XNA style)
 func LoadFontFromImage(image Image, key color.RGBA, firstChar rune) Font {
-	var font Font
-	loadFontFromImage(uintptr(unsafe.Pointer(&font)), uintptr(unsafe.Pointer(&image)), *(*uintptr)(unsafe.Pointer(&key)), firstChar)
-	return font
+	// empty code to make gopls happy on non-web
+	var zero Font
+	return zero
 }
 
 // LoadFontFromMemory - Load font from memory buffer, fileType refers to extension: i.e. '.ttf'
 func LoadFontFromMemory(fileType string, fileData []byte, fontSize int32, codepoints []rune) Font {
-	var font Font
-	dataSize := int32(len(fileData))
-	codepointCount := int32(len(codepoints))
-	loadFontFromMemory(uintptr(unsafe.Pointer(&font)), fileType, fileData, dataSize, fontSize, codepoints, codepointCount)
-	return font
+	// empty code to make gopls happy on non-web
+	var zero Font
+	return zero
 }
 
 // IsFontValid - Check if a font is valid (font data loaded, WARNING: GPU texture not checked)
 func IsFontValid(font Font) bool {
-	return isFontValid(uintptr(unsafe.Pointer(&font)))
+	// empty code to make gopls happy on non-web
+	var zero bool
+	return zero
 }
 
 // LoadFontData - Load font data for further use
-func LoadFontData(fileData []byte, fontSize int32, codepoints []rune, codepointCount, typ int32) []GlyphInfo {
-	dataSize := int32(len(fileData))
-	// In case no chars count provided, default to 95
-	if codepointCount <= 0 {
-		codepointCount = 95
-	}
-	ret := loadFontData(fileData, dataSize, fontSize, codepoints, codepointCount, typ)
-	return unsafe.Slice(ret, codepointCount)
+func LoadFontData(fileData []byte, fontSize int32, codepoints []rune, codepointCount int32, typ int32) []GlyphInfo {
+	// empty code to make gopls happy on non-web
+	var zero []GlyphInfo
+	return zero
 }
 
 // GenImageFontAtlas - Generate image font atlas using chars info
 func GenImageFontAtlas(glyphs []GlyphInfo, glyphRecs []*Rectangle, fontSize int32, padding int32, packMethod int32) Image {
-	var image Image
-	glyphCount := int32(len(glyphs))
-	genImageFontAtlas(uintptr(unsafe.Pointer(&image)), unsafe.SliceData(glyphs), glyphRecs, glyphCount, fontSize, padding, packMethod)
-	return image
+	// empty code to make gopls happy on non-web
+	var zero Image
+	return zero
 }
 
 // UnloadFontData - Unload font chars info data (RAM)
 func UnloadFontData(glyphs []GlyphInfo) {
-	glyphCount := int32(len(glyphs))
-	unloadFontData(unsafe.SliceData(glyphs), glyphCount)
+	// empty code to make gopls happy on non-web
 }
 
 // UnloadFont - Unload font from GPU memory (VRAM)
 func UnloadFont(font Font) {
-	unloadFont(uintptr(unsafe.Pointer(&font)))
+	// empty code to make gopls happy on non-web
 }
 
 // DrawFPS - Draw current FPS
 func DrawFPS(posX int32, posY int32) {
-	drawFPS(posX, posY)
+	// empty code to make gopls happy on non-web
 }
 
 // DrawText - Draw text (using default font)
 func DrawText(text string, posX int32, posY int32, fontSize int32, col color.RGBA) {
-	drawText(text, posX, posY, fontSize, *(*uintptr)(unsafe.Pointer(&col)))
+	// empty code to make gopls happy on non-web
 }
 
 // DrawTextEx - Draw text using font and additional parameters
 func DrawTextEx(font Font, text string, position Vector2, fontSize float32, spacing float32, tint color.RGBA) {
-	drawTextEx(uintptr(unsafe.Pointer(&font)), text, *(*uintptr)(unsafe.Pointer(&position)), fontSize, spacing, *(*uintptr)(unsafe.Pointer(&tint)))
+	// empty code to make gopls happy on non-web
 }
 
 // DrawTextPro - Draw text using Font and pro parameters (rotation)
 func DrawTextPro(font Font, text string, position Vector2, origin Vector2, rotation float32, fontSize float32, spacing float32, tint color.RGBA) {
-	drawTextPro(uintptr(unsafe.Pointer(&font)), text, *(*uintptr)(unsafe.Pointer(&position)), *(*uintptr)(unsafe.Pointer(&origin)), rotation, fontSize, spacing, *(*uintptr)(unsafe.Pointer(&tint)))
+	// empty code to make gopls happy on non-web
 }
 
 // DrawTextCodepoint - Draw one character (codepoint)
 func DrawTextCodepoint(font Font, codepoint rune, position Vector2, fontSize float32, tint color.RGBA) {
-	drawTextCodepoint(uintptr(unsafe.Pointer(&font)), codepoint, *(*uintptr)(unsafe.Pointer(&position)), fontSize, *(*uintptr)(unsafe.Pointer(&tint)))
+	// empty code to make gopls happy on non-web
 }
 
 // DrawTextCodepoints - Draw multiple character (codepoint)
 func DrawTextCodepoints(font Font, codepoints []rune, position Vector2, fontSize float32, spacing float32, tint color.RGBA) {
-	codepointCount := int32(len(codepoints))
-	drawTextCodepoints(uintptr(unsafe.Pointer(&font)), codepoints, codepointCount, *(*uintptr)(unsafe.Pointer(&position)), fontSize, spacing, *(*uintptr)(unsafe.Pointer(&tint)))
+	// empty code to make gopls happy on non-web
 }
 
 // SetTextLineSpacing - Set vertical line spacing when drawing with line-breaks
 func SetTextLineSpacing(spacing int) {
-	setTextLineSpacing(int32(spacing))
+	// empty code to make gopls happy on non-web
 }
 
 // MeasureText - Measure string width for default font
 func MeasureText(text string, fontSize int32) int32 {
-	return measureText(text, fontSize)
+	// empty code to make gopls happy on non-web
+	var zero int32
+	return zero
 }
 
 // MeasureTextEx - Measure string size for Font
 func MeasureTextEx(font Font, text string, fontSize float32, spacing float32) Vector2 {
-	ret := measureTextEx(uintptr(unsafe.Pointer(&font)), text, fontSize, spacing)
-	return *(*Vector2)(unsafe.Pointer(&ret))
+	// empty code to make gopls happy on non-web
+	var zero Vector2
+	return zero
 }
 
 // GetGlyphIndex - Get glyph index position in font for a codepoint (unicode character), fallback to '?' if not found
 func GetGlyphIndex(font Font, codepoint rune) int32 {
-	return getGlyphIndex(uintptr(unsafe.Pointer(&font)), codepoint)
+	// empty code to make gopls happy on non-web
+	var zero int32
+	return zero
 }
 
 // GetGlyphInfo - Get glyph font info data for a codepoint (unicode character), fallback to '?' if not found
 func GetGlyphInfo(font Font, codepoint rune) GlyphInfo {
-	var glyphInfo GlyphInfo
-	getGlyphInfo(uintptr(unsafe.Pointer(&glyphInfo)), uintptr(unsafe.Pointer(&font)), codepoint)
-	return glyphInfo
+	// empty code to make gopls happy on non-web
+	var zero GlyphInfo
+	return zero
 }
 
 // GetGlyphAtlasRec - Get glyph rectangle in font atlas for a codepoint (unicode character), fallback to '?' if not found
 func GetGlyphAtlasRec(font Font, codepoint rune) Rectangle {
-	var rec Rectangle
-	getGlyphAtlasRec(uintptr(unsafe.Pointer(&rec)), uintptr(unsafe.Pointer(&font)), codepoint)
-	return rec
+	// empty code to make gopls happy on non-web
+	var zero Rectangle
+	return zero
 }
 
 // DrawLine3D - Draw a line in 3D world space
 func DrawLine3D(startPos Vector3, endPos Vector3, col color.RGBA) {
-	drawLine3D(uintptr(unsafe.Pointer(&startPos)), uintptr(unsafe.Pointer(&endPos)), *(*uintptr)(unsafe.Pointer(&col)))
+	// empty code to make gopls happy on non-web
 }
 
 // DrawPoint3D - Draw a point in 3D space, actually a small line
 func DrawPoint3D(position Vector3, col color.RGBA) {
-	drawPoint3D(uintptr(unsafe.Pointer(&position)), *(*uintptr)(unsafe.Pointer(&col)))
+	// empty code to make gopls happy on non-web
 }
 
 // DrawCircle3D - Draw a circle in 3D world space
 func DrawCircle3D(center Vector3, radius float32, rotationAxis Vector3, rotationAngle float32, col color.RGBA) {
-	drawCircle3D(uintptr(unsafe.Pointer(&center)), radius, uintptr(unsafe.Pointer(&rotationAxis)), rotationAngle, *(*uintptr)(unsafe.Pointer(&col)))
+	// empty code to make gopls happy on non-web
 }
 
 // DrawTriangle3D - Draw a color-filled triangle (vertex in counter-clockwise order!)
 func DrawTriangle3D(v1 Vector3, v2 Vector3, v3 Vector3, col color.RGBA) {
-	drawTriangle3D(uintptr(unsafe.Pointer(&v1)), uintptr(unsafe.Pointer(&v2)), uintptr(unsafe.Pointer(&v3)), *(*uintptr)(unsafe.Pointer(&col)))
+	// empty code to make gopls happy on non-web
 }
 
 // DrawTriangleStrip3D - Draw a triangle strip defined by points
 func DrawTriangleStrip3D(points []Vector3, col color.RGBA) {
-	pointCount := int32(len(points))
-	drawTriangleStrip3D(unsafe.SliceData(points), pointCount, *(*uintptr)(unsafe.Pointer(&col)))
+	// empty code to make gopls happy on non-web
 }
 
 // DrawCube - Draw cube
 func DrawCube(position Vector3, width float32, height float32, length float32, col color.RGBA) {
-	drawCube(uintptr(unsafe.Pointer(&position)), width, height, length, *(*uintptr)(unsafe.Pointer(&col)))
+	// empty code to make gopls happy on non-web
 }
 
 // DrawCubeV - Draw cube (Vector version)
 func DrawCubeV(position Vector3, size Vector3, col color.RGBA) {
-	drawCubeV(uintptr(unsafe.Pointer(&position)), uintptr(unsafe.Pointer(&size)), *(*uintptr)(unsafe.Pointer(&col)))
+	// empty code to make gopls happy on non-web
 }
 
 // DrawCubeWires - Draw cube wires
 func DrawCubeWires(position Vector3, width float32, height float32, length float32, col color.RGBA) {
-	drawCubeWires(uintptr(unsafe.Pointer(&position)), width, height, length, *(*uintptr)(unsafe.Pointer(&col)))
+	// empty code to make gopls happy on non-web
 }
 
 // DrawCubeWiresV - Draw cube wires (Vector version)
 func DrawCubeWiresV(position Vector3, size Vector3, col color.RGBA) {
-	drawCubeWiresV(uintptr(unsafe.Pointer(&position)), uintptr(unsafe.Pointer(&size)), *(*uintptr)(unsafe.Pointer(&col)))
+	// empty code to make gopls happy on non-web
 }
 
 // DrawSphere - Draw sphere
 func DrawSphere(centerPos Vector3, radius float32, col color.RGBA) {
-	drawSphere(uintptr(unsafe.Pointer(&centerPos)), radius, *(*uintptr)(unsafe.Pointer(&col)))
+	// empty code to make gopls happy on non-web
 }
 
 // DrawSphereEx - Draw sphere with extended parameters
 func DrawSphereEx(centerPos Vector3, radius float32, rings int32, slices int32, col color.RGBA) {
-	drawSphereEx(uintptr(unsafe.Pointer(&centerPos)), radius, rings, slices, *(*uintptr)(unsafe.Pointer(&col)))
+	// empty code to make gopls happy on non-web
 }
 
 // DrawSphereWires - Draw sphere wires
 func DrawSphereWires(centerPos Vector3, radius float32, rings int32, slices int32, col color.RGBA) {
-	drawSphereWires(uintptr(unsafe.Pointer(&centerPos)), radius, rings, slices, *(*uintptr)(unsafe.Pointer(&col)))
+	// empty code to make gopls happy on non-web
 }
 
 // DrawCylinder - Draw a cylinder/cone
 func DrawCylinder(position Vector3, radiusTop float32, radiusBottom float32, height float32, slices int32, col color.RGBA) {
-	drawCylinder(uintptr(unsafe.Pointer(&position)), radiusTop, radiusBottom, height, slices, *(*uintptr)(unsafe.Pointer(&col)))
+	// empty code to make gopls happy on non-web
 }
 
 // DrawCylinderEx - Draw a cylinder with base at startPos and top at endPos
 func DrawCylinderEx(startPos Vector3, endPos Vector3, startRadius float32, endRadius float32, sides int32, col color.RGBA) {
-	drawCylinderEx(uintptr(unsafe.Pointer(&startPos)), uintptr(unsafe.Pointer(&endPos)), startRadius, endRadius, sides, *(*uintptr)(unsafe.Pointer(&col)))
+	// empty code to make gopls happy on non-web
 }
 
 // DrawCylinderWires - Draw a cylinder/cone wires
 func DrawCylinderWires(position Vector3, radiusTop float32, radiusBottom float32, height float32, slices int32, col color.RGBA) {
-	drawCylinderWires(uintptr(unsafe.Pointer(&position)), radiusTop, radiusBottom, height, slices, *(*uintptr)(unsafe.Pointer(&col)))
+	// empty code to make gopls happy on non-web
 }
 
 // DrawCylinderWiresEx - Draw a cylinder wires with base at startPos and top at endPos
 func DrawCylinderWiresEx(startPos Vector3, endPos Vector3, startRadius float32, endRadius float32, sides int32, col color.RGBA) {
-	drawCylinderWiresEx(uintptr(unsafe.Pointer(&startPos)), uintptr(unsafe.Pointer(&endPos)), startRadius, endRadius, sides, *(*uintptr)(unsafe.Pointer(&col)))
+	// empty code to make gopls happy on non-web
 }
 
 // DrawCapsule - Draw a capsule with the center of its sphere caps at startPos and endPos
 func DrawCapsule(startPos Vector3, endPos Vector3, radius float32, slices int32, rings int32, col color.RGBA) {
-	drawCapsule(uintptr(unsafe.Pointer(&startPos)), uintptr(unsafe.Pointer(&endPos)), radius, slices, rings, *(*uintptr)(unsafe.Pointer(&col)))
+	// empty code to make gopls happy on non-web
 }
 
 // DrawCapsuleWires - Draw capsule wireframe with the center of its sphere caps at startPos and endPos
 func DrawCapsuleWires(startPos Vector3, endPos Vector3, radius float32, slices int32, rings int32, col color.RGBA) {
-	drawCapsuleWires(uintptr(unsafe.Pointer(&startPos)), uintptr(unsafe.Pointer(&endPos)), radius, slices, rings, *(*uintptr)(unsafe.Pointer(&col)))
+	// empty code to make gopls happy on non-web
 }
 
 // DrawPlane - Draw a plane XZ
 func DrawPlane(centerPos Vector3, size Vector2, col color.RGBA) {
-	drawPlane(uintptr(unsafe.Pointer(&centerPos)), *(*uintptr)(unsafe.Pointer(&size)), *(*uintptr)(unsafe.Pointer(&col)))
+	// empty code to make gopls happy on non-web
 }
 
 // DrawRay - Draw a ray line
 func DrawRay(ray Ray, col color.RGBA) {
-	drawRay(uintptr(unsafe.Pointer(&ray)), *(*uintptr)(unsafe.Pointer(&col)))
+	// empty code to make gopls happy on non-web
 }
 
 // DrawGrid - Draw a grid (centered at (0, 0, 0))
 func DrawGrid(slices int32, spacing float32) {
-	drawGrid(slices, spacing)
+	// empty code to make gopls happy on non-web
 }
-
 
 // LoadModelFromMesh - Load model from generated mesh (default material)
 func LoadModelFromMesh(mesh Mesh) Model {
-	var model Model
-	loadModelFromMesh(uintptr(unsafe.Pointer(&model)), uintptr(unsafe.Pointer(&mesh)))
-	return model
+	// empty code to make gopls happy on non-web
+	var zero Model
+	return zero
 }
 
 // IsModelValid - Check if a model is valid (loaded in GPU, VAO/VBOs)
 func IsModelValid(model Model) bool {
-	return isModelValid(uintptr(unsafe.Pointer(&model)))
+	// empty code to make gopls happy on non-web
+	var zero bool
+	return zero
 }
 
 // UnloadModel - Unload model (including meshes) from memory (RAM and/or VRAM)
 func UnloadModel(model Model) {
-	unloadModel(uintptr(unsafe.Pointer(&model)))
+	// empty code to make gopls happy on non-web
 }
 
 // GetModelBoundingBox - Compute model bounding box limits (considers all meshes)
 func GetModelBoundingBox(model Model) BoundingBox {
-	var boundingBox BoundingBox
-	getModelBoundingBox(uintptr(unsafe.Pointer(&boundingBox)), uintptr(unsafe.Pointer(&model)))
-	return boundingBox
+	// empty code to make gopls happy on non-web
+	var zero BoundingBox
+	return zero
 }
 
 // DrawModel - Draw a model (with texture if set)
 func DrawModel(model Model, position Vector3, scale float32, tint color.RGBA) {
-	drawModel(uintptr(unsafe.Pointer(&model)), uintptr(unsafe.Pointer(&position)), scale, *(*uintptr)(unsafe.Pointer(&tint)))
+	// empty code to make gopls happy on non-web
 }
 
 // DrawModelEx - Draw a model with extended parameters
 func DrawModelEx(model Model, position Vector3, rotationAxis Vector3, rotationAngle float32, scale Vector3, tint color.RGBA) {
-	drawModelEx(uintptr(unsafe.Pointer(&model)), uintptr(unsafe.Pointer(&position)), uintptr(unsafe.Pointer(&rotationAxis)), rotationAngle, uintptr(unsafe.Pointer(&scale)), *(*uintptr)(unsafe.Pointer(&tint)))
+	// empty code to make gopls happy on non-web
 }
 
 // DrawModelWires - Draw a model wires (with texture if set)
 func DrawModelWires(model Model, position Vector3, scale float32, tint color.RGBA) {
-	drawModelWires(uintptr(unsafe.Pointer(&model)), uintptr(unsafe.Pointer(&position)), scale, *(*uintptr)(unsafe.Pointer(&tint)))
+	// empty code to make gopls happy on non-web
 }
 
 // DrawModelWiresEx - Draw a model wires (with texture if set) with extended parameters
 func DrawModelWiresEx(model Model, position Vector3, rotationAxis Vector3, rotationAngle float32, scale Vector3, tint color.RGBA) {
-	drawModelWiresEx(uintptr(unsafe.Pointer(&model)), uintptr(unsafe.Pointer(&position)), uintptr(unsafe.Pointer(&rotationAxis)), rotationAngle, uintptr(unsafe.Pointer(&scale)), *(*uintptr)(unsafe.Pointer(&tint)))
+	// empty code to make gopls happy on non-web
 }
 
 // DrawModelPoints - Draw a model as points
 func DrawModelPoints(model Model, position Vector3, scale float32, tint color.RGBA) {
-	drawModelPoints(uintptr(unsafe.Pointer(&model)), uintptr(unsafe.Pointer(&position)), scale, *(*uintptr)(unsafe.Pointer(&tint)))
+	// empty code to make gopls happy on non-web
 }
 
 // DrawModelPointsEx - Draw a model as points with extended parameters
 func DrawModelPointsEx(model Model, position Vector3, rotationAxis Vector3, rotationAngle float32, scale Vector3, tint color.RGBA) {
-	drawModelPointsEx(uintptr(unsafe.Pointer(&model)), uintptr(unsafe.Pointer(&position)), uintptr(unsafe.Pointer(&rotationAxis)), rotationAngle, uintptr(unsafe.Pointer(&scale)), *(*uintptr)(unsafe.Pointer(&tint)))
+	// empty code to make gopls happy on non-web
 }
 
 // DrawBoundingBox - Draw bounding box (wires)
 func DrawBoundingBox(box BoundingBox, col color.RGBA) {
-	drawBoundingBox(uintptr(unsafe.Pointer(&box)), *(*uintptr)(unsafe.Pointer(&col)))
+	// empty code to make gopls happy on non-web
 }
 
 // DrawBillboard - Draw a billboard texture
 func DrawBillboard(camera Camera, texture Texture2D, position Vector3, scale float32, tint color.RGBA) {
-	drawBillboard(uintptr(unsafe.Pointer(&camera)), uintptr(unsafe.Pointer(&texture)), uintptr(unsafe.Pointer(&position)), scale, *(*uintptr)(unsafe.Pointer(&tint)))
+	// empty code to make gopls happy on non-web
 }
 
 // DrawBillboardRec - Draw a billboard texture defined by source
 func DrawBillboardRec(camera Camera, texture Texture2D, source Rectangle, position Vector3, size Vector2, tint color.RGBA) {
-	drawBillboardRec(uintptr(unsafe.Pointer(&camera)), uintptr(unsafe.Pointer(&texture)), uintptr(unsafe.Pointer(&source)), uintptr(unsafe.Pointer(&position)), *(*uintptr)(unsafe.Pointer(&size)), *(*uintptr)(unsafe.Pointer(&tint)))
+	// empty code to make gopls happy on non-web
 }
 
 // DrawBillboardPro - Draw a billboard texture defined by source and rotation
 func DrawBillboardPro(camera Camera, texture Texture2D, source Rectangle, position Vector3, up Vector3, size Vector2, origin Vector2, rotation float32, tint color.RGBA) {
-	drawBillboardPro(uintptr(unsafe.Pointer(&camera)), uintptr(unsafe.Pointer(&texture)), uintptr(unsafe.Pointer(&source)), uintptr(unsafe.Pointer(&position)), uintptr(unsafe.Pointer(&up)), *(*uintptr)(unsafe.Pointer(&size)), *(*uintptr)(unsafe.Pointer(&origin)), rotation, *(*uintptr)(unsafe.Pointer(&tint)))
+	// empty code to make gopls happy on non-web
 }
 
 // UploadMesh - Upload mesh vertex data in GPU and provide VAO/VBO ids
 func UploadMesh(mesh *Mesh, dynamic bool) {
-	uploadMesh(mesh, dynamic)
+	// empty code to make gopls happy on non-web
 }
 
 // UpdateMeshBuffer - Update mesh vertex data in GPU for a specific buffer index
 func UpdateMeshBuffer(mesh Mesh, index int32, data []byte, offset int) {
-	dataSize := int32(len(data))
-	updateMeshBuffer(uintptr(unsafe.Pointer(&mesh)), index, data, dataSize, int32(offset))
+	// empty code to make gopls happy on non-web
 }
 
 // UnloadMesh - Unload mesh data from CPU and GPU
 func UnloadMesh(mesh *Mesh) {
-	unloadMesh(uintptr(unsafe.Pointer(mesh)))
+	// empty code to make gopls happy on non-web
 }
 
 // DrawMesh - Draw a 3d mesh with material and transform
 func DrawMesh(mesh Mesh, material Material, transform Matrix) {
-	drawMesh(uintptr(unsafe.Pointer(&mesh)), uintptr(unsafe.Pointer(&material)), uintptr(unsafe.Pointer(&transform)))
+	// empty code to make gopls happy on non-web
 }
 
 // DrawMeshInstanced - Draw multiple mesh instances with material and different transforms
 func DrawMeshInstanced(mesh Mesh, material Material, transforms []Matrix, instances int32) {
-	drawMeshInstanced(uintptr(unsafe.Pointer(&mesh)), uintptr(unsafe.Pointer(&material)), transforms, instances)
+	// empty code to make gopls happy on non-web
 }
 
 // ExportMesh - Export mesh data to file, returns true on success
 func ExportMesh(mesh Mesh, fileName string) bool {
-	return exportMesh(uintptr(unsafe.Pointer(&mesh)), fileName)
+	// empty code to make gopls happy on non-web
+	var zero bool
+	return zero
 }
 
 // GetMeshBoundingBox - Compute mesh bounding box limits
 func GetMeshBoundingBox(mesh Mesh) BoundingBox {
-	var boundingBox BoundingBox
-	getMeshBoundingBox(uintptr(unsafe.Pointer(&boundingBox)), uintptr(unsafe.Pointer(&mesh)))
-	return boundingBox
+	// empty code to make gopls happy on non-web
+	var zero BoundingBox
+	return zero
 }
 
 // GenMeshTangents - Compute mesh tangents
 func GenMeshTangents(mesh *Mesh) {
-	genMeshTangents(mesh)
+	// empty code to make gopls happy on non-web
 }
 
 // GenMeshPoly - Generate polygonal mesh
 func GenMeshPoly(sides int, radius float32) Mesh {
-	var mesh Mesh
-	genMeshPoly(uintptr(unsafe.Pointer(&mesh)), int32(sides), radius)
-	return mesh
+	// empty code to make gopls happy on non-web
+	var zero Mesh
+	return zero
 }
 
 // GenMeshPlane - Generate plane mesh (with subdivisions)
 func GenMeshPlane(width float32, length float32, resX int, resZ int) Mesh {
-	var mesh Mesh
-	genMeshPlane(uintptr(unsafe.Pointer(&mesh)), width, length, int32(resX), int32(resZ))
-	return mesh
+	// empty code to make gopls happy on non-web
+	var zero Mesh
+	return zero
 }
 
 // GenMeshCube - Generate cuboid mesh
 func GenMeshCube(width float32, height float32, length float32) Mesh {
-	var mesh Mesh
-	genMeshCube(uintptr(unsafe.Pointer(&mesh)), width, height, length)
-	return mesh
+	// empty code to make gopls happy on non-web
+	var zero Mesh
+	return zero
 }
 
 // GenMeshSphere - Generate sphere mesh (standard sphere)
 func GenMeshSphere(radius float32, rings int, slices int) Mesh {
-	var mesh Mesh
-	genMeshSphere(uintptr(unsafe.Pointer(&mesh)), radius, int32(rings), int32(slices))
-	return mesh
+	// empty code to make gopls happy on non-web
+	var zero Mesh
+	return zero
 }
 
 // GenMeshHemiSphere - Generate half-sphere mesh (no bottom cap)
 func GenMeshHemiSphere(radius float32, rings int, slices int) Mesh {
-	var mesh Mesh
-	genMeshHemiSphere(uintptr(unsafe.Pointer(&mesh)), radius, int32(rings), int32(slices))
-	return mesh
+	// empty code to make gopls happy on non-web
+	var zero Mesh
+	return zero
 }
 
 // GenMeshCylinder - Generate cylinder mesh
 func GenMeshCylinder(radius float32, height float32, slices int) Mesh {
-	var mesh Mesh
-	genMeshCylinder(uintptr(unsafe.Pointer(&mesh)), radius, height, int32(slices))
-	return mesh
+	// empty code to make gopls happy on non-web
+	var zero Mesh
+	return zero
 }
 
 // GenMeshCone - Generate cone/pyramid mesh
 func GenMeshCone(radius float32, height float32, slices int) Mesh {
-	var mesh Mesh
-	genMeshCone(uintptr(unsafe.Pointer(&mesh)), radius, height, int32(slices))
-	return mesh
+	// empty code to make gopls happy on non-web
+	var zero Mesh
+	return zero
 }
 
 // GenMeshTorus - Generate torus mesh
 func GenMeshTorus(radius float32, size float32, radSeg int, sides int) Mesh {
-	var mesh Mesh
-	genMeshTorus(uintptr(unsafe.Pointer(&mesh)), radius, size, int32(radSeg), int32(sides))
-	return mesh
+	// empty code to make gopls happy on non-web
+	var zero Mesh
+	return zero
 }
 
 // GenMeshKnot - Generate trefoil knot mesh
 func GenMeshKnot(radius float32, size float32, radSeg int, sides int) Mesh {
-	var mesh Mesh
-	genMeshKnot(uintptr(unsafe.Pointer(&mesh)), radius, size, int32(radSeg), int32(sides))
-	return mesh
+	// empty code to make gopls happy on non-web
+	var zero Mesh
+	return zero
 }
 
 // GenMeshHeightmap - Generate heightmap mesh from image data
 func GenMeshHeightmap(heightmap Image, size Vector3) Mesh {
-	var mesh Mesh
-	genMeshHeightmap(uintptr(unsafe.Pointer(&mesh)), uintptr(unsafe.Pointer(&heightmap)), uintptr(unsafe.Pointer(&size)))
-	return mesh
+	// empty code to make gopls happy on non-web
+	var zero Mesh
+	return zero
 }
 
 // GenMeshCubicmap - Generate cubes-based map mesh from image data
 func GenMeshCubicmap(cubicmap Image, cubeSize Vector3) Mesh {
-	var mesh Mesh
-	genMeshCubicmap(uintptr(unsafe.Pointer(&mesh)), uintptr(unsafe.Pointer(&cubicmap)), uintptr(unsafe.Pointer(&cubeSize)))
-	return mesh
+	// empty code to make gopls happy on non-web
+	var zero Mesh
+	return zero
 }
-
 
 // LoadMaterialDefault - Load default material (Supports: DIFFUSE, SPECULAR, NORMAL maps)
 func LoadMaterialDefault() Material {
-	var material Material
-	loadMaterialDefault(uintptr(unsafe.Pointer(&material)))
-	return material
+	// empty code to make gopls happy on non-web
+	var zero Material
+	return zero
 }
 
 // IsMaterialValid - Check if a material is valid (shader assigned, map textures loaded in GPU)
 func IsMaterialValid(material Material) bool {
-	return isMaterialValid(uintptr(unsafe.Pointer(&material)))
+	// empty code to make gopls happy on non-web
+	var zero bool
+	return zero
 }
 
 // UnloadMaterial - Unload material from GPU memory (VRAM)
 func UnloadMaterial(material Material) {
-	unloadMaterial(uintptr(unsafe.Pointer(&material)))
+	// empty code to make gopls happy on non-web
 }
 
 // SetMaterialTexture - Set texture for a material map type (MATERIAL_MAP_DIFFUSE, MATERIAL_MAP_SPECULAR...)
 func SetMaterialTexture(material *Material, mapType int32, texture Texture2D) {
-	setMaterialTexture(material, mapType, uintptr(unsafe.Pointer(&texture)))
+	// empty code to make gopls happy on non-web
 }
 
 // SetModelMeshMaterial - Set material for a mesh
 func SetModelMeshMaterial(model *Model, meshId int32, materialId int32) {
-	setModelMeshMaterial(model, meshId, materialId)
+	// empty code to make gopls happy on non-web
 }
-
 
 // UpdateModelAnimation - Update model animation pose (CPU)
 func UpdateModelAnimation(model Model, anim ModelAnimation, frame int32) {
-	updateModelAnimation(uintptr(unsafe.Pointer(&model)), uintptr(unsafe.Pointer(&anim)), frame)
+	// empty code to make gopls happy on non-web
 }
 
 // UpdateModelAnimationBones - Update model animation mesh bone matrices (GPU skinning)
 func UpdateModelAnimationBones(model Model, anim ModelAnimation, frame int32) {
-	updateModelAnimationBones(uintptr(unsafe.Pointer(&model)), uintptr(unsafe.Pointer(&anim)), frame)
+	// empty code to make gopls happy on non-web
 }
 
 // UnloadModelAnimation - Unload animation data
 func UnloadModelAnimation(anim ModelAnimation) {
-	unloadModelAnimation(uintptr(unsafe.Pointer(&anim)))
+	// empty code to make gopls happy on non-web
 }
 
 // UnloadModelAnimations - Unload animation array data
 func UnloadModelAnimations(animations []ModelAnimation) {
-	animCount := int32(len(animations))
-	unloadModelAnimations(unsafe.SliceData(animations), animCount)
+	// empty code to make gopls happy on non-web
 }
 
 // IsModelAnimationValid - Check model animation skeleton match
 func IsModelAnimationValid(model Model, anim ModelAnimation) bool {
-	return isModelAnimationValid(uintptr(unsafe.Pointer(&model)), uintptr(unsafe.Pointer(&anim)))
+	// empty code to make gopls happy on non-web
+	var zero bool
+	return zero
 }
 
 // CheckCollisionSpheres - Check collision between two spheres
 func CheckCollisionSpheres(center1 Vector3, radius1 float32, center2 Vector3, radius2 float32) bool {
-	return checkCollisionSpheres(uintptr(unsafe.Pointer(&center1)), radius1, uintptr(unsafe.Pointer(&center2)), radius2)
+	// empty code to make gopls happy on non-web
+	var zero bool
+	return zero
 }
 
 // CheckCollisionBoxes - Check collision between two bounding boxes
 func CheckCollisionBoxes(box1 BoundingBox, box2 BoundingBox) bool {
-	return checkCollisionBoxes(uintptr(unsafe.Pointer(&box1)), uintptr(unsafe.Pointer(&box2)))
+	// empty code to make gopls happy on non-web
+	var zero bool
+	return zero
 }
 
 // CheckCollisionBoxSphere - Check collision between box and sphere
 func CheckCollisionBoxSphere(box BoundingBox, center Vector3, radius float32) bool {
-	return checkCollisionBoxSphere(uintptr(unsafe.Pointer(&box)), uintptr(unsafe.Pointer(&center)), radius)
+	// empty code to make gopls happy on non-web
+	var zero bool
+	return zero
 }
 
 // GetRayCollisionSphere - Get collision info between ray and sphere
 func GetRayCollisionSphere(ray Ray, center Vector3, radius float32) RayCollision {
-	var rayCollision RayCollision
-	getRayCollisionSphere(uintptr(unsafe.Pointer(&rayCollision)), uintptr(unsafe.Pointer(&ray)), uintptr(unsafe.Pointer(&center)), radius)
-	return rayCollision
+	// empty code to make gopls happy on non-web
+	var zero RayCollision
+	return zero
 }
 
 // GetRayCollisionBox - Get collision info between ray and box
 func GetRayCollisionBox(ray Ray, box BoundingBox) RayCollision {
-	var rayCollision RayCollision
-	getRayCollisionBox(uintptr(unsafe.Pointer(&rayCollision)), uintptr(unsafe.Pointer(&ray)), uintptr(unsafe.Pointer(&box)))
-	return rayCollision
+	// empty code to make gopls happy on non-web
+	var zero RayCollision
+	return zero
 }
 
 // GetRayCollisionMesh - Get collision info between ray and mesh
 func GetRayCollisionMesh(ray Ray, mesh Mesh, transform Matrix) RayCollision {
-	var rayCollision RayCollision
-	getRayCollisionMesh(uintptr(unsafe.Pointer(&rayCollision)), uintptr(unsafe.Pointer(&ray)), uintptr(unsafe.Pointer(&mesh)), uintptr(unsafe.Pointer(&transform)))
-	return rayCollision
+	// empty code to make gopls happy on non-web
+	var zero RayCollision
+	return zero
 }
 
 // GetRayCollisionTriangle - Get collision info between ray and triangle
 func GetRayCollisionTriangle(ray Ray, p1 Vector3, p2 Vector3, p3 Vector3) RayCollision {
-	var rayCollision RayCollision
-	getRayCollisionTriangle(uintptr(unsafe.Pointer(&rayCollision)), uintptr(unsafe.Pointer(&ray)), uintptr(unsafe.Pointer(&p1)), uintptr(unsafe.Pointer(&p2)), uintptr(unsafe.Pointer(&p3)))
-	return rayCollision
+	// empty code to make gopls happy on non-web
+	var zero RayCollision
+	return zero
 }
 
 // GetRayCollisionQuad - Get collision info between ray and quad
 func GetRayCollisionQuad(ray Ray, p1 Vector3, p2 Vector3, p3 Vector3, p4 Vector3) RayCollision {
-	var rayCollision RayCollision
-	getRayCollisionQuad(uintptr(unsafe.Pointer(&rayCollision)), uintptr(unsafe.Pointer(&ray)), uintptr(unsafe.Pointer(&p1)), uintptr(unsafe.Pointer(&p2)), uintptr(unsafe.Pointer(&p3)), uintptr(unsafe.Pointer(&p4)))
-	return rayCollision
+	// empty code to make gopls happy on non-web
+	var zero RayCollision
+	return zero
 }
 
 // InitAudioDevice - Initialize audio device and context
 func InitAudioDevice() {
-	initAudioDevice()
+	// empty code to make gopls happy on non-web
 }
 
 // CloseAudioDevice - Close the audio device and context
 func CloseAudioDevice() {
-	closeAudioDevice()
+	// empty code to make gopls happy on non-web
 }
 
 // IsAudioDeviceReady - Check if audio device has been initialized successfully
 func IsAudioDeviceReady() bool {
-	return isAudioDeviceReady()
+	// empty code to make gopls happy on non-web
+	var zero bool
+	return zero
 }
 
 // SetMasterVolume - Set master volume (listener)
 func SetMasterVolume(volume float32) {
-	setMasterVolume(volume)
+	// empty code to make gopls happy on non-web
 }
 
 // GetMasterVolume - Get master volume (listener)
 func GetMasterVolume() float32 {
-	return getMasterVolume()
+	// empty code to make gopls happy on non-web
+	var zero float32
+	return zero
 }
-
 
 // LoadWaveFromMemory - Load wave from memory buffer, fileType refers to extension: i.e. '.wav'
 func LoadWaveFromMemory(fileType string, fileData []byte, dataSize int32) Wave {
-	var wave Wave
-	loadWaveFromMemory(uintptr(unsafe.Pointer(&wave)), fileType, fileData, dataSize)
-	return wave
+	// empty code to make gopls happy on non-web
+	var zero Wave
+	return zero
 }
 
 // IsWaveValid - Checks if wave data is valid (data loaded and parameters)
 func IsWaveValid(wave Wave) bool {
-	return isWaveValid(uintptr(unsafe.Pointer(&wave)))
+	// empty code to make gopls happy on non-web
+	var zero bool
+	return zero
 }
-
-
 
 // LoadSoundFromWave - Load sound from wave data
 func LoadSoundFromWave(wave Wave) Sound {
-	var sound Sound
-	loadSoundFromWave(uintptr(unsafe.Pointer(&sound)), uintptr(unsafe.Pointer(&wave)))
-	return sound
+	// empty code to make gopls happy on non-web
+	var zero Sound
+	return zero
 }
 
 // LoadSoundAlias - Create a new sound that shares the same sample data as the source sound, does not own the sound data
 func LoadSoundAlias(source Sound) Sound {
-	var sound Sound
-	loadSoundAlias(uintptr(unsafe.Pointer(&sound)), uintptr(unsafe.Pointer(&source)))
-	return sound
+	// empty code to make gopls happy on non-web
+	var zero Sound
+	return zero
 }
 
 // IsSoundValid - Checks if a sound is valid (data loaded and buffers initialized)
 func IsSoundValid(sound Sound) bool {
-	return isSoundValid(uintptr(unsafe.Pointer(&sound)))
+	// empty code to make gopls happy on non-web
+	var zero bool
+	return zero
 }
 
 // UpdateSound - Update sound buffer with new data
 func UpdateSound(sound Sound, data []byte, sampleCount int32) {
-	updateSound(uintptr(unsafe.Pointer(&sound)), data, sampleCount)
+	// empty code to make gopls happy on non-web
 }
 
 // UnloadWave - Unload wave data
 func UnloadWave(wave Wave) {
-	unloadWave(uintptr(unsafe.Pointer(&wave)))
+	// empty code to make gopls happy on non-web
 }
 
 // UnloadSound - Unload sound
 func UnloadSound(sound Sound) {
-	unloadSound(uintptr(unsafe.Pointer(&sound)))
+	// empty code to make gopls happy on non-web
 }
 
 // UnloadSoundAlias - Unload a sound alias (does not deallocate sample data)
 func UnloadSoundAlias(alias Sound) {
-	unloadSoundAlias(uintptr(unsafe.Pointer(&alias)))
+	// empty code to make gopls happy on non-web
 }
 
 // ExportWave - Export wave data to file, returns true on success
 func ExportWave(wave Wave, fileName string) bool {
-	return exportWave(uintptr(unsafe.Pointer(&wave)), fileName)
+	// empty code to make gopls happy on non-web
+	var zero bool
+	return zero
 }
 
 // PlaySound - Play a sound
 func PlaySound(sound Sound) {
-	playSound(uintptr(unsafe.Pointer(&sound)))
+	// empty code to make gopls happy on non-web
 }
 
 // StopSound - Stop playing a sound
 func StopSound(sound Sound) {
-	stopSound(uintptr(unsafe.Pointer(&sound)))
+	// empty code to make gopls happy on non-web
 }
 
 // PauseSound - Pause a sound
 func PauseSound(sound Sound) {
-	pauseSound(uintptr(unsafe.Pointer(&sound)))
+	// empty code to make gopls happy on non-web
 }
 
 // ResumeSound - Resume a paused sound
 func ResumeSound(sound Sound) {
-	resumeSound(uintptr(unsafe.Pointer(&sound)))
+	// empty code to make gopls happy on non-web
 }
 
 // IsSoundPlaying - Check if a sound is currently playing
 func IsSoundPlaying(sound Sound) bool {
-	return isSoundPlaying(uintptr(unsafe.Pointer(&sound)))
+	// empty code to make gopls happy on non-web
+	var zero bool
+	return zero
 }
 
 // SetSoundVolume - Set volume for a sound (1.0 is max level)
 func SetSoundVolume(sound Sound, volume float32) {
-	setSoundVolume(uintptr(unsafe.Pointer(&sound)), volume)
+	// empty code to make gopls happy on non-web
 }
 
 // SetSoundPitch - Set pitch for a sound (1.0 is base level)
 func SetSoundPitch(sound Sound, pitch float32) {
-	setSoundPitch(uintptr(unsafe.Pointer(&sound)), pitch)
+	// empty code to make gopls happy on non-web
 }
 
 // SetSoundPan - Set pan for a sound (0.5 is center)
 func SetSoundPan(sound Sound, pan float32) {
-	setSoundPan(uintptr(unsafe.Pointer(&sound)), pan)
+	// empty code to make gopls happy on non-web
 }
 
 // WaveCopy - Copy a wave to a new wave
 func WaveCopy(wave Wave) Wave {
-	var copy Wave
-	waveCopy(uintptr(unsafe.Pointer(&copy)), uintptr(unsafe.Pointer(&wave)))
-	return copy
+	// empty code to make gopls happy on non-web
+	var zero Wave
+	return zero
 }
 
 // WaveCrop - Crop a wave to defined frames range
 func WaveCrop(wave *Wave, initFrame int32, finalFrame int32) {
-	waveCrop(wave, initFrame, finalFrame)
+	// empty code to make gopls happy on non-web
 }
 
 // WaveFormat - Convert wave data to desired format
 func WaveFormat(wave *Wave, sampleRate int32, sampleSize int32, channels int32) {
-	waveFormat(wave, sampleRate, sampleRate, channels)
+	// empty code to make gopls happy on non-web
 }
 
 // LoadWaveSamples - Load samples data from wave as a 32bit float data array
 func LoadWaveSamples(wave Wave) []float32 {
-	ret := loadWaveSamples(uintptr(unsafe.Pointer(&wave)))
-	return unsafe.Slice(ret, wave.FrameCount*wave.Channels)
+	// empty code to make gopls happy on non-web
+	var zero []float32
+	return zero
 }
 
 // UnloadWaveSamples - Unload samples data loaded with LoadWaveSamples()
 func UnloadWaveSamples(samples []float32) {
-	unloadWaveSamples(samples)
+	// empty code to make gopls happy on non-web
 }
-
-
 
 // LoadMusicStreamFromMemory - Load music stream from data
 func LoadMusicStreamFromMemory(fileType string, data []byte, dataSize int32) Music {
-	var music Music
-	loadMusicStreamFromMemory(uintptr(unsafe.Pointer(&music)), fileType, data, dataSize)
-	return music
+	// empty code to make gopls happy on non-web
+	var zero Music
+	return zero
 }
 
 // IsMusicValid - Checks if a music stream is valid (context and buffers initialized)
 func IsMusicValid(music Music) bool {
-	return isMusicValid(uintptr(unsafe.Pointer(&music)))
+	// empty code to make gopls happy on non-web
+	var zero bool
+	return zero
 }
 
 // UnloadMusicStream - Unload music stream
 func UnloadMusicStream(music Music) {
-	unloadMusicStream(uintptr(unsafe.Pointer(&music)))
+	// empty code to make gopls happy on non-web
 }
 
 // PlayMusicStream - Start music playing
 func PlayMusicStream(music Music) {
-	playMusicStream(uintptr(unsafe.Pointer(&music)))
+	// empty code to make gopls happy on non-web
 }
 
 // IsMusicStreamPlaying - Check if music is playing
 func IsMusicStreamPlaying(music Music) bool {
-	return isMusicStreamPlaying(uintptr(unsafe.Pointer(&music)))
+	// empty code to make gopls happy on non-web
+	var zero bool
+	return zero
 }
 
 // UpdateMusicStream - Updates buffers for music streaming
 func UpdateMusicStream(music Music) {
-	updateMusicStream(uintptr(unsafe.Pointer(&music)))
+	// empty code to make gopls happy on non-web
 }
 
 // StopMusicStream - Stop music playing
 func StopMusicStream(music Music) {
-	stopMusicStream(uintptr(unsafe.Pointer(&music)))
+	// empty code to make gopls happy on non-web
 }
 
 // PauseMusicStream - Pause music playing
 func PauseMusicStream(music Music) {
-	pauseMusicStream(uintptr(unsafe.Pointer(&music)))
+	// empty code to make gopls happy on non-web
 }
 
 // ResumeMusicStream - Resume playing paused music
 func ResumeMusicStream(music Music) {
-	resumeMusicStream(uintptr(unsafe.Pointer(&music)))
+	// empty code to make gopls happy on non-web
 }
 
 // SeekMusicStream - Seek music to a position (in seconds)
 func SeekMusicStream(music Music, position float32) {
-	seekMusicStream(uintptr(unsafe.Pointer(&music)), position)
+	// empty code to make gopls happy on non-web
 }
 
 // SetMusicVolume - Set volume for music (1.0 is max level)
 func SetMusicVolume(music Music, volume float32) {
-	setMusicVolume(uintptr(unsafe.Pointer(&music)), volume)
+	// empty code to make gopls happy on non-web
 }
 
 // SetMusicPitch - Set pitch for a music (1.0 is base level)
 func SetMusicPitch(music Music, pitch float32) {
-	setMusicPitch(uintptr(unsafe.Pointer(&music)), pitch)
+	// empty code to make gopls happy on non-web
 }
 
 // SetMusicPan - Set pan for a music (0.5 is center)
 func SetMusicPan(music Music, pan float32) {
-	setMusicPan(uintptr(unsafe.Pointer(&music)), pan)
+	// empty code to make gopls happy on non-web
 }
 
 // GetMusicTimeLength - Get music time length (in seconds)
 func GetMusicTimeLength(music Music) float32 {
-	return getMusicTimeLength(uintptr(unsafe.Pointer(&music)))
+	// empty code to make gopls happy on non-web
+	var zero float32
+	return zero
 }
 
 // GetMusicTimePlayed - Get current music time played (in seconds)
 func GetMusicTimePlayed(music Music) float32 {
-	return getMusicTimePlayed(uintptr(unsafe.Pointer(&music)))
+	// empty code to make gopls happy on non-web
+	var zero float32
+	return zero
 }
 
 // LoadAudioStream - Load audio stream (to stream raw audio pcm data)
 func LoadAudioStream(sampleRate uint32, sampleSize uint32, channels uint32) AudioStream {
-	var audioStream AudioStream
-	loadAudioStream(uintptr(unsafe.Pointer(&audioStream)), sampleRate, sampleSize, channels)
-	return audioStream
+	// empty code to make gopls happy on non-web
+	var zero AudioStream
+	return zero
 }
 
 // IsAudioStreamValid - Checks if an audio stream is valid (buffers initialized)
 func IsAudioStreamValid(stream AudioStream) bool {
-	return isAudioStreamValid(uintptr(unsafe.Pointer(&stream)))
+	// empty code to make gopls happy on non-web
+	var zero bool
+	return zero
 }
 
 // UnloadAudioStream - Unload audio stream and free memory
 func UnloadAudioStream(stream AudioStream) {
-	unloadAudioStream(uintptr(unsafe.Pointer(&stream)))
+	// empty code to make gopls happy on non-web
 }
 
 // UpdateAudioStream - Update audio stream buffers with data
 func UpdateAudioStream(stream AudioStream, data []float32) {
-	frameCount := int32(len(data))
-	updateAudioStream(uintptr(unsafe.Pointer(&stream)), data, frameCount)
+	// empty code to make gopls happy on non-web
 }
 
 // IsAudioStreamProcessed - Check if any audio stream buffers requires refill
 func IsAudioStreamProcessed(stream AudioStream) bool {
-	return isAudioStreamProcessed(uintptr(unsafe.Pointer(&stream)))
+	// empty code to make gopls happy on non-web
+	var zero bool
+	return zero
 }
 
 // PlayAudioStream - Play audio stream
 func PlayAudioStream(stream AudioStream) {
-	playAudioStream(uintptr(unsafe.Pointer(&stream)))
+	// empty code to make gopls happy on non-web
 }
 
 // PauseAudioStream - Pause audio stream
 func PauseAudioStream(stream AudioStream) {
-	pauseAudioStream(uintptr(unsafe.Pointer(&stream)))
+	// empty code to make gopls happy on non-web
 }
 
 // ResumeAudioStream - Resume audio stream
 func ResumeAudioStream(stream AudioStream) {
-	resumeAudioStream(uintptr(unsafe.Pointer(&stream)))
+	// empty code to make gopls happy on non-web
 }
 
 // IsAudioStreamPlaying - Check if audio stream is playing
 func IsAudioStreamPlaying(stream AudioStream) bool {
-	return isAudioStreamPlaying(uintptr(unsafe.Pointer(&stream)))
+	// empty code to make gopls happy on non-web
+	var zero bool
+	return zero
 }
 
 // StopAudioStream - Stop audio stream
 func StopAudioStream(stream AudioStream) {
-	stopAudioStream(uintptr(unsafe.Pointer(&stream)))
+	// empty code to make gopls happy on non-web
 }
 
 // SetAudioStreamVolume - Set volume for audio stream (1.0 is max level)
 func SetAudioStreamVolume(stream AudioStream, volume float32) {
-	setAudioStreamVolume(uintptr(unsafe.Pointer(&stream)), volume)
+	// empty code to make gopls happy on non-web
 }
 
 // SetAudioStreamPitch - Set pitch for audio stream (1.0 is base level)
 func SetAudioStreamPitch(stream AudioStream, pitch float32) {
-	setAudioStreamPitch(uintptr(unsafe.Pointer(&stream)), pitch)
+	// empty code to make gopls happy on non-web
 }
 
 // SetAudioStreamPan - Set pan for audio stream (0.5 is centered)
 func SetAudioStreamPan(stream AudioStream, pan float32) {
-	setAudioStreamPan(uintptr(unsafe.Pointer(&stream)), pan)
+	// empty code to make gopls happy on non-web
 }
 
 // SetAudioStreamBufferSizeDefault - Default size for new audio streams
 func SetAudioStreamBufferSizeDefault(size int32) {
-	setAudioStreamBufferSizeDefault(size)
+	// empty code to make gopls happy on non-web
 }
-
-// // SetAudioStreamCallback - Audio thread callback to request new data
-// func SetAudioStreamCallback(stream AudioStream, callback AudioCallback) {
-// 	fn := purego.NewCallback(func(bufferData unsafe.Pointer, frames int32) uintptr {
-// 		callback(unsafe.Slice((*float32)(bufferData), frames), int(frames))
-// 		return 0
-// 	})
-// 	setAudioStreamCallback(uintptr(unsafe.Pointer(&stream)), fn)
-// }
-
-// // AttachAudioStreamProcessor - Attach audio stream processor to stream, receives the samples as <float>s
-// func AttachAudioStreamProcessor(stream AudioStream, processor AudioCallback) {
-// 	fn := purego.NewCallback(func(bufferData unsafe.Pointer, frames int32) uintptr {
-// 		processor(unsafe.Slice((*float32)(bufferData), frames), int(frames))
-// 		return 0
-// 	})
-// 	ptr := uintptr(reflect.ValueOf(processor).UnsafePointer())
-// 	audioCallbacks[ptr] = fn
-// 	attachAudioStreamProcessor(uintptr(unsafe.Pointer(&stream)), fn)
-// }
-
-// // DetachAudioStreamProcessor - Detach audio stream processor from stream
-// func DetachAudioStreamProcessor(stream AudioStream, processor AudioCallback) {
-// 	ptr := uintptr(reflect.ValueOf(processor).UnsafePointer())
-// 	fn := audioCallbacks[ptr]
-// 	detachAudioStreamProcessor(uintptr(unsafe.Pointer(&stream)), fn)
-// }
-
-// // AttachAudioMixedProcessor - Attach audio stream processor to the entire audio pipeline, receives the samples as <float>s
-// func AttachAudioMixedProcessor(processor AudioCallback) {
-// 	fn := purego.NewCallback(func(bufferData unsafe.Pointer, frames int32) uintptr {
-// 		processor(unsafe.Slice((*float32)(bufferData), frames), int(frames))
-// 		return 0
-// 	})
-// 	ptr := uintptr(reflect.ValueOf(processor).UnsafePointer())
-// 	audioCallbacks[ptr] = fn
-// 	attachAudioMixedProcessor(fn)
-// }
-
-// // DetachAudioMixedProcessor - Detach audio stream processor from the entire audio pipeline
-// func DetachAudioMixedProcessor(processor AudioCallback) {
-// 	ptr := uintptr(reflect.ValueOf(processor).UnsafePointer())
-// 	fn := audioCallbacks[ptr]
-// 	detachAudioMixedProcessor(fn)
-// }
 

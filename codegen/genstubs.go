@@ -7,8 +7,8 @@ import (
 	"strings"
 )
 
-
-func ModeBind(file string, structs []string) {
+// make empty definitions
+func ModeStub(file string, structs []string) {
 
 	funcs := ExtractFuncs(file)
 	// check which parameters are struct types
@@ -27,22 +27,18 @@ func ModeBind(file string, structs []string) {
 		}
 	}
 
-	var out string = imports
-	//
-	for _, f := range funcs {
-		if strings.Contains(f.Description, "(only PLATFORM_DESKTOP)") {
-			continue
-		}
-		// var initWindow = wasm.Proc("InitWindow")
-		out += fmt.Sprintln(f.RegisterSignature())
-	}
+	var out string = fmt.Sprintln("//go:build !js") + imports
 	for _, f := range funcs {
 		comments := strings.SplitSeq(f.Description, "\n")
 		for comment := range comments {
 			out += fmt.Sprintln("//", comment)
 		}
 		// func InitWindow(width int32, height int32, title string){//binding code}
-		out += fmt.Sprintln(f.Signature(f.BindingCode()))
+		var stub string = "//empty code to make gopls happy on non-web\n"
+		if f.ReturnType != "" {
+			stub += fmt.Sprintf("var zero %s ;return zero", f.ReturnType)
+		}
+		out += fmt.Sprintln(f.Signature(stub))
 	}
 
 	formatted, err := format.Source([]byte(out))

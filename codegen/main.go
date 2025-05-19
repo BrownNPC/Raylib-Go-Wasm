@@ -7,7 +7,7 @@ import (
 	"slices"
 )
 
-var help string = fmt.Sprint("Supported libraries to generate bindings for are: ", supportedLibs)
+var help string = fmt.Sprintf("Supported libraries to generate bindings for are: %s\npassing a third argument 'stub' will generate stubs", supportedLibs)
 
 var mode int
 
@@ -16,6 +16,15 @@ var supportedLibs = []string{"rcore"}
 
 // go bindings for raylib dont have aliases for some structs
 var additions = []string{"color.RGBA", "Texture2D", "RenderTexture2D"}
+
+var imports = `
+package rl
+import (
+	"image/color"
+	"unsafe"
+	wasm "github.com/BrownNPC/Raylib-Go-Wasm/wasm"
+)
+`
 
 // get data codegen data for a supported lib
 func CodegenDataFor(libname string) (defines string, structNames []string, err error) {
@@ -59,7 +68,11 @@ func main() {
 		if err != nil {
 			os.Exit(1)
 		}
-		ModeBind(defines, structNames)
+		if len(os.Args) == 3 && os.Args[2] == "stub" {
+			ModeStub(defines, structNames)
+		} else {
+			ModeBind(defines, structNames)
+		}
 	} else {
 		fmt.Println(help)
 	}
