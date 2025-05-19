@@ -4,7 +4,7 @@ import (
 	"image/color"
 	"unsafe"
 
-	wasm "github.com/BrownNPC/Raylib-Go-Wasm/internal"
+	wasm "github.com/BrownNPC/Raylib-Go-Wasm/wasm"
 )
 
 var closeWindow = wasm.Proc("CloseWindow")
@@ -483,8 +483,6 @@ var setAudioStreamVolume = wasm.Proc("SetAudioStreamVolume")
 var setAudioStreamPitch = wasm.Proc("SetAudioStreamPitch")
 var setAudioStreamPan = wasm.Proc("SetAudioStreamPan")
 var setAudioStreamBufferSizeDefault = wasm.Proc("SetAudioStreamBufferSizeDefault")
-
-
 
 // CloseWindow - Close window and unload OpenGL context
 func CloseWindow() {
@@ -3799,4 +3797,3 @@ func SetAudioStreamBufferSizeDefault(size int32) {
 	_, fl := setAudioStreamBufferSizeDefault.Call(size)
 	wasm.Free(fl...)
 }
-

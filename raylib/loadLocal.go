@@ -2,7 +2,7 @@
 
 package rl
 
-import wasm "main.wasm/internal"
+import wasm "github.com/BrownNPC/Raylib-Go-Wasm/wasm"
 
 func addfile(){	
 }

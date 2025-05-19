@@ -12,7 +12,7 @@ import (
 	"image/color"
 	"io"
 
-	wasm "main.wasm/internal"
+	wasm "github.com/BrownNPC/Raylib-Go-Wasm/wasm"
 )
 
 // Wave type, defines audio wave data

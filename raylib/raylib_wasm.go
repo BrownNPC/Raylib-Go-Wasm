@@ -4,7 +4,7 @@ package rl
 import (
 	"syscall/js"
 
-	wasm "main.wasm/internal"
+	wasm "github.com/BrownNPC/Raylib-Go-Wasm/wasm"
 )
 
 // Use this instead of a for loop on web platform
