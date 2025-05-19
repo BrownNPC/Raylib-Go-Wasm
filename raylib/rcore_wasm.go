@@ -2,11 +2,11 @@ package rl
 
 import (
 	"image/color"
-	wasm "main.wasm/internal"
 	"unsafe"
+
+	wasm "github.com/BrownNPC/Raylib-Go-Wasm/internal"
 )
 
-var initWindow = wasm.Proc("InitWindow")
 var closeWindow = wasm.Proc("CloseWindow")
 var isWindowReady = wasm.Func[bool]("IsWindowReady")
 var isWindowFullscreen = wasm.Func[bool]("IsWindowFullscreen")
@@ -484,11 +484,7 @@ var setAudioStreamPitch = wasm.Proc("SetAudioStreamPitch")
 var setAudioStreamPan = wasm.Proc("SetAudioStreamPan")
 var setAudioStreamBufferSizeDefault = wasm.Proc("SetAudioStreamBufferSizeDefault")
 
-// InitWindow - Initialize window and OpenGL context
-func InitWindow(width int32, height int32, title string) {
-	_, fl := initWindow.Call(width, height, title)
-	wasm.Free(fl...)
-}
+
 
 // CloseWindow - Close window and unload OpenGL context
 func CloseWindow() {

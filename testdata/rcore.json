@@ -3162,25 +3162,6 @@
   ],
   "functions": [
     {
-      "name": "InitWindow",
-      "description": "Initialize window and OpenGL context",
-      "returnType": "void",
-      "params": [
-        {
-          "type": "int",
-          "name": "width"
-        },
-        {
-          "type": "int",
-          "name": "height"
-        },
-        {
-          "type": "const char *",
-          "name": "title"
-        }
-      ]
-    },
-    {
       "name": "CloseWindow",
       "description": "Close window and unload OpenGL context",
       "returnType": "void"
