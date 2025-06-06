@@ -7,13 +7,12 @@ import (
 	"fmt"
 	"log"
 	"net/http"
-	"os"
 	"path/filepath"
 )
 
 var (
 	port = ":8080"
-	dir  = filepath.Join(os.Args[0], "../index/")
+	dir  = filepath.Join("./Raylib-Go-Wasm/index")
 )
 
 func main() {
