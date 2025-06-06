@@ -75,11 +75,32 @@ or if you're using Windows
 ```
 ./server.exe
 ```
-this will serve your app on https://localhost:8080
+> this will serve your app on https://localhost:8080
 
-You dont need to restart the server after you recompile
+#### You dont need to restart the server after you recompile
+
+### Tips
 
 I recommend you run the server in a seperate terminal, so you can recompile your code easier.
+
+
+You can also setup [air](https://github.com/air-verse/air) to automatically recompile your code when a file changes
+
+firstly make sure `air` is installed and then make a file called `.air.toml` next to your `main.go`
+(dont forget the dot in `.air.toml`)
+
+put this in the file and simply run the `air` command while in the same directory as the `.air.toml` file
+
+```toml
+[build]
+  cmd = "GOOS=js GOARCH=wasm go build -o ./Raylib-Go-Wasm/index/main.wasm ."
+  bin = ""                     
+  include_ext = ["go"]
+  exclude_dir = ["vendor"]
+  delay = 100
+[log]
+  time = false
+```
 
 # Publish to Github Pages
 
