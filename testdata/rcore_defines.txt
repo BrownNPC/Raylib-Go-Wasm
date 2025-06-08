@@ -1,5 +1,17 @@
 package fake
 
+import (
+	"fmt"
+	"image"
+	"image/color"
+	"os"
+	"reflect"
+	"unsafe"
+
+	"github.com/ebitengine/purego"
+	"golang.org/x/sys/windows"
+)
+
 
 // CloseWindow - Close window and unload OpenGL context
 func CloseWindow() {
@@ -81,7 +93,7 @@ func RestoreWindow() {
 	restoreWindow()
 }
 
-// SetWindowIcon - Set icon for window (single image, RGBA 32bit, (only PLATFORM_DESKTOP)
+// SetWindowIcon - Set icon for window (single image, RGBA 32bit, only PLATFORM_DESKTOP)
 func SetWindowIcon(image Image) {
 	setWindowIcon(uintptr(unsafe.Pointer(&image)))
 }
@@ -131,7 +143,7 @@ func SetWindowFocused() {
 	setWindowFocused()
 }
 
-// GetWindowHandle - Get native window handle (only PLATFORM_DESKTOP)
+// GetWindowHandle - Get native window handle
 func GetWindowHandle() unsafe.Pointer {
 	return getWindowHandle()
 }
@@ -619,6 +631,7 @@ func MemRealloc(ptr unsafe.Pointer, size uint32) unsafe.Pointer {
 func MemFree(ptr unsafe.Pointer) {
 	memFree(ptr)
 }
+
 
 // IsFileDropped - Check if a file has been dropped into window
 func IsFileDropped() bool {
@@ -1287,6 +1300,27 @@ func GetCollisionRec(rec1 Rectangle, rec2 Rectangle) Rectangle {
 	return rec
 }
 
+// LoadImage - Load image from file into CPU memory (RAM)
+func LoadImage(fileName string) *Image {
+	var img Image
+	loadImage(uintptr(unsafe.Pointer(&img)), fileName)
+	return &img
+}
+
+// LoadImageRaw - Load image from RAW file data
+func LoadImageRaw(fileName string, width int32, height int32, format PixelFormat, headerSize int32) *Image {
+	var img Image
+	loadImageRaw(uintptr(unsafe.Pointer(&img)), fileName, width, height, int32(format), headerSize)
+	return &img
+}
+
+// LoadImageAnim - Load image sequence from file (frames appended to image.data)
+func LoadImageAnim(fileName string, frames *int32) *Image {
+	var img Image
+	loadImageAnim(uintptr(unsafe.Pointer(&img)), fileName, frames)
+	return &img
+}
+
 // LoadImageAnimFromMemory - Load image sequence from memory buffer
 func LoadImageAnimFromMemory(fileType string, fileData []byte, dataSize int32, frames *int32) *Image {
 	var img Image
@@ -1713,6 +1747,12 @@ func ImageDrawTextEx(dst *Image, position Vector2, font Font, text string, fontS
 	imageDrawTextEx(dst, uintptr(unsafe.Pointer(&font)), text, *(*uintptr)(unsafe.Pointer(&position)), fontSize, spacing, *(*uintptr)(unsafe.Pointer(&tint)))
 }
 
+// LoadTexture - Load texture from file into GPU memory (VRAM)
+func LoadTexture(fileName string) Texture2D {
+	var texture Texture2D
+	loadTexture(uintptr(unsafe.Pointer(&texture)), fileName)
+	return texture
+}
 
 // LoadTextureFromImage - Load texture from image data
 func LoadTextureFromImage(image *Image) Texture2D {
@@ -1912,6 +1952,23 @@ func GetFontDefault() Font {
 	return font
 }
 
+// LoadFont - Load font from file into GPU memory (VRAM)
+func LoadFont(fileName string) Font {
+	var font Font
+	loadFont(uintptr(unsafe.Pointer(&font)), fileName)
+	return font
+}
+
+// LoadFontEx - Load font from file with extended parameters, use NULL for codepoints and 0 for codepointCount to load the default character setFont
+func LoadFontEx(fileName string, fontSize int32, codepoints []rune, runesNumber ...int32) Font {
+	var font Font
+	codepointCount := int32(len(codepoints))
+	if len(runesNumber) > 0 {
+		codepointCount = int32(runesNumber[0])
+	}
+	loadFontEx(uintptr(unsafe.Pointer(&font)), fileName, fontSize, codepoints, codepointCount)
+	return font
+}
 
 // LoadFontFromImage - Load font from Image (XNA style)
 func LoadFontFromImage(image Image, key color.RGBA, firstChar rune) Font {
@@ -2136,6 +2193,12 @@ func DrawGrid(slices int32, spacing float32) {
 	drawGrid(slices, spacing)
 }
 
+// LoadModel - Load model from files (meshes and materials)
+func LoadModel(fileName string) Model {
+	var model Model
+	loadModel(uintptr(unsafe.Pointer(&model)), fileName)
+	return model
+}
 
 // LoadModelFromMesh - Load model from generated mesh (default material)
 func LoadModelFromMesh(mesh Mesh) Model {
@@ -2331,6 +2394,12 @@ func GenMeshCubicmap(cubicmap Image, cubeSize Vector3) Mesh {
 	return mesh
 }
 
+// LoadMaterials - Load materials from model file
+func LoadMaterials(fileName string) []Material {
+	var materialCount int32
+	ret := loadMaterials(fileName, &materialCount)
+	return unsafe.Slice(ret, materialCount)
+}
 
 // LoadMaterialDefault - Load default material (Supports: DIFFUSE, SPECULAR, NORMAL maps)
 func LoadMaterialDefault() Material {
@@ -2359,6 +2428,12 @@ func SetModelMeshMaterial(model *Model, meshId int32, materialId int32) {
 	setModelMeshMaterial(model, meshId, materialId)
 }
 
+// LoadModelAnimations - Load model animations from file
+func LoadModelAnimations(fileName string) []ModelAnimation {
+	var animCount int32
+	ret := loadModelAnimations(fileName, &animCount)
+	return unsafe.Slice(ret, animCount)
+}
 
 // UpdateModelAnimation - Update model animation pose (CPU)
 func UpdateModelAnimation(model Model, anim ModelAnimation, frame int32) {
@@ -2461,6 +2536,12 @@ func GetMasterVolume() float32 {
 	return getMasterVolume()
 }
 
+// LoadWave - Load wave data from file
+func LoadWave(fileName string) Wave {
+	var wave Wave
+	loadWave(uintptr(unsafe.Pointer(&wave)), fileName)
+	return wave
+}
 
 // LoadWaveFromMemory - Load wave from memory buffer, fileType refers to extension: i.e. '.wav'
 func LoadWaveFromMemory(fileType string, fileData []byte, dataSize int32) Wave {
@@ -2474,7 +2555,12 @@ func IsWaveValid(wave Wave) bool {
 	return isWaveValid(uintptr(unsafe.Pointer(&wave)))
 }
 
-
+// LoadSound - Load sound from file
+func LoadSound(fileName string) Sound {
+	var sound Sound
+	loadSound(uintptr(unsafe.Pointer(&sound)), fileName)
+	return sound
+}
 
 // LoadSoundFromWave - Load sound from wave data
 func LoadSoundFromWave(wave Wave) Sound {
@@ -2588,7 +2674,12 @@ func UnloadWaveSamples(samples []float32) {
 	unloadWaveSamples(samples)
 }
 
-
+// LoadMusicStream - Load music stream from file
+func LoadMusicStream(fileName string) Music {
+	var music Music
+	loadMusicStream(uintptr(unsafe.Pointer(&music)), fileName)
+	return music
+}
 
 // LoadMusicStreamFromMemory - Load music stream from data
 func LoadMusicStreamFromMemory(fileType string, data []byte, dataSize int32) Music {
@@ -2740,48 +2831,100 @@ func SetAudioStreamBufferSizeDefault(size int32) {
 	setAudioStreamBufferSizeDefault(size)
 }
 
-// // SetAudioStreamCallback - Audio thread callback to request new data
-// func SetAudioStreamCallback(stream AudioStream, callback AudioCallback) {
-// 	fn := purego.NewCallback(func(bufferData unsafe.Pointer, frames int32) uintptr {
-// 		callback(unsafe.Slice((*float32)(bufferData), frames), int(frames))
-// 		return 0
-// 	})
-// 	setAudioStreamCallback(uintptr(unsafe.Pointer(&stream)), fn)
-// }
+// SetAudioStreamCallback - Audio thread callback to request new data
+func SetAudioStreamCallback(stream AudioStream, callback AudioCallback) {
+	fn := purego.NewCallback(func(bufferData unsafe.Pointer, frames int32) uintptr {
+		callback(unsafe.Slice((*float32)(bufferData), frames), int(frames))
+		return 0
+	})
+	setAudioStreamCallback(uintptr(unsafe.Pointer(&stream)), fn)
+}
 
-// // AttachAudioStreamProcessor - Attach audio stream processor to stream, receives the samples as <float>s
-// func AttachAudioStreamProcessor(stream AudioStream, processor AudioCallback) {
-// 	fn := purego.NewCallback(func(bufferData unsafe.Pointer, frames int32) uintptr {
-// 		processor(unsafe.Slice((*float32)(bufferData), frames), int(frames))
-// 		return 0
-// 	})
-// 	ptr := uintptr(reflect.ValueOf(processor).UnsafePointer())
-// 	audioCallbacks[ptr] = fn
-// 	attachAudioStreamProcessor(uintptr(unsafe.Pointer(&stream)), fn)
-// }
+// AttachAudioStreamProcessor - Attach audio stream processor to stream, receives the samples as <float>s
+func AttachAudioStreamProcessor(stream AudioStream, processor AudioCallback) {
+	fn := purego.NewCallback(func(bufferData unsafe.Pointer, frames int32) uintptr {
+		processor(unsafe.Slice((*float32)(bufferData), frames), int(frames))
+		return 0
+	})
+	ptr := uintptr(reflect.ValueOf(processor).UnsafePointer())
+	audioCallbacks[ptr] = fn
+	attachAudioStreamProcessor(uintptr(unsafe.Pointer(&stream)), fn)
+}
 
-// // DetachAudioStreamProcessor - Detach audio stream processor from stream
-// func DetachAudioStreamProcessor(stream AudioStream, processor AudioCallback) {
-// 	ptr := uintptr(reflect.ValueOf(processor).UnsafePointer())
-// 	fn := audioCallbacks[ptr]
-// 	detachAudioStreamProcessor(uintptr(unsafe.Pointer(&stream)), fn)
-// }
+// DetachAudioStreamProcessor - Detach audio stream processor from stream
+func DetachAudioStreamProcessor(stream AudioStream, processor AudioCallback) {
+	ptr := uintptr(reflect.ValueOf(processor).UnsafePointer())
+	fn := audioCallbacks[ptr]
+	detachAudioStreamProcessor(uintptr(unsafe.Pointer(&stream)), fn)
+}
 
-// // AttachAudioMixedProcessor - Attach audio stream processor to the entire audio pipeline, receives the samples as <float>s
-// func AttachAudioMixedProcessor(processor AudioCallback) {
-// 	fn := purego.NewCallback(func(bufferData unsafe.Pointer, frames int32) uintptr {
-// 		processor(unsafe.Slice((*float32)(bufferData), frames), int(frames))
-// 		return 0
-// 	})
-// 	ptr := uintptr(reflect.ValueOf(processor).UnsafePointer())
-// 	audioCallbacks[ptr] = fn
-// 	attachAudioMixedProcessor(fn)
-// }
+// AttachAudioMixedProcessor - Attach audio stream processor to the entire audio pipeline, receives the samples as <float>s
+func AttachAudioMixedProcessor(processor AudioCallback) {
+	fn := purego.NewCallback(func(bufferData unsafe.Pointer, frames int32) uintptr {
+		processor(unsafe.Slice((*float32)(bufferData), frames), int(frames))
+		return 0
+	})
+	ptr := uintptr(reflect.ValueOf(processor).UnsafePointer())
+	audioCallbacks[ptr] = fn
+	attachAudioMixedProcessor(fn)
+}
 
-// // DetachAudioMixedProcessor - Detach audio stream processor from the entire audio pipeline
-// func DetachAudioMixedProcessor(processor AudioCallback) {
-// 	ptr := uintptr(reflect.ValueOf(processor).UnsafePointer())
-// 	fn := audioCallbacks[ptr]
-// 	detachAudioMixedProcessor(fn)
-// }
+// DetachAudioMixedProcessor - Detach audio stream processor from the entire audio pipeline
+func DetachAudioMixedProcessor(processor AudioCallback) {
+	ptr := uintptr(reflect.ValueOf(processor).UnsafePointer())
+	fn := audioCallbacks[ptr]
+	detachAudioMixedProcessor(fn)
+}
 
+// SetCallbackFunc - Sets callback function
+func SetCallbackFunc(func()) {
+}
+
+// NewImageFromImage - Returns new Image from Go image.Image
+func NewImageFromImage(img image.Image) *Image {
+	size := img.Bounds().Size()
+
+	ret := GenImageColor(size.X, size.Y, White)
+
+	for y := 0; y < size.Y; y++ {
+		for x := 0; x < size.X; x++ {
+			col := img.At(x, y)
+			r, g, b, a := col.RGBA()
+			rcolor := NewColor(uint8(r>>8), uint8(g>>8), uint8(b>>8), uint8(a>>8))
+			ImageDrawPixel(ret, int32(x), int32(y), rcolor)
+		}
+	}
+
+	return ret
+}
+
+// ToImage converts a Image to Go image.Image
+func (i *Image) ToImage() image.Image {
+	img := image.NewRGBA(image.Rect(0, 0, int(i.Width), int(i.Height)))
+
+	// Get pixel data from image (RGBA 32bit)
+	ret := LoadImageColors(i)
+	pixels := (*[1 << 24]uint8)(unsafe.Pointer(unsafe.SliceData(ret)))[0 : i.Width*i.Height*4]
+
+	img.Pix = pixels
+
+	return img
+}
+
+// OpenAsset - Open asset
+func OpenAsset(name string) (Asset, error) {
+	f, err := os.Open(name)
+	if err != nil {
+		return nil, err
+	}
+	return f, nil
+}
+
+// HomeDir - Returns user home directory
+// NOTE: On Android this returns internal data path and must be called after InitWindow
+func HomeDir() string {
+	if homeDir, err := os.UserHomeDir(); err == nil {
+		return homeDir
+	}
+	return ""
+}

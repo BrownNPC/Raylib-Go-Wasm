@@ -1,8 +1,10 @@
+//go:build js && wasm
 package rl
 
 // some functions need to be defined manually
 
 import (
+	"io/fs"
 	"syscall/js"
 
 	wasm "github.com/BrownNPC/Raylib-Go-Wasm/wasm"
@@ -12,6 +14,15 @@ import (
 func SetMainLoop(UpdateAndDrawFrame func()) {
 	wasm.SetMainLoop(UpdateAndDrawFrame)
 	<-make(chan struct{}, 0)
+}
+
+
+
+
+// Use this to initialize the internal wasm filesystem so asset loading works
+// pass it an embed.FS 
+func SetFileSystem(efs fs.FS) {
+	wasm.AddFileSystem(efs)
 }
 
 // UNSUPPORTED: USE SetMainLoop

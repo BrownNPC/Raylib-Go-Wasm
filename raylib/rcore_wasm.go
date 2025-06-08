@@ -1,6 +1,7 @@
 package rl
 
 import (
+	"image"
 	"image/color"
 	"unsafe"
 
@@ -13,12 +14,14 @@ var isWindowFullscreen = wasm.Func[bool]("IsWindowFullscreen")
 var isWindowResized = wasm.Func[bool]("IsWindowResized")
 var isWindowState = wasm.Func[bool]("IsWindowState")
 var clearWindowState = wasm.Proc("ClearWindowState")
+var setWindowIcon = wasm.Proc("SetWindowIcon")
 var setWindowIcons = wasm.Proc("SetWindowIcons")
 var setWindowTitle = wasm.Proc("SetWindowTitle")
 var setWindowMonitor = wasm.Proc("SetWindowMonitor")
 var setWindowMinSize = wasm.Proc("SetWindowMinSize")
 var setWindowMaxSize = wasm.Proc("SetWindowMaxSize")
 var setWindowSize = wasm.Proc("SetWindowSize")
+var getWindowHandle = wasm.Func[unsafe.Pointer]("GetWindowHandle")
 var getScreenWidth = wasm.Func[int]("GetScreenWidth")
 var getScreenHeight = wasm.Func[int]("GetScreenHeight")
 var getRenderWidth = wasm.Func[int]("GetRenderWidth")
@@ -225,7 +228,11 @@ var checkCollisionPointPoly = wasm.Func[bool]("CheckCollisionPointPoly")
 var checkCollisionLines = wasm.Func[bool]("CheckCollisionLines")
 var checkCollisionPointLine = wasm.Func[bool]("CheckCollisionPointLine")
 var getCollisionRec = wasm.Func[Rectangle]("GetCollisionRec")
+var loadImage = wasm.Func[*Image]("LoadImage")
+var loadImageRaw = wasm.Func[*Image]("LoadImageRaw")
+var loadImageAnim = wasm.Func[*Image]("LoadImageAnim")
 var loadImageAnimFromMemory = wasm.Func[*Image]("LoadImageAnimFromMemory")
+var loadImageFromMemory = wasm.Func[*Image]("LoadImageFromMemory")
 var loadImageFromTexture = wasm.Func[*Image]("LoadImageFromTexture")
 var loadImageFromScreen = wasm.Func[*Image]("LoadImageFromScreen")
 var isImageValid = wasm.Func[bool]("IsImageValid")
@@ -299,6 +306,8 @@ var imageDrawTriangleStrip = wasm.Proc("ImageDrawTriangleStrip")
 var imageDraw = wasm.Proc("ImageDraw")
 var imageDrawText = wasm.Proc("ImageDrawText")
 var imageDrawTextEx = wasm.Proc("ImageDrawTextEx")
+var loadTexture = wasm.Func[Texture2D]("LoadTexture")
+var loadTextureFromImage = wasm.Func[Texture2D]("LoadTextureFromImage")
 var loadTextureCubemap = wasm.Func[Texture2D]("LoadTextureCubemap")
 var loadRenderTexture = wasm.Func[RenderTexture2D]("LoadRenderTexture")
 var isTextureValid = wasm.Func[bool]("IsTextureValid")
@@ -333,6 +342,8 @@ var getPixelColor = wasm.Func[color.RGBA]("GetPixelColor")
 var setPixelColor = wasm.Proc("SetPixelColor")
 var getPixelDataSize = wasm.Func[int32]("GetPixelDataSize")
 var getFontDefault = wasm.Func[Font]("GetFontDefault")
+var loadFont = wasm.Func[Font]("LoadFont")
+var loadFontEx = wasm.Func[Font]("LoadFontEx")
 var loadFontFromImage = wasm.Func[Font]("LoadFontFromImage")
 var loadFontFromMemory = wasm.Func[Font]("LoadFontFromMemory")
 var isFontValid = wasm.Func[bool]("IsFontValid")
@@ -373,6 +384,7 @@ var drawCapsuleWires = wasm.Proc("DrawCapsuleWires")
 var drawPlane = wasm.Proc("DrawPlane")
 var drawRay = wasm.Proc("DrawRay")
 var drawGrid = wasm.Proc("DrawGrid")
+var loadModel = wasm.Func[Model]("LoadModel")
 var loadModelFromMesh = wasm.Func[Model]("LoadModelFromMesh")
 var isModelValid = wasm.Func[bool]("IsModelValid")
 var unloadModel = wasm.Proc("UnloadModel")
@@ -406,11 +418,13 @@ var genMeshTorus = wasm.Func[Mesh]("GenMeshTorus")
 var genMeshKnot = wasm.Func[Mesh]("GenMeshKnot")
 var genMeshHeightmap = wasm.Func[Mesh]("GenMeshHeightmap")
 var genMeshCubicmap = wasm.Func[Mesh]("GenMeshCubicmap")
+var loadMaterials = wasm.Func[[]Material]("LoadMaterials")
 var loadMaterialDefault = wasm.Func[Material]("LoadMaterialDefault")
 var isMaterialValid = wasm.Func[bool]("IsMaterialValid")
 var unloadMaterial = wasm.Proc("UnloadMaterial")
 var setMaterialTexture = wasm.Proc("SetMaterialTexture")
 var setModelMeshMaterial = wasm.Proc("SetModelMeshMaterial")
+var loadModelAnimations = wasm.Func[[]ModelAnimation]("LoadModelAnimations")
 var updateModelAnimation = wasm.Proc("UpdateModelAnimation")
 var updateModelAnimationBones = wasm.Proc("UpdateModelAnimationBones")
 var unloadModelAnimation = wasm.Proc("UnloadModelAnimation")
@@ -429,8 +443,10 @@ var closeAudioDevice = wasm.Proc("CloseAudioDevice")
 var isAudioDeviceReady = wasm.Func[bool]("IsAudioDeviceReady")
 var setMasterVolume = wasm.Proc("SetMasterVolume")
 var getMasterVolume = wasm.Func[float32]("GetMasterVolume")
+var loadWave = wasm.Func[Wave]("LoadWave")
 var loadWaveFromMemory = wasm.Func[Wave]("LoadWaveFromMemory")
 var isWaveValid = wasm.Func[bool]("IsWaveValid")
+var loadSound = wasm.Func[Sound]("LoadSound")
 var loadSoundFromWave = wasm.Func[Sound]("LoadSoundFromWave")
 var loadSoundAlias = wasm.Func[Sound]("LoadSoundAlias")
 var isSoundValid = wasm.Func[bool]("IsSoundValid")
@@ -452,6 +468,7 @@ var waveCrop = wasm.Proc("WaveCrop")
 var waveFormat = wasm.Proc("WaveFormat")
 var loadWaveSamples = wasm.Func[[]float32]("LoadWaveSamples")
 var unloadWaveSamples = wasm.Proc("UnloadWaveSamples")
+var loadMusicStream = wasm.Func[Music]("LoadMusicStream")
 var loadMusicStreamFromMemory = wasm.Func[Music]("LoadMusicStreamFromMemory")
 var isMusicValid = wasm.Func[bool]("IsMusicValid")
 var unloadMusicStream = wasm.Proc("UnloadMusicStream")
@@ -481,6 +498,16 @@ var setAudioStreamVolume = wasm.Proc("SetAudioStreamVolume")
 var setAudioStreamPitch = wasm.Proc("SetAudioStreamPitch")
 var setAudioStreamPan = wasm.Proc("SetAudioStreamPan")
 var setAudioStreamBufferSizeDefault = wasm.Proc("SetAudioStreamBufferSizeDefault")
+var setAudioStreamCallback = wasm.Proc("SetAudioStreamCallback")
+var attachAudioStreamProcessor = wasm.Proc("AttachAudioStreamProcessor")
+var detachAudioStreamProcessor = wasm.Proc("DetachAudioStreamProcessor")
+var attachAudioMixedProcessor = wasm.Proc("AttachAudioMixedProcessor")
+var detachAudioMixedProcessor = wasm.Proc("DetachAudioMixedProcessor")
+var setCallbackFunc = wasm.Proc("SetCallbackFunc")
+var newImageFromImage = wasm.Func[*Image]("NewImageFromImage")
+var toImage = wasm.Func[image.Image]("ToImage")
+var openAsset = wasm.Func[Asset]("OpenAsset")
+var homeDir = wasm.Func[string]("HomeDir")
 
 // CloseWindow - Close window and unload OpenGL context
 func CloseWindow() {
@@ -574,8 +601,10 @@ func MinimizeWindow() {
 func RestoreWindow() {
 }
 
-// SetWindowIcon - Set icon for window (single image, RGBA 32bit, (only PLATFORM_DESKTOP)
+// SetWindowIcon - Set icon for window (single image, RGBA 32bit, only PLATFORM_DESKTOP)
 func SetWindowIcon(image Image) {
+	_, fl := setWindowIcon.Call(wasm.Struct(image))
+	wasm.Free(fl...)
 }
 
 // SetWindowIcons - Set icon for window (multiple images, RGBA 32bit, only PLATFORM_DESKTOP)
@@ -626,7 +655,7 @@ func SetWindowOpacity(opacity float32) {
 func SetWindowFocused() {
 }
 
-// GetWindowHandle - Get native window handle (only PLATFORM_DESKTOP)
+// GetWindowHandle - Get native window handle
 func GetWindowHandle() unsafe.Pointer {
 	var zero unsafe.Pointer
 	return zero
@@ -2074,13 +2103,35 @@ func GetCollisionRec(rec1 Rectangle, rec2 Rectangle) Rectangle {
 	return v
 }
 
+// LoadImage - Load image from file into CPU memory (RAM)
+func LoadImage(fileName string) *Image {
+	var zero *Image
+	return zero
+}
+
+// LoadImageRaw - Load image from RAW file data
+func LoadImageRaw(fileName string, width int32, height int32, format PixelFormat, headerSize int32) *Image {
+	var zero *Image
+	return zero
+}
+
+// LoadImageAnim - Load image sequence from file (frames appended to image.data)
+func LoadImageAnim(fileName string, frames *int32) *Image {
+	var zero *Image
+	return zero
+}
+
 // LoadImageAnimFromMemory - Load image sequence from memory buffer
 func LoadImageAnimFromMemory(fileType string, fileData []byte, dataSize int32, frames *int32) *Image {
 	var zero *Image
 	return zero
 }
 
-
+// LoadImageFromMemory - Load image from memory buffer, fileType refers to extension: i.e. '.png'
+func LoadImageFromMemory(fileType string, fileData []byte, dataSize int32) *Image {
+	var zero *Image
+	return zero
+}
 
 // LoadImageFromTexture - Load image from GPU texture data
 func LoadImageFromTexture(texture Texture2D) *Image {
@@ -2542,7 +2593,21 @@ func ImageDrawTextEx(dst *Image, position Vector2, font Font, text string, fontS
 	wasm.Free(fl...)
 }
 
+// LoadTexture - Load texture from file into GPU memory (VRAM)
+func LoadTexture(fileName string) Texture2D {
+	ret, fl := loadTexture.Call(fileName)
+	v := wasm.ReadStruct[Texture2D](ret)
+	wasm.Free(fl...)
+	return v
+}
 
+// LoadTextureFromImage - Load texture from image data
+func LoadTextureFromImage(image *Image) Texture2D {
+	ret, fl := loadTextureFromImage.Call(image)
+	v := wasm.ReadStruct[Texture2D](ret)
+	wasm.Free(fl...)
+	return v
+}
 
 // LoadTextureCubemap - Load cubemap from image, multiple image cubemap layouts supported
 func LoadTextureCubemap(image *Image, layout int32) Texture2D {
@@ -2783,6 +2848,22 @@ func GetPixelDataSize(width int32, height int32, format int32) int32 {
 // GetFontDefault - Get the default Font
 func GetFontDefault() Font {
 	ret, fl := getFontDefault.Call()
+	v := wasm.ReadStruct[Font](ret)
+	wasm.Free(fl...)
+	return v
+}
+
+// LoadFont - Load font from file into GPU memory (VRAM)
+func LoadFont(fileName string) Font {
+	ret, fl := loadFont.Call(fileName)
+	v := wasm.ReadStruct[Font](ret)
+	wasm.Free(fl...)
+	return v
+}
+
+// LoadFontEx - Load font from file with extended parameters, use NULL for codepoints and 0 for codepointCount to load the default character setFont
+func LoadFontEx(fileName string, fontSize int32, codepoints []rune, runesNumber ...int32) Font {
+	ret, fl := loadFontEx.Call(fileName, fontSize, codepoints, runesNumber)
 	v := wasm.ReadStruct[Font](ret)
 	wasm.Free(fl...)
 	return v
@@ -3046,6 +3127,14 @@ func DrawGrid(slices int32, spacing float32) {
 	wasm.Free(fl...)
 }
 
+// LoadModel - Load model from files (meshes and materials)
+func LoadModel(fileName string) Model {
+	ret, fl := loadModel.Call(fileName)
+	v := wasm.ReadStruct[Model](ret)
+	wasm.Free(fl...)
+	return v
+}
+
 // LoadModelFromMesh - Load model from generated mesh (default material)
 func LoadModelFromMesh(mesh Mesh) Model {
 	ret, fl := loadModelFromMesh.Call(wasm.Struct(mesh))
@@ -3276,6 +3365,12 @@ func GenMeshCubicmap(cubicmap Image, cubeSize Vector3) Mesh {
 	return v
 }
 
+// LoadMaterials - Load materials from model file
+func LoadMaterials(fileName string) []Material {
+	var zero []Material
+	return zero
+}
+
 // LoadMaterialDefault - Load default material (Supports: DIFFUSE, SPECULAR, NORMAL maps)
 func LoadMaterialDefault() Material {
 	ret, fl := loadMaterialDefault.Call()
@@ -3308,6 +3403,12 @@ func SetMaterialTexture(material *Material, mapType int32, texture Texture2D) {
 func SetModelMeshMaterial(model *Model, meshId int32, materialId int32) {
 	_, fl := setModelMeshMaterial.Call(model, meshId, materialId)
 	wasm.Free(fl...)
+}
+
+// LoadModelAnimations - Load model animations from file
+func LoadModelAnimations(fileName string) []ModelAnimation {
+	var zero []ModelAnimation
+	return zero
 }
 
 // UpdateModelAnimation - Update model animation pose (CPU)
@@ -3440,6 +3541,14 @@ func GetMasterVolume() float32 {
 	return v
 }
 
+// LoadWave - Load wave data from file
+func LoadWave(fileName string) Wave {
+	ret, fl := loadWave.Call(fileName)
+	v := wasm.ReadStruct[Wave](ret)
+	wasm.Free(fl...)
+	return v
+}
+
 // LoadWaveFromMemory - Load wave from memory buffer, fileType refers to extension: i.e. '.wav'
 func LoadWaveFromMemory(fileType string, fileData []byte, dataSize int32) Wave {
 	ret, fl := loadWaveFromMemory.Call(fileType, fileData, dataSize)
@@ -3452,6 +3561,14 @@ func LoadWaveFromMemory(fileType string, fileData []byte, dataSize int32) Wave {
 func IsWaveValid(wave Wave) bool {
 	ret, fl := isWaveValid.Call(wasm.Struct(wave))
 	v := wasm.Boolean(ret)
+	wasm.Free(fl...)
+	return v
+}
+
+// LoadSound - Load sound from file
+func LoadSound(fileName string) Sound {
+	ret, fl := loadSound.Call(fileName)
+	v := wasm.ReadStruct[Sound](ret)
 	wasm.Free(fl...)
 	return v
 }
@@ -3592,6 +3709,14 @@ func LoadWaveSamples(wave Wave) []float32 {
 func UnloadWaveSamples(samples []float32) {
 	_, fl := unloadWaveSamples.Call(samples)
 	wasm.Free(fl...)
+}
+
+// LoadMusicStream - Load music stream from file
+func LoadMusicStream(fileName string) Music {
+	ret, fl := loadMusicStream.Call(fileName)
+	v := wasm.ReadStruct[Music](ret)
+	wasm.Free(fl...)
+	return v
 }
 
 // LoadMusicStreamFromMemory - Load music stream from data
@@ -3784,4 +3909,73 @@ func SetAudioStreamPan(stream AudioStream, pan float32) {
 func SetAudioStreamBufferSizeDefault(size int32) {
 	_, fl := setAudioStreamBufferSizeDefault.Call(size)
 	wasm.Free(fl...)
+}
+
+// SetAudioStreamCallback - Audio thread callback to request new data
+func SetAudioStreamCallback(stream AudioStream, callback AudioCallback) {
+	_, fl := setAudioStreamCallback.Call(wasm.Struct(stream), callback)
+	wasm.Free(fl...)
+}
+
+// AttachAudioStreamProcessor - Attach audio stream processor to stream, receives the samples as <float>s
+func AttachAudioStreamProcessor(stream AudioStream, processor AudioCallback) {
+	_, fl := attachAudioStreamProcessor.Call(wasm.Struct(stream), processor)
+	wasm.Free(fl...)
+}
+
+// DetachAudioStreamProcessor - Detach audio stream processor from stream
+func DetachAudioStreamProcessor(stream AudioStream, processor AudioCallback) {
+	_, fl := detachAudioStreamProcessor.Call(wasm.Struct(stream), processor)
+	wasm.Free(fl...)
+}
+
+// AttachAudioMixedProcessor - Attach audio stream processor to the entire audio pipeline, receives the samples as <float>s
+func AttachAudioMixedProcessor(processor AudioCallback) {
+	_, fl := attachAudioMixedProcessor.Call(processor)
+	wasm.Free(fl...)
+}
+
+// DetachAudioMixedProcessor - Detach audio stream processor from the entire audio pipeline
+func DetachAudioMixedProcessor(processor AudioCallback) {
+	_, fl := detachAudioMixedProcessor.Call(processor)
+	wasm.Free(fl...)
+}
+
+// SetCallbackFunc - Sets callback function
+func SetCallbackFunc() {
+	_, fl := setCallbackFunc.Call()
+	wasm.Free(fl...)
+}
+
+// NewImageFromImage - Returns new Image from Go image.Image
+func NewImageFromImage(img image.Image) *Image {
+	var zero *Image
+	return zero
+}
+
+// ToImage converts a Image to Go image.Image
+func ToImage() image.Image {
+	// ret, fl := toImage.Call()
+	// // v := wasm.Numeric[image.Image](ret)
+	// wasm.Free(fl...)
+	// return v
+	return nil
+}
+
+// OpenAsset - Open asset
+func OpenAsset(name string) Asset {
+	// ret, fl := openAsset.Call(name)
+	// v := wasm.Numeric[Asset](ret)
+	// wasm.Free(fl...)
+	// return v
+	return nil
+}
+
+// HomeDir - Returns user home directory
+// NOTE: On Android this returns internal data path and must be called after InitWindow
+func HomeDir() string {
+	ret, fl := homeDir.Call()
+	v := wasm.Numeric[string](ret)
+	wasm.Free(fl...)
+	return v
 }
