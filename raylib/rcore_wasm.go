@@ -226,7 +226,6 @@ var checkCollisionLines = wasm.Func[bool]("CheckCollisionLines")
 var checkCollisionPointLine = wasm.Func[bool]("CheckCollisionPointLine")
 var getCollisionRec = wasm.Func[Rectangle]("GetCollisionRec")
 var loadImageAnimFromMemory = wasm.Func[*Image]("LoadImageAnimFromMemory")
-var loadImageFromMemory = wasm.Func[*Image]("LoadImageFromMemory")
 var loadImageFromTexture = wasm.Func[*Image]("LoadImageFromTexture")
 var loadImageFromScreen = wasm.Func[*Image]("LoadImageFromScreen")
 var isImageValid = wasm.Func[bool]("IsImageValid")
@@ -300,7 +299,6 @@ var imageDrawTriangleStrip = wasm.Proc("ImageDrawTriangleStrip")
 var imageDraw = wasm.Proc("ImageDraw")
 var imageDrawText = wasm.Proc("ImageDrawText")
 var imageDrawTextEx = wasm.Proc("ImageDrawTextEx")
-var loadTextureFromImage = wasm.Func[Texture2D]("LoadTextureFromImage")
 var loadTextureCubemap = wasm.Func[Texture2D]("LoadTextureCubemap")
 var loadRenderTexture = wasm.Func[RenderTexture2D]("LoadRenderTexture")
 var isTextureValid = wasm.Func[bool]("IsTextureValid")
@@ -2082,11 +2080,7 @@ func LoadImageAnimFromMemory(fileType string, fileData []byte, dataSize int32, f
 	return zero
 }
 
-// LoadImageFromMemory - Load image from memory buffer, fileType refers to extension: i.e. '.png'
-func LoadImageFromMemory(fileType string, fileData []byte, dataSize int32) *Image {
-	var zero *Image
-	return zero
-}
+
 
 // LoadImageFromTexture - Load image from GPU texture data
 func LoadImageFromTexture(texture Texture2D) *Image {
@@ -2548,13 +2542,7 @@ func ImageDrawTextEx(dst *Image, position Vector2, font Font, text string, fontS
 	wasm.Free(fl...)
 }
 
-// LoadTextureFromImage - Load texture from image data
-func LoadTextureFromImage(image *Image) Texture2D {
-	ret, fl := loadTextureFromImage.Call(image)
-	v := wasm.ReadStruct[Texture2D](ret)
-	wasm.Free(fl...)
-	return v
-}
+
 
 // LoadTextureCubemap - Load cubemap from image, multiple image cubemap layouts supported
 func LoadTextureCubemap(image *Image, layout int32) Texture2D {

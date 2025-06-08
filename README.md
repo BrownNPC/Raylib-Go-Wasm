@@ -75,7 +75,7 @@ or if you're using Windows
 ```
 ./server.exe
 ```
-> this will serve your app on https://localhost:8080
+> this will serve your app on http://localhost:8080
 
 #### You dont need to restart the server after you recompile
 
