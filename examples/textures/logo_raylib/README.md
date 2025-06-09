@@ -55,3 +55,4 @@ Right now we just tell it to store `raylib_logo.png` which is next to our `main.
 
 The `init` function is called by the go runtime. Inside it we just copy the embed.FS's contents into the wasm virtual filesystem
 
+also see https://github.com/BrownNPC/Raylib-Go-Wasm/tree/master/examples/audio/sound_loading
