@@ -7,7 +7,7 @@ import (
 	"io/fs"
 	"syscall/js"
 
-	wasm "github.com/BrownNPC/Raylib-Go-Wasm/wasm"
+	wasm "github.com/BrownNPC/wasm-ffi-go"
 )
 
 // Use this instead of a for loop on web platform

@@ -5,7 +5,7 @@ import (
 	"image/color"
 	"unsafe"
 
-	wasm "github.com/BrownNPC/Raylib-Go-Wasm/wasm"
+	wasm "github.com/BrownNPC/wasm-ffi-go"
 )
 
 var closeWindow = wasm.Proc("CloseWindow")

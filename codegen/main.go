@@ -22,7 +22,7 @@ package rl
 import (
 	"image/color"
 	"unsafe"
-	wasm "github.com/BrownNPC/Raylib-Go-Wasm/wasm"
+	wasm github.com/BrownNPC/wasm-ffi-go
 )
 `
 
