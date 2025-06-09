@@ -19,9 +19,9 @@ func SetMainLoop(UpdateAndDrawFrame func()) {
 
 
 
-// Use this to initialize the internal wasm filesystem so asset loading works
+// Copy embed.FS to wasm memory. This must be called before loading assets
 // pass it an embed.FS 
-func SetFileSystem(efs fs.FS) {
+func AddFileSystem(efs fs.FS) {
 	wasm.AddFileSystem(efs)
 }
 

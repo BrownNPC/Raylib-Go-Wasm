@@ -39,6 +39,8 @@ for !rl.WindowShouldClose(){
 Look at [this example](https://github.com/BrownNPC/Raylib-Go-Wasm/blob/master/examples/basic_window/main.go)
  if you dont understand.
 
+## Loading assets
+See [here]()
 
 ## Making it compatible with desktop again
 Comment the line 
