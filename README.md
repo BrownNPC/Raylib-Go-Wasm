@@ -9,6 +9,9 @@
 ### What works?
 - Loading Fonts, Sounds Textures etc.
 - Drawing Shapes and Graphics
+### What doesnt work?
+- Images
+Not sure yet. Please open an issue if something is unsupported
 
 ## Getting started
 
