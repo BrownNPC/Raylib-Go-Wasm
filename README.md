@@ -4,8 +4,8 @@
 
 - [Getting Started](#getting-started)
 - [Loading Assets](#loading-assets)
-- [Running] (#running)
-- [Tips] (#tips)
+- [Running](#running)
+- [Tips](#tips)
 ### What works?
 - Loading Fonts, Sounds Textures etc.
 - Drawing Shapes and Graphics
