@@ -1,5 +1,11 @@
 # Raylib Go (golang) bindings for the web.
 
+#### Table Of Contents:
+
+- [Getting Started](#getting-started)
+- [Loading Assets](#loading-assets)
+- [Running] (#running)
+- [Tips] (#tips)
 ### What works?
 - Loading Fonts, Sounds Textures etc.
 - Drawing Shapes and Graphics
@@ -40,7 +46,7 @@ Look at [this example](https://github.com/BrownNPC/Raylib-Go-Wasm/blob/master/ex
  if you dont understand.
 
 ## Loading assets
-See [here]()
+See [here](https://github.com/BrownNPC/Raylib-Go-Wasm/tree/master/examples/textures/logo_raylib)
 
 ## Making it compatible with desktop again
 Comment the line 
