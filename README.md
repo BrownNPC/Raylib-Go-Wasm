@@ -1,7 +1,11 @@
 # Raylib Go (golang) bindings for the web.
 
+### What works?
+- Loading Fonts, Sounds Textures etc.
+- Drawing Shapes and Graphics
+
 ## Getting started
-> Please note these bindings are not 100% complete, currently loading assets is not implemented.
+
 
 ### 1. Download this repository. 
 Either use `git clone` or click the green "Code" button and download it in your project folder.
