@@ -925,7 +925,7 @@ func EndShaderMode() {
 
 // BeginBlendMode - Begin blending mode (alpha, additive, multiplied, subtract, custom)
 func BeginBlendMode(mode BlendMode) {
-	_, fl := beginBlendMode.Call(mode)
+	_, fl := beginBlendMode.Call(int32(mode))
 	wasm.Free(fl...)
 }
 
@@ -2673,13 +2673,13 @@ func GenTextureMipmaps(texture *Texture2D) {
 
 // SetTextureFilter - Set texture scaling filter mode
 func SetTextureFilter(texture Texture2D, filter TextureFilterMode) {
-	_, fl := setTextureFilter.Call(wasm.Struct(texture), filter)
+	_, fl := setTextureFilter.Call(wasm.Struct(texture), int32(filter))
 	wasm.Free(fl...)
 }
 
 // SetTextureWrap - Set texture wrapping mode
 func SetTextureWrap(texture Texture2D, wrap TextureWrapMode) {
-	_, fl := setTextureWrap.Call(wasm.Struct(texture), wrap)
+	_, fl := setTextureWrap.Call(wasm.Struct(texture), int32(wrap))
 	wasm.Free(fl...)
 }
 
@@ -2863,7 +2863,18 @@ func LoadFont(fileName string) Font {
 
 // LoadFontEx - Load font from file with extended parameters, use NULL for codepoints and 0 for codepointCount to load the default character setFont
 func LoadFontEx(fileName string, fontSize int32, codepoints []rune, runesNumber ...int32) Font {
-	ret, fl := loadFontEx.Call(fileName, fontSize, codepoints, runesNumber)
+	codepointCount := int32(len(codepoints))
+	if len(runesNumber) > 0 {
+		codepointCount = int32(runesNumber[0])
+	}
+
+	// Handle empty codepoints slice by passing nil
+	var codepointsToPass any = codepoints
+	if len(codepoints) == 0 {
+		codepointsToPass = nil
+	}
+
+	ret, fl := loadFontEx.Call(fileName, fontSize, codepointsToPass, codepointCount)
 	v := wasm.ReadStruct[Font](ret)
 	wasm.Free(fl...)
 	return v
