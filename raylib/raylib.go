@@ -963,7 +963,7 @@ func NewRayCollision(hit bool, distance float32, point, normal Vector3) RayColli
 }
 
 // BlendMode type
-type BlendMode int32
+type BlendMode = int32
 
 // Color blending modes (pre-defined)
 const (
@@ -1114,7 +1114,7 @@ const (
 )
 
 // TextureWrapMode - Texture wrap mode
-type TextureWrapMode int32
+type TextureWrapMode = int32
 
 // Texture parameters: wrap mode
 const (

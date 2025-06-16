@@ -343,7 +343,6 @@ var setPixelColor = wasm.Proc("SetPixelColor")
 var getPixelDataSize = wasm.Func[int32]("GetPixelDataSize")
 var getFontDefault = wasm.Func[Font]("GetFontDefault")
 var loadFont = wasm.Func[Font]("LoadFont")
-var loadFontEx = wasm.Func[Font]("LoadFontEx")
 var loadFontFromImage = wasm.Func[Font]("LoadFontFromImage")
 var loadFontFromMemory = wasm.Func[Font]("LoadFontFromMemory")
 var isFontValid = wasm.Func[bool]("IsFontValid")
@@ -925,7 +924,7 @@ func EndShaderMode() {
 
 // BeginBlendMode - Begin blending mode (alpha, additive, multiplied, subtract, custom)
 func BeginBlendMode(mode BlendMode) {
-	_, fl := beginBlendMode.Call(int32(mode))
+	_, fl := beginBlendMode.Call(mode)
 	wasm.Free(fl...)
 }
 
@@ -2673,13 +2672,13 @@ func GenTextureMipmaps(texture *Texture2D) {
 
 // SetTextureFilter - Set texture scaling filter mode
 func SetTextureFilter(texture Texture2D, filter TextureFilterMode) {
-	_, fl := setTextureFilter.Call(wasm.Struct(texture), int32(filter))
+	_, fl := setTextureFilter.Call(wasm.Struct(texture), filter)
 	wasm.Free(fl...)
 }
 
 // SetTextureWrap - Set texture wrapping mode
 func SetTextureWrap(texture Texture2D, wrap TextureWrapMode) {
-	_, fl := setTextureWrap.Call(wasm.Struct(texture), int32(wrap))
+	_, fl := setTextureWrap.Call(wasm.Struct(texture), wrap)
 	wasm.Free(fl...)
 }
 
@@ -2856,25 +2855,6 @@ func GetFontDefault() Font {
 // LoadFont - Load font from file into GPU memory (VRAM)
 func LoadFont(fileName string) Font {
 	ret, fl := loadFont.Call(fileName)
-	v := wasm.ReadStruct[Font](ret)
-	wasm.Free(fl...)
-	return v
-}
-
-// LoadFontEx - Load font from file with extended parameters, use NULL for codepoints and 0 for codepointCount to load the default character setFont
-func LoadFontEx(fileName string, fontSize int32, codepoints []rune, runesNumber ...int32) Font {
-	codepointCount := int32(len(codepoints))
-	if len(runesNumber) > 0 {
-		codepointCount = int32(runesNumber[0])
-	}
-
-	// Handle empty codepoints slice by passing nil
-	var codepointsToPass any = codepoints
-	if len(codepoints) == 0 {
-		codepointsToPass = nil
-	}
-
-	ret, fl := loadFontEx.Call(fileName, fontSize, codepointsToPass, codepointCount)
 	v := wasm.ReadStruct[Font](ret)
 	wasm.Free(fl...)
 	return v

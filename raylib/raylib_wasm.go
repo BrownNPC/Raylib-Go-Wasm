@@ -55,3 +55,22 @@ func InitWindow(width int32, height int32, title string) {
 	_, fl := initWindow.Call(width, height, title)
 	wasm.Free(fl...)
 }
+var loadFontEx = wasm.Func[Font]("LoadFontEx")
+// LoadFontEx - Load font from file with extended parameters, use NULL for codepoints and 0 for codepointCount to load the default character setFont
+func LoadFontEx(fileName string, fontSize int32, codepoints []rune, runesNumber ...int32) Font {
+	codepointCount := int32(len(codepoints))
+	if len(runesNumber) > 0 {
+		codepointCount = int32(runesNumber[0])
+	}
+
+	// Handle empty codepoints slice by passing nil
+	var codepointsToPass any = codepoints
+	if len(codepoints) == 0 {
+		codepointsToPass = nil
+	}
+
+	ret, fl := loadFontEx.Call(fileName, fontSize, codepointsToPass, codepointCount)
+	v := wasm.ReadStruct[Font](ret)
+	wasm.Free(fl...)
+	return v
+}
