@@ -18,11 +18,28 @@ func (fn Function) BindingCode() string {
 	}
 	var out string
 	var param_names string
+	// generate reference binding code
+	// func CheckCollisionLines(startPos1 Vector2, endPos1 Vector2, startPos2 Vector2, endPos2 Vector2, collisionPoint *Vector2) bool {
+	// _collisionPoint := wasm.Struct(*collisionPoint)
+	// ret, fl := checkCollisionLines.Call(wasm.Struct(startPos1), wasm.Struct(endPos1), wasm.Struct(startPos2), wasm.Struct(endPos2), _collisionPoint)
+	// v := wasm.Boolean(ret)
+	// *collisionPoint = wasm.BytesToStruct[Vector2](wasm.ReadFromWASM(_collisionPoint.Mem, _collisionPoint.Size))
+	// wasm.Free(fl...)
+	// return v
+	// }
+	var referenceBinding string
 	for _, p := range fn.Params {
-		if !p.isStruct {
+		if p.isReference {
+			referenceBinding += fmt.Sprintf("_%s := wasm.Struct(*%s)\n", p.Name, p.Name)
+		}
+	}
+	for _, p := range fn.Params {
+		if !p.isStruct && !p.isReference {
 			param_names += fmt.Sprintf("%s,", p.Name)
-		} else {
+		} else if p.isStruct && !p.isReference {
 			param_names += fmt.Sprintf("wasm.Struct(%s),", p.Name)
+		} else if p.isReference {
+			param_names += fmt.Sprintf("_%s", p.Name)
 		}
 	}
 	var returnV bool

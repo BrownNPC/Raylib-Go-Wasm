@@ -23,6 +23,9 @@ func ModeStub(file string, structs []string) {
 			p := &f.Params[j]
 			if slices.Contains(structs, p.Type) {
 				p.isStruct = true
+			} else if p.Type[0] == '*' {
+				// *Vector2
+				p.isReference = true
 			}
 		}
 	}

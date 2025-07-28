@@ -2080,8 +2080,10 @@ func CheckCollisionPointPoly(point Vector2, points []Vector2) bool {
 
 // CheckCollisionLines - Check the collision between two lines defined by two points each, returns collision point by reference
 func CheckCollisionLines(startPos1 Vector2, endPos1 Vector2, startPos2 Vector2, endPos2 Vector2, collisionPoint *Vector2) bool {
-	ret, fl := checkCollisionLines.Call(wasm.Struct(startPos1), wasm.Struct(endPos1), wasm.Struct(startPos2), wasm.Struct(endPos2), collisionPoint)
+	_collisionPoint := wasm.Struct(*collisionPoint)
+	ret, fl := checkCollisionLines.Call(wasm.Struct(startPos1), wasm.Struct(endPos1), wasm.Struct(startPos2), wasm.Struct(endPos2), _collisionPoint)
 	v := wasm.Boolean(ret)
+	*collisionPoint = wasm.BytesToStruct[Vector2](wasm.ReadFromWASM(_collisionPoint.Mem, _collisionPoint.Size))
 	wasm.Free(fl...)
 	return v
 }

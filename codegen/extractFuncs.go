@@ -20,8 +20,9 @@ type Function struct {
 
 // Param holds one parameter’s name and type.
 type Param struct {
-	Name, Type string
-	isStruct   bool
+	Name, Type  string
+	isReference bool
+	isStruct    bool
 }
 
 // ExtractFuncs parses src and returns all top-level FuncDecls along with their comments.
