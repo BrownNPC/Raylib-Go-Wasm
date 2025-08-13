@@ -13,7 +13,7 @@
 - Images
 
 
-Please open an issue if something is unsupported
+# Please open an issue if something is unsupported
 
 ## Getting started
 
