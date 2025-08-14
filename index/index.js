@@ -3,7 +3,8 @@ import Module from "./rl/raylib.js";
 const wasmBinary = await fetch("./rl/raylib.wasm")
   .then(r => r.arrayBuffer());
 
-// var canvas = document.getElementById("canvas").addEventListener('contextmenu', e => e.preventDefault())
+// disable right click context menu
+document.getElementById("canvas").addEventListener('contextmenu', e => e.preventDefault())
 
 let mod = await Module({
   canvas: document.getElementById('canvas'),
