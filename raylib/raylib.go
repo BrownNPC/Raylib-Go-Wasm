@@ -15,6 +15,7 @@ import (
 	wasm "github.com/BrownNPC/wasm-ffi-go"
 )
 
+
 // Wave type, defines audio wave data
 type Wave struct {
 	// Number of samples

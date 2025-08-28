@@ -10,7 +10,7 @@ func InitWindow(width int32, height int32, title string) {
 }
 
 // Use this instead of a for loop on web platform
-func SetMainLoop(UpdateAndDrawFrame func()) {
+func SetMain(UpdateAndDrawFrame func()) {
 }
 
 // UNSUPPORTED: USE SetMainLoop

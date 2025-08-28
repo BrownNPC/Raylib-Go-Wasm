@@ -1,4 +1,5 @@
 //go:build js && wasm
+
 package rl
 
 // some functions need to be defined manually
@@ -10,17 +11,17 @@ import (
 	wasm "github.com/BrownNPC/wasm-ffi-go"
 )
 
+// DEPRECATED: use SetMain instead.
+var SetMainLoop = SetMain
+
 // Use this instead of a for loop on web platform
-func SetMainLoop(UpdateAndDrawFrame func()) {
+func SetMain(UpdateAndDrawFrame func()) {
 	wasm.SetMainLoop(UpdateAndDrawFrame)
 	<-make(chan struct{}, 0)
 }
 
-
-
-
 // Copy embed.FS to wasm memory. This must be called before loading assets
-// pass it an embed.FS 
+// pass it an embed.FS
 func AddFileSystem(efs fs.FS) {
 	wasm.AddFileSystem(efs)
 }
@@ -55,7 +56,9 @@ func InitWindow(width int32, height int32, title string) {
 	_, fl := initWindow.Call(width, height, title)
 	wasm.Free(fl...)
 }
+
 var loadFontEx = wasm.Func[Font]("LoadFontEx")
+
 // LoadFontEx - Load font from file with extended parameters, use NULL for codepoints and 0 for codepointCount to load the default character setFont
 func LoadFontEx(fileName string, fontSize int32, codepoints []rune, runesNumber ...int32) Font {
 	codepointCount := int32(len(codepoints))
