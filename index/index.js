@@ -1,4 +1,12 @@
+const overlay = document.getElementById('loading-overlay');
+function hideOverlay() { overlay.style.display = 'none' }
+function showOverlay() { overlay.style.display = 'flex' }
+
+// show loading overlay
+showOverlay();
+
 import Module from "./rl/raylib.js";
+
 
 const wasmBinary = await fetch("./rl/raylib.wasm")
   .then(r => r.arrayBuffer());
@@ -15,6 +23,8 @@ window.mod = mod
 const go = new Go();
 WebAssembly.instantiateStreaming(fetch("main.wasm"), go.importObject)
   .then(result => {
+    // hide loading overlay before running code
+    hideOverlay();
     go.run(result.instance);
   })
   .catch(console.error);
