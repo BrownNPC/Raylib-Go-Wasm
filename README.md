@@ -1,5 +1,9 @@
 # Raylib Go (golang) bindings for the web.
 
+
+## Motivation
+The Go bindings for raylib had not been able to compile to web for a decade, so I did it myself :D
+
 #### Table Of Contents:
 
 - [Getting Started](#getting-started)
