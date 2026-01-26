@@ -2174,11 +2174,6 @@ func ExportImageToMemory(image Image, fileType string) []byte {
 	return zero
 }
 
-// GenImageColor - Generate image: plain color
-func GenImageColor(width int, height int, col color.RGBA) *Image {
-	var zero *Image
-	return zero
-}
 
 // GenImageGradientLinear - Generate image: linear gradient, direction in degrees [0..360], 0=Vertical gradient
 func GenImageGradientLinear(width int, height int, direction int, start color.RGBA, end color.RGBA) *Image {
@@ -2468,12 +2463,6 @@ func ImageClearBackground(dst *Image, col color.RGBA) {
 	wasm.Free(fl...)
 }
 
-// ImageDrawPixel - Draw pixel within an image
-func ImageDrawPixel(dst *Image, posX int32, posY int32, col color.RGBA) {
-	_, fl := imageDrawPixel.Call(dst, posX, posY, wasm.Struct(col))
-	wasm.Free(fl...)
-}
-
 // ImageDrawPixelV - Draw pixel within an image (Vector version)
 func ImageDrawPixelV(dst *Image, position Vector2, col color.RGBA) {
 	_, fl := imageDrawPixelV.Call(dst, wasm.Struct(position), wasm.Struct(col))
@@ -2602,13 +2591,6 @@ func LoadTexture(fileName string) Texture2D {
 	return v
 }
 
-// LoadTextureFromImage - Load texture from image data
-func LoadTextureFromImage(image *Image) Texture2D {
-	ret, fl := loadTextureFromImage.Call(image)
-	v := wasm.ReadStruct[Texture2D](ret)
-	wasm.Free(fl...)
-	return v
-}
 
 // LoadTextureCubemap - Load cubemap from image, multiple image cubemap layouts supported
 func LoadTextureCubemap(image *Image, layout int32) Texture2D {
@@ -3940,11 +3922,6 @@ func SetCallbackFunc() {
 	wasm.Free(fl...)
 }
 
-// NewImageFromImage - Returns new Image from Go image.Image
-func NewImageFromImage(img image.Image) *Image {
-	var zero *Image
-	return zero
-}
 
 // ToImage converts a Image to Go image.Image
 func ToImage() image.Image {

@@ -5,10 +5,12 @@ package rl
 // some functions need to be defined manually
 
 import (
+	"image"
+	"image/color"
 	"io/fs"
 	"syscall/js"
 
-	wasm "github.com/BrownNPC/wasm-ffi-go"
+	"github.com/BrownNPC/wasm-ffi-go"
 )
 
 // DEPRECATED: use SetMain instead.
@@ -76,4 +78,45 @@ func LoadFontEx(fileName string, fontSize int32, codepoints []rune, runesNumber 
 	v := wasm.ReadStruct[Font](ret)
 	wasm.Free(fl...)
 	return v
+}
+
+// NewImageFromImage - Returns new Image from Go image.Image
+
+// NewImageFromImage - Returns new Image from Go image.Image
+func NewImageFromImage(img image.Image) *Image {
+	size := img.Bounds().Size()
+
+	ret := GenImageColor(size.X, size.Y, White)
+
+	for y := range size.Y {
+		for x := range size.X {
+			col := img.At(x, y)
+			r, g, b, a := col.RGBA()
+			rcolor := NewColor(uint8(r>>8), uint8(g>>8), uint8(b>>8), uint8(a>>8))
+			ImageDrawPixel(ret, int32(x), int32(y), rcolor)
+		}
+	}
+	return ret
+}
+
+// GenImageColor - Generate image: plain color
+func GenImageColor(width int, height int, col color.RGBA) *Image {
+	ret, fl := genImageColor.Call(width, height, wasm.Struct(col))
+	v := wasm.ReadStruct[Image](ret)
+	wasm.Free(fl...)
+	return &v
+}
+
+// LoadTextureFromImage - Load texture from image data
+func LoadTextureFromImage(image *Image) Texture2D {
+	ret, fl := loadTextureFromImage.Call(wasm.Struct(*image))
+	v := wasm.ReadStruct[Texture2D](ret)
+	wasm.Free(fl...)
+	return v
+}
+
+// ImageDrawPixel - Draw pixel within an image
+func ImageDrawPixel(dst *Image, posX int32, posY int32, col color.RGBA) {
+	_, fl := imageDrawPixel.Call(wasm.Struct(*dst), posX, posY, wasm.Struct(col))
+	wasm.Free(fl...)
 }
