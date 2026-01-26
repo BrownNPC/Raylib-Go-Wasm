@@ -14,7 +14,7 @@ The Go bindings for raylib had not been able to compile to web for a decade, so 
 - Loading Fonts, Sounds Textures etc.
 - Drawing Shapes and Graphics
 ### What doesnt work?
-- Images
+- Images (can use NewImageFromImage [#7](https://github.com/BrownNPC/Raylib-Go-Wasm/issues/7))
 
 
 # Please open an issue if something is unsupported
