@@ -11,10 +11,15 @@ package rl
 import (
 	"image/color"
 	"io"
-
-	wasm "github.com/BrownNPC/wasm-ffi-go"
+	"io/fs"
+	"runtime"
+	"unsafe"
 )
 
+func init() {
+	// Make sure the main goroutine is bound to the main thread.
+	runtime.LockOSThread()
+}
 
 // Wave type, defines audio wave data
 type Wave struct {
@@ -27,15 +32,15 @@ type Wave struct {
 	// Number of channels (1-mono, 2-stereo)
 	Channels uint32
 	// Buffer data pointer
-	Data wasm.Pointer
+	Data unsafe.Pointer
 }
 
-// // NewWave - Returns new Wave
-// func NewWave(sampleCount, sampleRate, sampleSize, channels uint32, data []byte) Wave {
-// 	d := wasm.Pointer(&data[0])
+// NewWave - Returns new Wave
+func NewWave(sampleCount, sampleRate, sampleSize, channels uint32, data []byte) Wave {
+	d := unsafe.Pointer(&data[0])
 
-// 	return Wave{sampleCount, sampleRate, sampleSize, channels, d}
-// }
+	return Wave{sampleCount, sampleRate, sampleSize, channels, d}
+}
 
 // AudioCallback function.
 type AudioCallback func(data []float32, frames int)
@@ -54,7 +59,7 @@ type Music struct {
 	FrameCount uint32
 	Looping    bool
 	CtxType    int32
-	CtxData    wasm.Pointer
+	CtxData    unsafe.Pointer
 }
 
 // AudioStream type
@@ -178,12 +183,12 @@ type AutomationEventList struct {
 	Events *AutomationEvent
 }
 
-// func (a *AutomationEventList) GetEvents() []AutomationEvent {
-// 	return wasm.Slice(a.Events, a.Count)
-// }
+func (a *AutomationEventList) GetEvents() []AutomationEvent {
+	return unsafe.Slice(a.Events, a.Count)
+}
 
 // CameraMode type
-type CameraMode = int32
+type CameraMode int32
 
 // Camera system modes
 const (
@@ -195,7 +200,7 @@ const (
 )
 
 // CameraProjection type
-type CameraProjection = int32
+type CameraProjection int32
 
 // Camera projection modes
 const (
@@ -369,7 +374,7 @@ const (
 	MouseMiddleButton = MouseButtonMiddle
 )
 
-type MouseButton = int32
+type MouseButton int32
 
 // Mouse Buttons
 const (
@@ -662,14 +667,34 @@ func NewBoundingBox(min, max Vector3) BoundingBox {
 	return BoundingBox{min, max}
 }
 
-// Asset file
-type Asset interface {
+// Asset implements fs.FS interfaces
+type Asset struct {
+	root string
+	fsys fs.FS
+}
+
+// NewAsset - creates a new Asset filesystem
+// For Android: root should be empty or a directory path within assets
+// For Desktop: root should be the filesystem path to assets
+func NewAsset(root string) *Asset {
+	return &Asset{root: root}
+}
+
+// NewAssetFromFS - creates a new Asset filesystem from a fs.FS
+// The root parameter specifies a subdirectory within the embedded filesystem (can be empty for root)
+func NewAssetFromFS(fsys fs.FS, root string) *Asset {
+	return &Asset{root: root, fsys: fsys}
+}
+
+// AssetFile represents an opened asset file
+type AssetFile interface {
 	io.ReadSeeker
 	io.Closer
+	Stat() (fs.FileInfo, error)
 }
 
 // Gestures type
-type Gestures = int32
+type Gestures int32
 
 // Gestures types
 // NOTE: It could be used as flags to enable only some gestures
@@ -721,7 +746,7 @@ const (
 )
 
 // ShaderUniformDataType type
-type ShaderUniformDataType = int32
+type ShaderUniformDataType int32
 
 // ShaderUniformDataType enumeration
 const (
@@ -828,10 +853,10 @@ type Material struct {
 	Params [4]float32
 }
 
-// // GetMap - Get pointer to MaterialMap by map type
-// func (mt Material) GetMap(index int32) *MaterialMap {
-// 	return (*MaterialMap)(wasm.Pointer(uintptr(wasm.Pointer(mt.Maps)) + uintptr(index)*wasm.Sizeof(MaterialMap{})))
-// }
+// GetMap - Get pointer to MaterialMap by map type
+func (mt Material) GetMap(index int32) *MaterialMap {
+	return (*MaterialMap)(unsafe.Pointer(uintptr(unsafe.Pointer(mt.Maps)) + uintptr(index)*unsafe.Sizeof(MaterialMap{})))
+}
 
 // MaterialMap type
 type MaterialMap struct {
@@ -873,25 +898,25 @@ type Model struct {
 	BindPose *Transform
 }
 
-// // GetMeshes returns the meshes of a model as go slice
-// func (m Model) GetMeshes() []Mesh {
-// 	return wasm.Slice(m.Meshes, m.MeshCount)
-// }
+// GetMeshes returns the meshes of a model as go slice
+func (m Model) GetMeshes() []Mesh {
+	return unsafe.Slice(m.Meshes, m.MeshCount)
+}
 
-// // GetMaterials returns the materials of a model as go slice
-// func (m Model) GetMaterials() []Material {
-// 	return wasm.Slice(m.Materials, m.MaterialCount)
-// }
+// GetMaterials returns the materials of a model as go slice
+func (m Model) GetMaterials() []Material {
+	return unsafe.Slice(m.Materials, m.MaterialCount)
+}
 
-// // GetBones returns the bones information (skeleton) of a model as go slice
-// func (m Model) GetBones() []BoneInfo {
-// 	return wasm.Slice(m.Bones, m.BoneCount)
-// }
+// GetBones returns the bones information (skeleton) of a model as go slice
+func (m Model) GetBones() []BoneInfo {
+	return unsafe.Slice(m.Bones, m.BoneCount)
+}
 
-// // GetBindPose returns the bones base transformation of a model as go slice
-// func (m Model) GetBindPose() []Transform {
-// 	return wasm.Slice(m.BindPose, m.BoneCount)
-// }
+// GetBindPose returns the bones base transformation of a model as go slice
+func (m Model) GetBindPose() []Transform {
+	return unsafe.Slice(m.BindPose, m.BoneCount)
+}
 
 // BoneInfo type
 type BoneInfo struct {
@@ -928,16 +953,16 @@ type ModelAnimation struct {
 	Name       [32]uint8
 }
 
-// // GetBones returns the bones information (skeleton) of a ModelAnimation as go slice
-// func (m ModelAnimation) GetBones() []BoneInfo {
-// 	return wasm.Slice(m.Bones, m.BoneCount)
-// }
+// GetBones returns the bones information (skeleton) of a ModelAnimation as go slice
+func (m ModelAnimation) GetBones() []BoneInfo {
+	return unsafe.Slice(m.Bones, m.BoneCount)
+}
 
-// // GetFramePose returns the Transform for a specific bone at a specific frame
-// func (m ModelAnimation) GetFramePose(frame, bone int) Transform {
-// 	framePoses := wasm.Slice(m.FramePoses, m.FrameCount)
-// 	return wasm.Slice(framePoses[frame], m.BoneCount)[bone]
-// }
+// GetFramePose returns the Transform for a specific bone at a specific frame
+func (m ModelAnimation) GetFramePose(frame, bone int) Transform {
+	framePoses := unsafe.Slice(m.FramePoses, m.FrameCount)
+	return unsafe.Slice(framePoses[frame], m.BoneCount)[bone]
+}
 
 // GetName returns the ModelAnimation's name as go string
 func (m ModelAnimation) GetName() string {
@@ -964,7 +989,7 @@ func NewRayCollision(hit bool, distance float32, point, normal Vector3) RayColli
 }
 
 // BlendMode type
-type BlendMode = int32
+type BlendMode int32
 
 // Color blending modes (pre-defined)
 const (
@@ -991,15 +1016,15 @@ func NewShader(id uint32, locs *int32) Shader {
 	return Shader{id, locs}
 }
 
-// // GetLocation - Get shader value's location
-// func (sh Shader) GetLocation(index int32) int32 {
-// 	return *(*int32)(wasm.Pointer(uintptr(wasm.Pointer(sh.Locs)) + uintptr(index*4)))
-// }
+// GetLocation - Get shader value's location
+func (sh Shader) GetLocation(index int32) int32 {
+	return *(*int32)(unsafe.Pointer(uintptr(unsafe.Pointer(sh.Locs)) + uintptr(index*4)))
+}
 
-// // UpdateLocation - Update shader value's location
-// func (sh Shader) UpdateLocation(index int32, loc int32) {
-// 	*(*int32)(wasm.Pointer(uintptr(wasm.Pointer(sh.Locs)) + uintptr(index*4))) = loc
-// }
+// UpdateLocation - Update shader value's location
+func (sh Shader) UpdateLocation(index int32, loc int32) {
+	*(*int32)(unsafe.Pointer(uintptr(unsafe.Pointer(sh.Locs)) + uintptr(index*4))) = loc
+}
 
 // GlyphInfo - Font character info
 type GlyphInfo struct {
@@ -1094,7 +1119,7 @@ const (
 )
 
 // TextureFilterMode - Texture filter mode
-type TextureFilterMode = int32
+type TextureFilterMode int32
 
 // Texture parameters: filter mode
 // NOTE 1: Filtering considers mipmaps if available in the texture
@@ -1115,7 +1140,7 @@ const (
 )
 
 // TextureWrapMode - Texture wrap mode
-type TextureWrapMode = int32
+type TextureWrapMode int32
 
 // Texture parameters: wrap mode
 const (
@@ -1138,7 +1163,7 @@ const (
 // NOTE: Data stored in CPU memory (RAM)
 type Image struct {
 	// Image raw Data
-	Data wasm.Pointer
+	Data unsafe.Pointer
 	// Image base width
 	Width int32
 	// Image base height
@@ -1149,12 +1174,12 @@ type Image struct {
 	Format PixelFormat
 }
 
-// // NewImage - Returns new Image
-// func NewImage(data []byte, width, height, mipmaps int32, format PixelFormat) *Image {
-// 	d := wasm.Pointer(&data[0])
+// NewImage - Returns new Image
+func NewImage(data []byte, width, height, mipmaps int32, format PixelFormat) *Image {
+	d := unsafe.Pointer(&data[0])
 
-// 	return &Image{d, width, height, mipmaps, format}
-// }
+	return &Image{d, width, height, mipmaps, format}
+}
 
 // Texture2D type, bpp always RGBA (32bit)
 // NOTE: Data stored in GPU memory
@@ -1195,7 +1220,7 @@ func NewRenderTexture2D(id uint32, texture, depth Texture2D) RenderTexture2D {
 type TraceLogCallbackFun func(int, string)
 
 // TraceLogLevel parameter of trace log message
-type TraceLogLevel = int
+type TraceLogLevel int
 
 // Trace log level
 // NOTE: Organized by priority level
@@ -1219,7 +1244,7 @@ const (
 )
 
 // N-patch layout
-type NPatchLayout = int32
+type NPatchLayout int32
 
 const (
 	NPatchNinePatch            NPatchLayout = iota // Npatch layout: 3x3 tiles
