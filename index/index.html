@@ -1,64 +1,13 @@
-<!DOCTYPE html>
 <html>
 
 <head>
   <meta charset="utf-8" />
   <script src="wasm_exec.js"></script>
-  <style>
-    body {
-      margin: 0;
-      overflow: hidden;
-      background: #111;
-    }
-
-    /* overlay */
-    #loading-overlay {
-      position: fixed;
-      inset: 0;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background: rgba(0, 0, 0, 0.8);
-      color: white;
-      font-family: system-ui, sans-serif;
-      z-index: 9999;
-      transition: opacity 0.4s ease;
-    }
-    /* spinner */
-    .spinner {
-      width: 48px;
-      height: 48px;
-      margin: 0 auto 1rem;
-      border: 5px solid rgba(255, 255, 255, 0.2);
-      border-top-color: #4fd1c5;
-      border-radius: 50%;
-      animation: spin 1s linear infinite;
-    }
-
-    @keyframes spin {
-      to {
-        transform: rotate(360deg);
-      }
-    }
-
-    .loading-text {
-      font-size: 1.1rem;
-      letter-spacing: 0.5px;
-    }
-  </style>
 </head>
 
 <body>
-  <div id="loading-overlay">
-    <div class="loading-box">
-      <div class="spinner"></div>
-      <div class="loading-text">Loading…</div>
-    </div>
-  </div>
-
   <canvas id="canvas" width="800" height="600"></canvas>
   <script type="module" src="./index.js"></script>
 </body>
 
 </html>
-
