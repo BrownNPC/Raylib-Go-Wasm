@@ -1,6 +1,9 @@
+//go:build js
+
 package rl
 
 import (
+	"syscall/js"
 	"unsafe"
 )
 
@@ -102,4 +105,19 @@ func copyArrayToGo[Slice ~[]E, E any](s Slice, srcPtr cptr) {
 	size := cptr(unsafe.Sizeof(s[0])) * cptr(len(s))
 	dstPtr := unsafe.SliceData(s)
 	copyToGo(unsafe.Pointer(dstPtr), size, srcPtr)
+}
+
+//go:wasmimport gojs Alert
+//go:noescape
+func alert(string)
+
+// Use this instead of a for loop on web platform
+func SetMain(UpdateAndDrawFrame func()) {
+	var updateLoop js.Func
+	updateLoop = js.FuncOf(func(this js.Value, args []js.Value) any {
+		UpdateAndDrawFrame()
+		js.Global().Call("requestAnimationFrame", updateLoop)
+		return nil
+	})
+	js.Global().Call("requestAnimationFrame", updateLoop)
 }

@@ -22,8 +22,7 @@ class Runtime {
 
   setInt64 = (addr, v) => {
     this.mem.setUint32(addr + 0, v, true);
-    // this.mem.setUint32(addr + 4, Math.floor(v / 4294967296), true);
-    this.mem.setUint32(addr + 4, 0, true);
+    this.mem.setUint32(addr + 4, Math.floor(v / 4294967296), true);
   };
 
   getInt64 = (addr) => {
@@ -33,8 +32,8 @@ class Runtime {
   };
 
   loadSlice = (addr) => {
-    const array = getInt64(addr + 0);
-    const len = getInt64(addr + 8);
+    const array = this.getInt64(addr + 0);
+    const len = this.getInt64(addr + 8);
     return this.getmem(array, len);
   };
 
@@ -65,7 +64,7 @@ class Runtime {
       len,
     );
   }
-  // func(string) int32
+  // func(string) int32wasnt
   // returns pointer to C string in raylib memory
   CStringFromGoString = (sp) => {
     sp >>>= 0;
@@ -126,6 +125,17 @@ class Runtime {
     const dstGoBytes = this.getmem(dstGoPtr, size);
     // copy C bytes to Go
     dstGoBytes.set(srcCBytes);
+  };
+  // func alert(string)
+  Alert = (sp) => {
+    sp >>>= 0;
+    const saddr = this.getInt64(sp + 8 * 1);
+    const len = this.getInt64(sp + 8 * 2);
+    const strU8 = this.getmem(saddr, len);
+
+    const decoder = new TextDecoder("utf-8"); // 'utf-8' is the default encoding
+    const str = decoder.decode(strU8);
+    alert(str);
   };
 }
 

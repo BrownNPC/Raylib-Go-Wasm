@@ -1,3 +1,5 @@
+//go:build js
+
 /*
 Package raylib - Go bindings for raylib, a simple and easy-to-use library to enjoy videogames programming.
 
@@ -26,18 +28,18 @@ type Wave struct {
 	Channels uint32
 	// Buffer data pointer
 	Data cptr
-	__ structs.HostLayout
+	__   structs.HostLayout
 }
 
 // NewWave - Returns new Wave
 func NewWave(sampleCount, sampleRate, sampleSize, channels uint32, data []byte) Wave {
-
+	ptr := allocSliceInC(data)
 	return Wave{
 		FrameCount: sampleCount,
 		SampleRate: sampleRate,
 		SampleSize: sampleSize,
 		Channels:   channels,
-		Data:       0,
+		Data:       ptr,
 		__:         structs.HostLayout{},
 	}
 }
@@ -50,7 +52,7 @@ type Sound struct {
 	Stream     AudioStream
 	FrameCount uint32
 	_          [4]byte
-	__ structs.HostLayout
+	__         structs.HostLayout
 }
 
 // Music type (file streaming from memory)
@@ -61,7 +63,7 @@ type Music struct {
 	Looping    bool
 	CtxType    int32
 	CtxData    cptr
-	__ structs.HostLayout
+	__         structs.HostLayout
 }
 
 // AudioStream type
@@ -78,7 +80,7 @@ type AudioStream struct {
 	// Number of channels (1-mono, 2-stereo)
 	Channels uint32
 	_        [4]byte
-	__ structs.HostLayout
+	__       structs.HostLayout
 }
 
 type maDataConverter struct {
@@ -99,7 +101,7 @@ type maDataConverter struct {
 	IsPassthrough           uint8
 	X_ownsHeap              uint8
 	X_pHeap                 *byte
-	__ structs.HostLayout
+	__                      structs.HostLayout
 }
 
 type maChannelConverter struct {
@@ -115,7 +117,7 @@ type maChannelConverter struct {
 	X_pHeap        *byte
 	X_ownsHeap     uint32
 	Pad_cgo_0      [4]byte
-	__ structs.HostLayout
+	__             structs.HostLayout
 }
 
 type maResampler struct {
@@ -130,7 +132,7 @@ type maResampler struct {
 	X_pHeap          *byte
 	X_ownsHeap       uint32
 	Pad_cgo_0        [4]byte
-	__ structs.HostLayout
+	__               structs.HostLayout
 }
 
 type maResamplingBackendVtable struct {
@@ -144,7 +146,7 @@ type maResamplingBackendVtable struct {
 	OnGetRequiredInputFrameCount  *[0]byte
 	OnGetExpectedOutputFrameCount *[0]byte
 	OnReset                       *[0]byte
-	__ structs.HostLayout
+	__                            structs.HostLayout
 }
 
 type AudioBuffer struct {
@@ -165,14 +167,14 @@ type AudioBuffer struct {
 	Data                 *uint8
 	Next                 *AudioBuffer
 	Prev                 *AudioBuffer
-	__ structs.HostLayout
+	__                   structs.HostLayout
 }
 
 type AudioProcessor struct {
 	Process *[0]byte
 	Next    *AudioProcessor
 	Prev    *AudioProcessor
-	__ structs.HostLayout
+	__      structs.HostLayout
 }
 
 // AutomationEvent - Automation event
@@ -180,7 +182,7 @@ type AutomationEvent struct {
 	Frame  uint32
 	Type   uint32
 	Params [4]int32
-	__ structs.HostLayout
+	__     structs.HostLayout
 }
 
 // AutomationEventList - Automation event list
@@ -191,7 +193,7 @@ type AutomationEventList struct {
 	//
 	// Use AutomationEventList.GetEvents instead (go slice)
 	Events *AutomationEvent
-	__ structs.HostLayout
+	__     structs.HostLayout
 }
 
 // func (a *AutomationEventList) GetEvents() []AutomationEvent {
@@ -506,8 +508,8 @@ var (
 
 // Vector2 type
 type Vector2 struct {
-	X float32
-	Y float32
+	X  float32
+	Y  float32
 	__ structs.HostLayout
 }
 
@@ -522,9 +524,9 @@ func NewVector2(x, y float32) Vector2 {
 
 // Vector3 type
 type Vector3 struct {
-	X float32
-	Y float32
-	Z float32
+	X  float32
+	Y  float32
+	Z  float32
 	__ structs.HostLayout
 }
 
@@ -540,10 +542,10 @@ func NewVector3(x, y, z float32) Vector3 {
 
 // Vector4 type
 type Vector4 struct {
-	X float32
-	Y float32
-	Z float32
-	W float32
+	X  float32
+	Y  float32
+	Z  float32
+	W  float32
 	__ structs.HostLayout
 }
 
@@ -564,7 +566,7 @@ type Matrix struct {
 	M1, M5, M9, M13  float32
 	M2, M6, M10, M14 float32
 	M3, M7, M11, M15 float32
-	__ structs.HostLayout
+	__               structs.HostLayout
 }
 
 // NewMatrix - Returns new Matrix
@@ -577,15 +579,15 @@ func NewMatrix(m0, m4, m8, m12, m1, m5, m9, m13, m2, m6, m10, m14, m3, m7, m11, 
 		M1:  m1,
 		M5:  m5,
 		M9:  m9,
-		M13: m1,
+		M13: m13,
 		M2:  m2,
 		M6:  m6,
-		M10: m1,
-		M14: m1,
+		M10: m10,
+		M14: m14,
 		M3:  m3,
 		M7:  m7,
-		M11: m1,
-		M15: m1,
+		M11: m11,
+		M15: m15,
 		__:  structs.HostLayout{},
 	}
 }
@@ -596,16 +598,16 @@ type Mat2 struct {
 	M01 float32
 	M10 float32
 	M11 float32
-	__ structs.HostLayout
+	__  structs.HostLayout
 }
 
 // NewMat2 - Returns new Mat2
 func NewMat2(m0, m1, m10, m11 float32) Mat2 {
 	return Mat2{
 		M00: m0,
-		M01: m0,
-		M10: m1,
-		M11: m1,
+		M01: m1,
+		M10: m10,
+		M11: m11,
 		__:  structs.HostLayout{},
 	}
 }
@@ -639,7 +641,7 @@ type Rectangle struct {
 	Y      float32
 	Width  float32
 	Height float32
-	__ structs.HostLayout
+	__     structs.HostLayout
 }
 
 // NewRectangle - Returns new Rectangle
@@ -670,7 +672,7 @@ type RectangleInt32 struct {
 	Y      int32
 	Width  int32
 	Height int32
-	__ structs.HostLayout
+	__     structs.HostLayout
 }
 
 // ToFloat32 converts rectangle to float32 variant
@@ -696,7 +698,7 @@ type Camera3D struct {
 	Fovy float32
 	// Camera type, controlling projection type, either CameraPerspective or CameraOrthographic.
 	Projection CameraProjection
-	__ structs.HostLayout
+	__         structs.HostLayout
 }
 
 // Camera type fallback, defaults to Camera3D
@@ -724,7 +726,7 @@ type Camera2D struct {
 	Rotation float32
 	// Camera zoom (scaling), should be 1.0f by default
 	Zoom float32
-	__ structs.HostLayout
+	__   structs.HostLayout
 }
 
 // NewCamera2D - Returns new Camera2D
@@ -744,7 +746,7 @@ type BoundingBox struct {
 	Min Vector3
 	// Maximum vertex box-corner
 	Max Vector3
-	__ structs.HostLayout
+	__  structs.HostLayout
 }
 
 // NewBoundingBox - Returns new BoundingBox
@@ -910,7 +912,7 @@ type Mesh struct {
 	VaoID uint32
 	// OpenGL Vertex Buffer Objects id (7 types of vertex data)
 	VboID *uint32
-	__ structs.HostLayout
+	__    structs.HostLayout
 }
 
 // Material type
@@ -921,7 +923,7 @@ type Material struct {
 	Maps *MaterialMap
 	// Generic parameters (if required)
 	Params [4]float32
-	__ structs.HostLayout
+	__     structs.HostLayout
 }
 
 // // GetMap - Get pointer to MaterialMap by map type
@@ -937,7 +939,7 @@ type MaterialMap struct {
 	Color color.RGBA
 	// Value
 	Value float32
-	__ structs.HostLayout
+	__    structs.HostLayout
 }
 
 // Model is struct of model, meshes, materials and animation data
@@ -968,7 +970,7 @@ type Model struct {
 	//
 	// Use Model.GetBindPose instead (go slice)
 	BindPose *Transform
-	__ structs.HostLayout
+	__       structs.HostLayout
 }
 
 // // GetMeshes returns the meshes of a model as go slice
@@ -995,7 +997,7 @@ type Model struct {
 type BoneInfo struct {
 	Name   [32]int8
 	Parent int32
-	__ structs.HostLayout
+	__     structs.HostLayout
 }
 
 // Transform type
@@ -1003,7 +1005,7 @@ type Transform struct {
 	Translation Vector3
 	Rotation    Vector4
 	Scale       Vector3
-	__ structs.HostLayout
+	__          structs.HostLayout
 }
 
 // Ray type (useful for raycast)
@@ -1012,7 +1014,7 @@ type Ray struct {
 	Position Vector3
 	// Ray direction
 	Direction Vector3
-	__ structs.HostLayout
+	__        structs.HostLayout
 }
 
 // NewRay - Returns new Ray
@@ -1031,7 +1033,7 @@ type ModelAnimation struct {
 	Bones      *BoneInfo
 	FramePoses **Transform
 	Name       [32]uint8
-	__ structs.HostLayout
+	__         structs.HostLayout
 }
 
 // // GetBones returns the bones information (skeleton) of a ModelAnimation as go slice
@@ -1062,7 +1064,7 @@ type RayCollision struct {
 	Distance float32
 	Point    Vector3
 	Normal   Vector3
-	__ structs.HostLayout
+	__       structs.HostLayout
 }
 
 // NewRayCollision - Returns new RayCollision
@@ -1097,7 +1099,7 @@ type Shader struct {
 	ID uint32
 	// Shader locations array
 	Locs *int32
-	__ structs.HostLayout
+	__   structs.HostLayout
 }
 
 // NewShader - Returns new Shader
@@ -1131,7 +1133,7 @@ type GlyphInfo struct {
 	AdvanceX int32
 	// Character image data
 	Image Image
-	__ structs.HostLayout
+	__    structs.HostLayout
 }
 
 // NewGlyphInfo - Returns new CharInfo
@@ -1162,7 +1164,7 @@ type Font struct {
 	// Characters info data
 	// Chars *GlyphInfo
 	Chars cptr
-	__ structs.HostLayout
+	__    structs.HostLayout
 }
 
 // Font type, defines generation method
@@ -1276,7 +1278,7 @@ type Image struct {
 	Mipmaps int32
 	// Data format (PixelFormat)
 	Format PixelFormat
-	__ structs.HostLayout
+	__     structs.HostLayout
 }
 
 // // NewImage - Returns new Image
@@ -1299,7 +1301,7 @@ type Texture2D struct {
 	Mipmaps int32
 	// Data format (PixelFormat)
 	Format PixelFormat
-	__ structs.HostLayout
+	__     structs.HostLayout
 }
 
 // NewTexture2D - Returns new Texture2D
@@ -1322,7 +1324,7 @@ type RenderTexture2D struct {
 	Texture Texture2D
 	// Depth buffer attachment texture
 	Depth Texture2D
-	__ structs.HostLayout
+	__    structs.HostLayout
 }
 
 // NewRenderTexture2D - Returns new RenderTexture2D
@@ -1379,7 +1381,7 @@ type NPatchInfo struct {
 	Right  int32        // Right border offset
 	Bottom int32        // Bottom border offset
 	Layout NPatchLayout // Layout of the n-patch: 3x3, 1x3 or 3x1
-	__ structs.HostLayout
+	__     structs.HostLayout
 }
 
 // VrStereoConfig, VR stereo rendering configuration for simulator
@@ -1392,7 +1394,7 @@ type VrStereoConfig struct {
 	RightScreenCenter [2]float32 // VR right screen center
 	Scale             [2]float32 // VR distortion scale
 	ScaleIn           [2]float32 // VR distortion scale in
-	__ structs.HostLayout
+	__                structs.HostLayout
 }
 
 // VrDeviceInfo, Head-Mounted-Display device parameters
@@ -1406,5 +1408,5 @@ type VrDeviceInfo struct {
 	InterpupillaryDistance float32    // IPD (distance between pupils) in meters
 	LensDistortionValues   [4]float32 // Lens distortion constant parameters
 	ChromaAbCorrection     [4]float32 // Chromatic aberration correction parameters
-	__ structs.HostLayout
+	__                     structs.HostLayout
 }

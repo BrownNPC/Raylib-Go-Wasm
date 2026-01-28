@@ -19,6 +19,7 @@ const raylib = await Module({
 const go = new Go();
 // inject raylib
 go.importObject.raylib = raylib;
+go.importObject.globalThis = globalThis;
 globalThis.raylib = raylib;
 
 import { Runtime } from "./runtime.js"; // helper funtions
@@ -31,6 +32,7 @@ Object.assign(go.importObject.gojs, {
   CStringFromGoString: runtime.CStringFromGoString.bind(runtime),
   CopyToC: runtime.CopyToC.bind(runtime),
   CopyToGo: runtime.CopyToGo.bind(runtime),
+  Alert: runtime.Alert.bind(runtime),
 });
 
 WebAssembly.instantiateStreaming(fetch("main.wasm"), go.importObject).then(
