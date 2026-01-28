@@ -30,6 +30,7 @@ Object.assign(go.importObject.gojs, {
   struct: runtime.struct.bind(runtime),
   CStringFromGoString: runtime.CStringFromGoString.bind(runtime),
   CopyToC: runtime.CopyToC.bind(runtime),
+  CopyToGo: runtime.CopyToGo.bind(runtime),
 });
 
 WebAssembly.instantiateStreaming(fetch("main.wasm"), go.importObject).then(

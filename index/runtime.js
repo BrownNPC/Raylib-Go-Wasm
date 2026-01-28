@@ -23,7 +23,7 @@ class Runtime {
   setInt64 = (addr, v) => {
     this.mem.setUint32(addr + 0, v, true);
     // this.mem.setUint32(addr + 4, Math.floor(v / 4294967296), true);
-    this.mem.setUint32(addr + 4, 0, true)
+    this.mem.setUint32(addr + 4, 0, true);
   };
 
   getInt64 = (addr) => {
@@ -51,9 +51,9 @@ class Runtime {
   struct = (sp) => {
     sp >>>= 0;
     const ptr = this.getInt64(sp + 8);
-    this.setInt32(ptr, 99);
-    // 2nd field of struct
-    this.setInt32(ptr + 4, 69);
+    // this.setInt32(ptr, 99);
+    // // 2nd field of struct
+    // this.setInt32(ptr + 4, 69);
     // return
     this.setInt64(sp + 16, ptr);
   };
@@ -99,6 +99,33 @@ class Runtime {
 
     const goBytes = this.getmem(srcPtr, srcSize);
     this.getRaylibU8Array(dstCArray, srcSize).set(goBytes);
+  };
+  // func(dstGoPtr unsafe.Pointer, size int32, src cptr)
+  // copies C memory to a Go pointer. Useful for copying C structs into Go structs
+  //
+  // example usage:
+  // type Person struct{
+  //  Age string
+  // }
+  //
+  // var cPtrToPersonInCHeap cptr = ...
+  //
+  // var p Person
+  // CopyToGo(unsafe.Pointer(&p),unsafe.SizeOf(p),cPtrToPersonInCHeap)
+  //
+  // p.Age == (whatever it was in C)
+  CopyToGo = (sp) => {
+    sp >>>= 0;
+    const dstGoPtr = this.getInt64(sp + 8 * 1);
+    const size = this.getInt32(sp + 8 * 2); // size of the dstGoPtr
+
+    // size and pointer are packed into a single 64bit int by Go's compiler
+    const srcCptr = this.getInt32(sp + 8 * 2 + 4);
+
+    const srcCBytes = this.getRaylibU8Array(srcCptr, size);
+    const dstGoBytes = this.getmem(dstGoPtr, size);
+    // copy C bytes to Go
+    dstGoBytes.set(srcCBytes);
   };
 }
 

@@ -1157,9 +1157,11 @@ type Font struct {
 	// Characters texture atlas
 	Texture Texture2D
 	// Characters rectangles in texture
-	Recs *Rectangle
+	// Recs *Rectangle
+	Recs cptr
 	// Characters info data
-	Chars *GlyphInfo
+	// Chars *GlyphInfo
+	Chars cptr
 	__ structs.HostLayout
 }
 

@@ -5,13 +5,13 @@ import (
 )
 
 // cptr is a pointer to raylib wasm memory
-type cptr = int32
+type cptr = uint32
 
 // Allocates memory on raylib heap
 //
 //go:wasmimport raylib _malloc
 //go:noescape
-func malloc(size int32) cptr
+func malloc(size cptr) cptr
 
 // free memory allocated on raylib heap
 //
@@ -28,13 +28,32 @@ func free(cptr)
 //
 //go:wasmimport gojs CopyToC
 //go:noescape
-func copyToC(dstCArray cptr, srcSize int32, Value any)
+func copyToC(dstCArray cptr, srcSize cptr, Value any)
+
+// copies C memory to a Go pointer. Useful for copying C structs into Go structs
+//
+// example usage:
+//
+//	type Person struct{
+//	 Age string
+//	}
+//
+// var cPtrToPersonInCHeap cptr = ...
+//
+// var p Person
+// CopyToGo(unsafe.Pointer(&p),unsafe.SizeOf(p),cPtrToPersonInCHeap)
+//
+// p.Age == (whatever it was in C)
+//
+//go:wasmimport gojs CopyToGo
+//go:noescape
+func copyToGo(dstGoPtr unsafe.Pointer, size cptr, src cptr)
 
 // The alocated C string lives on the raylib heap and must be free()'d
+//
 //go:wasmimport gojs CStringFromGoString
 //go:noescape
 func cStringFromGoString(string) cptr
-
 
 // allocValueInC allocates a copy of a concrete type (not a slice) in C memory and returns a cptr to it.
 //
@@ -42,7 +61,7 @@ func cStringFromGoString(string) cptr
 //
 // NOTE: For slices use [allocSliceInC]
 func allocValueInC[T any](Value T) cptr {
-	size := int32(unsafe.Sizeof(Value))
+	size := cptr(unsafe.Sizeof(Value))
 	// allocate C array to hold Value
 	ptr := malloc(size)
 	copyToC(ptr, size, Value)
@@ -56,14 +75,31 @@ func allocValueInC[T any](Value T) cptr {
 // NOTE: For slices use [allocSliceInC]
 func allocSliceInC[Slice ~[]E, E any](s Slice) cptr {
 	// size of the slice's underlying array in bytes
-	sliceSize := int32(unsafe.Sizeof(s[0])) * int32(len(s))
-
+	sliceSize := cptr(unsafe.Sizeof(s[0])) * cptr(len(s))
 	// allocate C array to hold Value
 	ptr := malloc(sliceSize)
-
 	// copy underlying array memory to C
 	copyToC(ptr, sliceSize, unsafe.SliceData(s))
-
 	return ptr
 }
 
+// copyValueToGo copies a value from C memory to Go memory.
+// Useful for copying structs
+//
+// NOTE: Slices are not supported. Use [copyArrayToGo]
+func copyValueToGo[T any](srcPtr cptr) T {
+	var value T
+	size := cptr(unsafe.Sizeof(value))
+	copyToGo(unsafe.Pointer(&value), size, srcPtr)
+	return value
+}
+
+// copyArrayToGo copies a C array into a Go Slice.
+//
+// It copies bytes to the underlying array of the slice.
+func copyArrayToGo[Slice ~[]E, E any](s Slice, srcPtr cptr) {
+	// size of underlying array
+	size := cptr(unsafe.Sizeof(s[0])) * cptr(len(s))
+	dstPtr := unsafe.SliceData(s)
+	copyToGo(unsafe.Pointer(dstPtr), size, srcPtr)
+}
