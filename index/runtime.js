@@ -64,14 +64,25 @@ class Runtime {
       len,
     );
   }
-  // func(string) int32wasnt
+  // func(cptr) cstr
+  // Scans for null terminator and returns the length
+  CStringGetLength = (sp) => {
+    sp >>>= 0;
+    const cStr = this.getInt32(sp + 8 * 1);
+    const view = raylib.HEAPU8.subarray(cStr);
+    let len = 0;
+    while (view[len] !== 0) {
+      len++;
+    }
+    this.setInt32(sp + 8 * 2, len);
+  };
+  // func(string) cptr
   // returns pointer to C string in raylib memory
   CStringFromGoString = (sp) => {
     sp >>>= 0;
-    let arg = 1;
     // get string addr and length
-    const saddr = this.getInt64(sp + 8 * arg++); // go string address
-    const len = this.getInt64(sp + 8 * arg++); // go string length
+    const saddr = this.getInt64(sp + 8 * 1); // go string address
+    const len = this.getInt64(sp + 8 * 2); // go string length
 
     const goStrView = this.getmem(saddr, len); // js slice
 
@@ -84,20 +95,21 @@ class Runtime {
     // // set last byte to null terminator
     cStrView[len] = 0;
     // return cstr
-    this.setInt32(sp + 8 * arg++, cstr);
+    this.setInt32(sp + 8 * 3, cstr);
   };
-  // func(dstCArray, srcSize int32, src any)
+  // func(src unsafe.Pointer, srcSize, dstCptr cptr)
   // copies Go memory to C memory. Useful for copying slices and structs.
   // Destination C array must have enough space.
   // src must be a type. cannot be a slice. To pass a slice, use unsafe.SliceData
   CopyToC = (sp) => {
     sp >>>= 0;
-    const dstCArray = this.getInt32(sp + 8 * 1);
-    const srcSize = this.getInt32(sp + 8 * 2);
-    const srcPtr = this.getInt64(sp + 8 * 3);
+    const srcGoPtr = this.getInt64(sp + 8 * 1);
+    const srcSize = this.getInt32(sp + 8 * 2); // size of the dstGoPtr
+    // size and pointer are packed into a single 64bit int by Go's compiler
+    const dstCptr = this.getInt32(sp + 8 * 2 + 4);
 
-    const goBytes = this.getmem(srcPtr, srcSize);
-    this.getRaylibU8Array(dstCArray, srcSize).set(goBytes);
+    const goBytes = this.getmem(srcGoPtr, srcSize);
+    this.getRaylibU8Array(dstCptr, srcSize).set(goBytes);
   };
   // func(dstGoPtr unsafe.Pointer, size int32, src cptr)
   // copies C memory to a Go pointer. Useful for copying C structs into Go structs
@@ -117,7 +129,6 @@ class Runtime {
     sp >>>= 0;
     const dstGoPtr = this.getInt64(sp + 8 * 1);
     const size = this.getInt32(sp + 8 * 2); // size of the dstGoPtr
-
     // size and pointer are packed into a single 64bit int by Go's compiler
     const srcCptr = this.getInt32(sp + 8 * 2 + 4);
 

@@ -33,7 +33,7 @@ type Wave struct {
 
 // NewWave - Returns new Wave
 func NewWave(sampleCount, sampleRate, sampleSize, channels uint32, data []byte) Wave {
-	ptr := allocSliceInC(data)
+	ptr := copySliceToC(data)
 	return Wave{
 		FrameCount: sampleCount,
 		SampleRate: sampleRate,

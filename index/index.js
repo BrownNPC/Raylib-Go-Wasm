@@ -30,6 +30,7 @@ Object.assign(go.importObject.gojs, {
   array: runtime.array.bind(runtime),
   struct: runtime.struct.bind(runtime),
   CStringFromGoString: runtime.CStringFromGoString.bind(runtime),
+  CStringGetLength: runtime.CStringGetLength.bind(runtime),
   CopyToC: runtime.CopyToC.bind(runtime),
   CopyToGo: runtime.CopyToGo.bind(runtime),
   Alert: runtime.Alert.bind(runtime),
