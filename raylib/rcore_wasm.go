@@ -928,6 +928,7 @@ func WaitTime(seconds float64)
 // Fade - Returns color with alpha applied, alpha goes from 0.0f to 1.0f
 //
 //go:wasmimport raylib _Fade
+//go:noescape
 func fade(color, col cptr, alpha float32)
 
 // Fade - Returns color with alpha applied, alpha goes from 0.0f to 1.0f
@@ -945,6 +946,7 @@ func Fade(col color.RGBA, alpha float32) color.RGBA {
 // ColorToInt - Get hexadecimal value for a Color (0xRRGGBBAA)
 //
 //go:wasmimport raylib _ColorToInt
+//go:noescape
 func colorToInt(col cptr) int32
 
 // ColorToInt - Get hexadecimal value for a Color (0xRRGGBBAA)
@@ -968,6 +970,7 @@ func ColorNormalize(col color.RGBA) Vector4 {
 // ColorFromNormalized - Returns Color from normalized values [0..1]
 //
 //go:wasmimport raylib _ColorNormalized
+//go:noescape
 func colorFromNormalized(col, normalized cptr)
 
 // ColorFromNormalized - Returns Color from normalized values [0..1]
@@ -982,6 +985,9 @@ func ColorFromNormalized(normalized Vector4) color.RGBA {
 }
 
 // ColorToHSV - Returns HSV values for a Color, hue [0..360], saturation/value [0..1]
+//
+//go:wasmimport raylib _ColorToHSV
+//go:noescape
 func colorToHSV(vector3, col cptr)
 
 // ColorToHSV - Returns HSV values for a Color, hue [0..360], saturation/value [0..1]
@@ -996,36 +1002,43 @@ func ColorToHSV(col color.RGBA) Vector3 {
 	return v
 }
 
-/*
-
+// ColorFromHSV - Returns a Color from HSV values, hue [0..360], saturation/value [0..1]
+//
+//go:wasmimport raylib _ColorFromHSV
+//go:noescape
+func colorFromHSV(col cptr, hue, saturation, value float32)
 
 // ColorFromHSV - Returns a Color from HSV values, hue [0..360], saturation/value [0..1]
 func ColorFromHSV(hue, saturation, value float32) color.RGBA {
-	chue := (float)(hue)
-	csaturation := (float)(saturation)
-	cvalue := (float)(value)
-	ret := colorFromHSV(chue, csaturation, cvalue)
-	v := newColorFromPointer(&ret)
+	var v Color
+	ret, f := mallocV(v)
+	defer f()
+	colorFromHSV(ret, hue, saturation, value)
+	copyValueToGo(ret, &v)
 	return v
 }
 
 // ColorTint - Get color multiplied with another color
+//
+//go:wasmimport raylib _ColorTint
+//go:noescape
+func colorTint(color, col, tint cptr)
+
+// ColorTint - Get color multiplied with another color
 func ColorTint(col color.RGBA, tint color.RGBA) color.RGBA {
-	ccolor := colorCptr(col)
-	ctint := colorCptr(tint)
-	ret := colorTint(*ccolor, *ctint)
-	v := newColorFromPointer(&ret)
+	ccolor, f := copyValueToC(col)
+	defer f()
+
+	ctint, f := copyValueToC(tint)
+	defer f()
+	var v Color
+	ret, f := mallocV(v)
+	defer f()
+	colorTint(ret, ccolor, ctint)
 	return v
 }
 
-// ColorBrightness - Get color with brightness correction, brightness factor goes from -1.0f to 1.0f
-func ColorBrightness(col color.RGBA, factor float32) color.RGBA {
-	ccolor := colorCptr(col)
-	cfactor := float(factor)
-	ret := colorBrightness(*ccolor, cfactor)
-	v := newColorFromPointer(&ret)
-	return v
-}
+/*
 
 // ColorContrast - Get color with contrast correction, contrast values between -1.0f and 1.0f
 func ColorContrast(col color.RGBA, contrast float32) color.RGBA {
