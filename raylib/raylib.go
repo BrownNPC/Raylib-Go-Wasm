@@ -33,7 +33,7 @@ type Wave struct {
 
 // NewWave - Returns new Wave
 func NewWave(sampleCount, sampleRate, sampleSize, channels uint32, data []byte) Wave {
-	ptr := copySliceToC(data)
+	ptr, _ := copySliceToC(data)
 	return Wave{
 		FrameCount: sampleCount,
 		SampleRate: sampleRate,
@@ -1098,28 +1098,31 @@ type Shader struct {
 	// Shader program id
 	ID uint32
 	// Shader locations array
-	Locs *int32
+	Locs cptr
 	__   structs.HostLayout
 }
 
 // NewShader - Returns new Shader
 func NewShader(id uint32, locs *int32) Shader {
 	return Shader{
-		ID:   id,
-		Locs: locs,
-		__:   structs.HostLayout{},
+		ID: id,
+		__: structs.HostLayout{},
 	}
 }
 
-// // GetLocation - Get shader value's location
-// func (sh Shader) GetLocation(index int32) int32 {
-// 	return *(*int32)(cptr(uintptr(cptr(sh.Locs)) + uintptr(index*4)))
-// }
+// GetLocation - Get shader value's location
+func (sh Shader) GetLocation(index int32) int32 {
+	var v int32
+	locAddr := sh.Locs + cptr(index)*4
+	copyValueToGo(locAddr, &v)
+	return v
+}
 
-// // UpdateLocation - Update shader value's location
-// func (sh Shader) UpdateLocation(index int32, loc int32) {
-// 	*(*int32)(cptr(uintptr(cptr(sh.Locs)) + uintptr(index*4))) = loc
-// }
+// UpdateLocation - Update shader value's location
+func (sh Shader) UpdateLocation(index int32, loc int32) {
+	locAddr := sh.Locs * cptr(index) * 4
+	copyToC(&loc, locAddr)
+}
 
 // GlyphInfo - Font character info
 type GlyphInfo struct {

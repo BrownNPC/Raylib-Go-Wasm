@@ -17,8 +17,9 @@ type cptr = uint32
 func malloc(size cptr) cptr
 
 // malloc the size of V
-func mallocV[T any](V T) cptr {
-	return malloc(sizeof(V))
+func mallocV[T any](V T) (cptr, func()) {
+	ptr := malloc(sizeof(V))
+	return ptr, func() { free(ptr) }
 }
 
 // free memory allocated on raylib heap
@@ -57,6 +58,12 @@ func _copyToC(Value unsafe.Pointer, srcSize, dstCptr cptr)
 //go:noescape
 func _copyToGo(dstGoPtr unsafe.Pointer, size cptr, src cptr)
 
+// Copies the src value to the dst cptr
+func copyToC[T any](src *T, dst cptr) {
+	size := sizeof(src)
+	_copyToC(unsafe.Pointer(src), size, dst)
+}
+
 // The alocated C string lives on the raylib heap and must be free()'d
 //
 //go:wasmimport gojs CStringFromGoString
@@ -80,24 +87,24 @@ func goString(cstr cptr) string {
 // copyValueToC copies a value to C and returns a pointer to it.
 //
 // NOTE: Value cannot be a slice. For a slice, use [copySliceToC]
-func copyValueToC[T any](srcValue T) cptr {
+func copyValueToC[T any](srcValue T) (cptr, func()) {
 	size := sizeof(srcValue)
 	dst := malloc(size)
-	_copyToC(unsafe.Pointer(&srcValue), size, dst)
-	return dst
+	copyToC(&srcValue, dst)
+	return dst, func() { free(dst) }
 }
 
 // copySliceToC allocates a copy of a slice in C memory and returns a cptr to it.
 //
 // NOTE: Value MUST be a slice
-func copySliceToC[Slice ~[]E, E any](s Slice) cptr {
+func copySliceToC[Slice ~[]E, E any](s Slice) (cptr, func()) {
 	// size of the slice's underlying array in bytes
 	sliceSize := cptr(unsafe.Sizeof(s[0])) * cptr(len(s))
 	// allocate C array to hold Value
 	dstCptr := malloc(sliceSize)
 	// copy underlying array memory to C
 	_copyToC(unsafe.Pointer(unsafe.SliceData(s)), sliceSize, dstCptr)
-	return dstCptr
+	return dstCptr, func() { free(dstCptr) }
 }
 
 // copyValueToGo copies a value from C memory to Go memory.
@@ -137,6 +144,7 @@ func SetMain(UpdateAndDrawFrame func()) {
 		return nil
 	})
 	js.Global().Call("requestAnimationFrame", updateLoop)
+	select {}
 }
 
 // return sizeof of v in bytes

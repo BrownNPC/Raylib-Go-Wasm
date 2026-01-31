@@ -3,6 +3,7 @@
 package rl
 
 import (
+	"image/color"
 	"syscall/js"
 	"unsafe"
 )
@@ -300,8 +301,8 @@ func GetMonitorPosition(monitor int) Vector2 {
 	var v Vector2
 	cmonitor := (int32)(monitor)
 
-	ret := mallocV(v)
-	defer free(ret)
+	ret, f := mallocV(v)
+	defer f()
 	getMonitorPosition(ret, cmonitor)
 	copyValueToGo(ret, &v)
 	return v
@@ -375,8 +376,8 @@ func getWindowPosition(vector2 cptr)
 // GetWindowPosition - Get window position XY on monitor
 func GetWindowPosition() Vector2 {
 	var v Vector2
-	ret := mallocV(v)
-	defer free(ret)
+	ret, f := mallocV(v)
+	defer f()
 	getWindowPosition(ret)
 	copyValueToGo(ret, &v)
 	return v
@@ -389,8 +390,8 @@ func getWindowScaleDPI(vector2 cptr)
 // GetWindowScaleDPI - Get window scale DPI factor
 func GetWindowScaleDPI() Vector2 {
 	var v Vector2
-	ret := mallocV(v)
-	defer free(ret)
+	ret, f := mallocV(v)
+	defer f()
 	getWindowScaleDPI(ret)
 	copyValueToGo(ret, &v)
 	return v
@@ -399,220 +400,313 @@ func GetWindowScaleDPI() Vector2 {
 // GetMonitorName - Get the human-readable, UTF-8 encoded name of the primary monitor
 func GetMonitorName(monitor int) string { return "" }
 
-// SetClipboardText - Set clipboard text content
-//
 //go:wasmimport raylib _SetClipboardText
 //go:noescape
 func setClipboardText(data cptr)
+
+// SetClipboardText - Set clipboard text content
 func SetClipboardText(data string) {
 	cdata := cString(data)
 	defer free(cdata)
 	setClipboardText(cdata)
 }
 
-/*
+//go:wasmimport raylib _GetClipboardText
+//go:noescape
+func getClipboardText() cptr
+
 // GetClipboardText - Get clipboard text content
 func GetClipboardText() string {
 	ret := getClipboardText()
+	defer free(ret)
 	v := goString(ret)
 	return v
 }
+
+//go:wasmimport raylib _GetClipboardImage
+//go:noescape
+func getClipboardImage(img cptr)
 
 // GetClipboardImage - Get clipboard image content
 //
 // Only works with SDL3 backend or Windows with GLFW/RGFW
 func GetClipboardImage() Image {
-	ret := getClipboardImage()
-	v := newImageFromPointer(unsafe.Pointer(&ret))
-	return *v
+	var v Image
+	ret, f := mallocV(v)
+	defer f()
+	getClipboardImage(ret)
+	copyValueToGo(ret, &v)
+	return v
 }
 
 // EnableEventWaiting - Enable waiting for events on EndDrawing(), no automatic event polling
-func EnableEventWaiting() {
-	enableEventWaiting()
-}
+//
+//go:wasmimport raylib _EnableEventWaiting
+//go:noescape
+func EnableEventWaiting()
 
 // DisableEventWaiting - Disable waiting for events on EndDrawing(), automatic events polling
-func DisableEventWaiting() {
-	disableEventWaiting()
-}
+//
+//go:wasmimport raylib _DisableEventWaiting
+//go:noescape
+func DisableEventWaiting()
+
+//go:wasmimport raylib _ClearBackground
+//go:noescape
+func clearBackground(col cptr)
 
 // ClearBackground - Sets Background Color
 func ClearBackground(col color.RGBA) {
-	ccolor := colorCptr(col)
-	clearBackground(*ccolor)
+	ccolor, f := copyValueToC(col)
+	defer f()
+	clearBackground(ccolor)
 }
 
 // BeginDrawing - Setup drawing canvas to start drawing
-func BeginDrawing() {
-	beginDrawing()
-}
+//
+//go:wasmimport raylib _BeginDrawing
+//go:noescape
+func BeginDrawing()
 
 // EndDrawing - End canvas drawing and Swap Buffers (Double Buffering)
-func EndDrawing() {
-	endDrawing()
-}
+//
+//go:wasmimport raylib _EndDrawing
+//go:noescape
+func EndDrawing()
+
+//go:wasmimport raylib _BeginMode2D
+//go:noescape
+func beginMode2D(camera cptr)
 
 // BeginMode2D - Initialize 2D mode with custom camera
 func BeginMode2D(camera Camera2D) {
-	ccamera := camera.cptr()
-	beginMode2D(*ccamera)
+	ccamera, f := copyValueToC(camera)
+	defer f()
+	beginMode2D(ccamera)
 }
 
 // EndMode2D - Ends 2D mode custom camera usage
-func EndMode2D() {
-	endMode2D()
-}
+//
+//go:wasmimport raylib _EndMode2D
+//go:noescape
+func EndMode2D()
+
+//go:wasmimport raylib _BeginMode3D
+//go:noescape
+func beginMode3D(camera cptr)
 
 // BeginMode3D - Initializes 3D mode for drawing (Camera setup)
 func BeginMode3D(camera Camera) {
-	ccamera := camera.cptr()
-	beginMode3D(*ccamera)
+	c, f := copyValueToC(camera)
+	defer f()
+	beginMode3D(c)
 }
 
 // EndMode3D - Ends 3D mode and returns to default 2D orthographic mode
-func EndMode3D() {
-	endMode3D()
-}
+//
+//go:wasmimport raylib _EndMode3D
+//go:noescape
+func EndMode3D()
+
+//go:wasmimport raylib _BeginTextureMode
+//go:noescape
+func beginTextureMode(target cptr)
 
 // BeginTextureMode - Initializes render texture for drawing
 func BeginTextureMode(target RenderTexture2D) {
-	ctarget := target.cptr()
-	beginTextureMode(*ctarget)
+	c, f := copyValueToC(target)
+	defer f()
+	beginTextureMode(c)
 }
 
 // EndTextureMode - Ends drawing to render texture
-func EndTextureMode() {
-	endTextureMode()
-}
+//
+//go:wasmimport raylib _EndTextureMode
+//go:noescape
+func EndTextureMode()
 
 // BeginScissorMode - Begins scissor mode (define screen area for following drawing)
-func BeginScissorMode(x, y, width, height int32) {
-	cx := (int32)(x)
-	cy := (int32)(y)
-	cwidth := (int32)(width)
-	cheight := (int32)(height)
-	beginScissorMode(cx, cy, cwidth, cheight)
-}
+//
+//go:wasmimport raylib _BeginScissorMode
+//go:noescape
+func BeginScissorMode(x, y, width, height int32)
 
 // EndScissorMode - Ends scissor mode
-func EndScissorMode() {
-	endScissorMode()
-}
+//
+//go:wasmimport raylib _EndScissorMode
+//go:noescape
+func EndScissorMode()
+
+// LoadShader - Load a custom shader and bind default locations
+//
+//go:wasmimport raylib _LoadShader
+//go:noescape
+func loadShader(shader, vsFileName cptr, fsFileName cptr)
 
 // LoadShader - Load a custom shader and bind default locations
 func LoadShader(vsFileName string, fsFileName string) Shader {
 	cvsFileName := cString(vsFileName)
-	defer free(unsafe.Pointer(cvsFileName))
+	defer free(cvsFileName)
 
 	cfsFileName := cString(fsFileName)
-	defer free(unsafe.Pointer(cfsFileName))
+	defer free(cfsFileName)
 
-	if vsFileName == "" {
-		cvsFileName = nil
-	}
-
-	if fsFileName == "" {
-		cfsFileName = nil
-	}
-
-	ret := loadShader(cvsFileName, cfsFileName)
-	v := newShaderFromPointer(unsafe.Pointer(&ret))
-
+	var v Shader
+	ret, f := mallocV(v)
+	defer f()
+	loadShader(ret, cvsFileName, cfsFileName)
+	copyValueToGo(ret, &v)
 	return v
 }
 
 // LoadShaderFromMemory - Load shader from code strings and bind default locations
+//
+//go:wasmimport raylib _LoadShaderFromMemory
+//go:noescape
+func loadShaderFromMemory(shader, vsCode cptr, fsCode cptr)
+
+// LoadShaderFromMemory - Load shader from code strings and bind default locations
 func LoadShaderFromMemory(vsCode string, fsCode string) Shader {
 	cvsCode := cString(vsCode)
-	defer free(unsafe.Pointer(cvsCode))
+	defer free(cvsCode)
 
 	cfsCode := cString(fsCode)
-	defer free(unsafe.Pointer(cfsCode))
+	defer free(cfsCode)
 
-	if vsCode == "" {
-		cvsCode = nil
-	}
-
-	if fsCode == "" {
-		cfsCode = nil
-	}
-
-	ret := loadShaderFromMemory(cvsCode, cfsCode)
-	v := newShaderFromPointer(unsafe.Pointer(&ret))
-
+	var v Shader
+	ret, f := mallocV(v)
+	defer f()
+	loadShaderFromMemory(ret, cvsCode, cfsCode)
+	copyValueToGo(ret, &v)
 	return v
 }
 
 // IsShaderValid - Check if a shader is valid (loaded on GPU)
+//
+//go:wasmimport raylib _IsShaderValid
+//go:noescape
+func isShaderValid(shader cptr) bool
+
+// IsShaderValid - Check if a shader is valid (loaded on GPU)
 func IsShaderValid(shader Shader) bool {
-	cshader := shader.cptr()
-	ret := isShaderValid(*cshader)
-	v := bool(ret)
+	c, f := copyValueToC(shader)
+	defer f()
+	v := isShaderValid(c)
 	return v
 }
 
 // GetShaderLocation - Get shader uniform location
-func GetShaderLocation(shader Shader, uniformName string) int32 {
-	cshader := shader.cptr()
-	cuniformName := cString(uniformName)
-	defer free(unsafe.Pointer(cuniformName))
+//
+//go:wasmimport raylib _GetShaderLocation
+//go:noescape
+func getShaderLocation(shader cptr, uniformName cptr) int32
 
-	ret := getShaderLocation(*cshader, cuniformName)
-	v := (int32)(ret)
+// GetShaderLocation - Get shader uniform location
+func GetShaderLocation(shader Shader, uniformName string) int32 {
+	cshader, f := copyValueToC(shader)
+	defer f()
+
+	cuniformName := cString(uniformName)
+	defer free(cuniformName)
+
+	v := getShaderLocation(cshader, cuniformName)
 	return v
 }
 
 // GetShaderLocationAttrib - Get shader attribute location
-func GetShaderLocationAttrib(shader Shader, attribName string) int32 {
-	cshader := shader.cptr()
-	cuniformName := cString(attribName)
-	defer free(unsafe.Pointer(cuniformName))
+//
+//go:wasmimport raylib _GetShaderLocationAttrib
+//go:noescape
+func getShaderLocationAttrib(shader cptr, attribName cptr) int32
 
-	ret := getShaderLocationAttrib(*cshader, cuniformName)
-	v := (int32)(ret)
-	return v
+// GetShaderLocationAttrib - Get shader attribute location
+func GetShaderLocationAttrib(shader Shader, attribName string) int32 {
+	cshader, f := copyValueToC(shader)
+	defer f()
+	cuniformName := cString(attribName)
+	defer free(cuniformName)
+	return getShaderLocationAttrib(cshader, cuniformName)
 }
 
 // SetShaderValue - Set shader uniform value (float)
+//
+//go:wasmimport raylib _SetShaderValue
+//go:noescape
+func setShaderValue(shader cptr, locIndex int32, value cptr, uniformType ShaderUniformDataType)
+
+// SetShaderValue - Set shader uniform value (float)
 func SetShaderValue(shader Shader, locIndex int32, value []float32, uniformType ShaderUniformDataType) {
-	cshader := shader.cptr()
+	cshader, f := copyValueToC(shader)
+	defer f()
 	clocIndex := (int32)(locIndex)
-	cvalue := (*float)(unsafe.Pointer(&value[0]))
+	cvalue, f := copySliceToC(value)
+	defer f()
 	cuniformType := (int32)(uniformType)
-	setShaderValue(*cshader, clocIndex, unsafe.Pointer(cvalue), cuniformType)
+	setShaderValue(cshader, clocIndex, cvalue, cuniformType)
 }
 
 // SetShaderValueV - Set shader uniform value (float)
+//
+//go:wasmimport raylib _SetShaderValueV
+//go:noescape
+func setShaderValueV(shader cptr, locIndex int32, value cptr, uniformType ShaderUniformDataType, count int32)
+
+// SetShaderValueV - Set shader uniform value (float)
 func SetShaderValueV(shader Shader, locIndex int32, value []float32, uniformType ShaderUniformDataType, count int32) {
-	cshader := shader.cptr()
+	cshader, f := copyValueToC(shader)
+	defer f()
 	clocIndex := (int32)(locIndex)
-	cvalue := (*float)(unsafe.Pointer(&value[0]))
+	cvalue, f := copySliceToC(value)
+	defer f()
 	cuniformType := (int32)(uniformType)
 	ccount := (int32)(count)
-	setShaderValueV(*cshader, clocIndex, unsafe.Pointer(cvalue), cuniformType, ccount)
+	setShaderValueV(cshader, clocIndex, cvalue, cuniformType, ccount)
 }
 
 // SetShaderValueMatrix - Set shader uniform value (matrix 4x4)
+//
+//go:wasmimport raylib _SetShaderValueMatrix
+//go:noescape
+func setShaderValueMatrix(shader cptr, locIndex int32, mat cptr)
+
+// SetShaderValueMatrix - Set shader uniform value (matrix 4x4)
 func SetShaderValueMatrix(shader Shader, locIndex int32, mat Matrix) {
-	cshader := shader.cptr()
+	cshader, f := copyValueToC(shader)
+	defer f()
 	clocIndex := (int32)(locIndex)
-	cmat := mat.cptr()
-	setShaderValueMatrix(*cshader, clocIndex, *cmat)
+	cmat, f := copyValueToC(mat)
+	defer f()
+	setShaderValueMatrix(cshader, clocIndex, cmat)
 }
 
 // SetShaderValueTexture - Set shader uniform value for texture (sampler2d)
+//
+//go:wasmimport raylib _SetShaderValueTexture
+//go:noescape
+func setShaderValueTexture(shader cptr, locIndex int32, texture cptr)
+
+// SetShaderValueTexture - Set shader uniform value for texture (sampler2d)
 func SetShaderValueTexture(shader Shader, locIndex int32, texture Texture2D) {
-	cshader := shader.cptr()
+	cshader, f := copyValueToC(shader)
+	defer f()
 	clocIndex := (int32)(locIndex)
-	ctexture := texture.cptr()
-	setShaderValueTexture(*cshader, clocIndex, *ctexture)
+	ctexture, f := copyValueToC(texture)
+	defer f()
+	setShaderValueTexture(cshader, clocIndex, ctexture)
 }
 
 // UnloadShader - Unload a custom shader from memory
+//
+//go:wasmimport raylib _UnloadShader
+//go:noescape
+func unloadShader(shader cptr)
+
+// UnloadShader - Unload a custom shader from memory
 func UnloadShader(shader Shader) {
-	cshader := shader.cptr()
-	unloadShader(*cshader)
+
+	cshader, f := copyValueToC(shader)
+	defer f()
+	unloadShader(cshader)
 }
 
 // GetMouseRay - Get a ray trace from mouse position
@@ -623,38 +717,71 @@ func GetMouseRay(mousePosition Vector2, camera Camera) Ray {
 }
 
 // GetScreenToWorldRay - Get a ray trace from screen position (i.e mouse)
+//
+//go:wasmimport raylib _GetScreenToWorldRay
+//go:noescape
+func getScreenToWorldRay(ray cptr, position cptr, camera cptr)
+
+// GetScreenToWorldRay - Get a ray trace from screen position (i.e mouse)
 func GetScreenToWorldRay(position Vector2, camera Camera) Ray {
-	cposition := position.cptr()
-	ccamera := camera.cptr()
-	ret := getScreenToWorldRay(*cposition, *ccamera)
-	v := newRayFromPointer(unsafe.Pointer(&ret))
+	cposition, f := copyValueToC(position)
+	defer f()
+	ccamera, f := copyValueToC(camera)
+	defer f()
+	var v Ray
+	ret, f := mallocV(v)
+	defer f()
+	getScreenToWorldRay(ret, cposition, ccamera)
+	copyValueToGo(ret, &v)
 	return v
 }
 
 // GetScreenToWorldRayEx - Get a ray trace from screen position (i.e mouse) in a viewport
+//
+//go:wasmimport raylib _GetScreenToWorldRayEx
+//go:noescape
+func getScreenToWorldRayEx(ray cptr, position cptr, camera cptr, width, height int32)
+
+// GetScreenToWorldRayEx - Get a ray trace from screen position (i.e mouse) in a viewport
 func GetScreenToWorldRayEx(position Vector2, camera Camera, width, height int32) Ray {
-	cposition := position.cptr()
-	ccamera := camera.cptr()
+	cposition, f := copyValueToC(position)
+	defer f()
+	ccamera, f := copyValueToC(camera)
 	cwidth := (int32)(width)
 	cheight := (int32)(height)
-	ret := getScreenToWorldRayEx(*cposition, *ccamera, cwidth, cheight)
-	v := newRayFromPointer(unsafe.Pointer(&ret))
+	var v Ray
+	ret, f := mallocV(v)
+	defer f()
+	getScreenToWorldRayEx(ret, cposition, ccamera, cwidth, cheight)
+	copyValueToGo(ret, &v)
 	return v
 }
 
 // GetCameraMatrix - Returns camera transform matrix (view matrix)
+//
+//go:wasmimport raylib _GetCameraMatrix
+//go:noescape
+func getCameraMatrix(mat cptr, camera cptr)
+
+// GetCameraMatrix - Returns camera transform matrix (view matrix)
 func GetCameraMatrix(camera Camera) Matrix {
-	ccamera := camera.cptr()
-	ret := getCameraMatrix(*ccamera)
-	v := newMatrixFromPointer(unsafe.Pointer(&ret))
+	ccamera, f := copyValueToC(camera)
+	defer f()
+	var v Matrix
+	ret, f := mallocV(v)
+	defer f()
+
+	getCameraMatrix(ret, ccamera)
+	copyValueToGo(ret, &v)
 	return v
 }
 
+/*
 // GetCameraMatrix2D - Returns camera 2d transform matrix
 func GetCameraMatrix2D(camera Camera2D) Matrix {
 	ccamera := camera.cptr()
 	ret := getCameraMatrix2D(*ccamera)
-	v := newMatrixFromPointer(unsafe.Pointer(&ret))
+	v := newMatrixFromPointer(&ret)
 	return v
 }
 
@@ -663,7 +790,7 @@ func GetWorldToScreen(position Vector3, camera Camera) Vector2 {
 	cposition := position.cptr()
 	ccamera := camera.cptr()
 	ret := getWorldToScreen(*cposition, *ccamera)
-	v := newVector2FromPointer(unsafe.Pointer(&ret))
+	v := newVector2FromPointer(&ret)
 	return v
 }
 
@@ -672,7 +799,7 @@ func GetScreenToWorld2D(position Vector2, camera Camera2D) Vector2 {
 	cposition := position.cptr()
 	ccamera := camera.cptr()
 	ret := getScreenToWorld2D(*cposition, *ccamera)
-	v := newVector2FromPointer(unsafe.Pointer(&ret))
+	v := newVector2FromPointer(&ret)
 	return v
 }
 
@@ -683,7 +810,7 @@ func GetWorldToScreenEx(position Vector3, camera Camera, width int32, height int
 	cwidth := (int32)(width)
 	cheight := (int32)(height)
 	ret := getWorldToScreenEx(*cposition, *ccamera, cwidth, cheight)
-	v := newVector2FromPointer(unsafe.Pointer(&ret))
+	v := newVector2FromPointer(&ret)
 	return v
 }
 
@@ -692,7 +819,7 @@ func GetWorldToScreen2D(position Vector2, camera Camera2D) Vector2 {
 	cposition := position.cptr()
 	ccamera := camera.cptr()
 	ret := getWorldToScreen2D(*cposition, *ccamera)
-	v := newVector2FromPointer(unsafe.Pointer(&ret))
+	v := newVector2FromPointer(&ret)
 	return v
 }
 
@@ -750,7 +877,7 @@ func Fade(col color.RGBA, alpha float32) color.RGBA {
 	ccolor := colorCptr(col)
 	calpha := (float)(alpha)
 	ret := fade(*ccolor, calpha)
-	v := newColorFromPointer(unsafe.Pointer(&ret))
+	v := newColorFromPointer(&ret)
 	return v
 }
 
@@ -778,7 +905,7 @@ func ColorNormalize(col color.RGBA) Vector4 {
 func ColorFromNormalized(normalized Vector4) color.RGBA {
 	cnormalized := normalized.cptr()
 	ret := colorFromNormalized(*cnormalized)
-	v := newColorFromPointer(unsafe.Pointer(&ret))
+	v := newColorFromPointer(&ret)
 	return v
 }
 
@@ -786,7 +913,7 @@ func ColorFromNormalized(normalized Vector4) color.RGBA {
 func ColorToHSV(col color.RGBA) Vector3 {
 	ccolor := colorCptr(col)
 	ret := colorToHSV(*ccolor)
-	v := newVector3FromPointer(unsafe.Pointer(&ret))
+	v := newVector3FromPointer(&ret)
 	return v
 }
 
@@ -796,7 +923,7 @@ func ColorFromHSV(hue, saturation, value float32) color.RGBA {
 	csaturation := (float)(saturation)
 	cvalue := (float)(value)
 	ret := colorFromHSV(chue, csaturation, cvalue)
-	v := newColorFromPointer(unsafe.Pointer(&ret))
+	v := newColorFromPointer(&ret)
 	return v
 }
 
@@ -805,7 +932,7 @@ func ColorTint(col color.RGBA, tint color.RGBA) color.RGBA {
 	ccolor := colorCptr(col)
 	ctint := colorCptr(tint)
 	ret := colorTint(*ccolor, *ctint)
-	v := newColorFromPointer(unsafe.Pointer(&ret))
+	v := newColorFromPointer(&ret)
 	return v
 }
 
@@ -814,7 +941,7 @@ func ColorBrightness(col color.RGBA, factor float32) color.RGBA {
 	ccolor := colorCptr(col)
 	cfactor := float(factor)
 	ret := colorBrightness(*ccolor, cfactor)
-	v := newColorFromPointer(unsafe.Pointer(&ret))
+	v := newColorFromPointer(&ret)
 	return v
 }
 
@@ -823,7 +950,7 @@ func ColorContrast(col color.RGBA, contrast float32) color.RGBA {
 	ccolor := colorCptr(col)
 	ccontrast := float(contrast)
 	ret := colorContrast(*ccolor, ccontrast)
-	v := newColorFromPointer(unsafe.Pointer(&ret))
+	v := newColorFromPointer(&ret)
 	return v
 }
 
@@ -838,7 +965,7 @@ func ColorAlphaBlend(src, dst, tint color.RGBA) color.RGBA {
 	cdst := colorCptr(dst)
 	ctint := colorCptr(tint)
 	ret := colorAlphaBlend(*csrc, *cdst, *ctint)
-	v := newColorFromPointer(unsafe.Pointer(&ret))
+	v := newColorFromPointer(&ret)
 	return v
 }
 
@@ -847,7 +974,7 @@ func ColorLerp(col1, col2 color.RGBA, factor float32) color.RGBA {
 	ccol1 := colorCptr(col1)
 	ccol2 := colorCptr(col2)
 	ret := colorLerp(*ccol1, *ccol2, float(factor))
-	v := newColorFromPointer(unsafe.Pointer(&ret))
+	v := newColorFromPointer(&ret)
 	return v
 }
 
@@ -855,7 +982,7 @@ func ColorLerp(col1, col2 color.RGBA, factor float32) color.RGBA {
 func GetColor(hexValue uint) color.RGBA {
 	chexValue := (uint)(hexValue)
 	ret := getColor(chexValue)
-	v := newColorFromPointer(unsafe.Pointer(&ret))
+	v := newColorFromPointer(&ret)
 	return v
 }
 
@@ -881,7 +1008,7 @@ func GetRandomValue(min, max int32) int32 {
 // OpenURL - Open URL with default system browser (if available)
 func OpenURL(url string) {
 	curl := cString(url)
-	defer free(unsafe.Pointer(curl))
+	defer free(curl)
 	openURL(curl)
 }
 
@@ -894,17 +1021,17 @@ func SetConfigFlags(flags uint32) {
 // TakeScreenshot - Takes a screenshot of current screen (saved a .png)
 func TakeScreenshot(name string) {
 	cname := cString(name)
-	defer free(unsafe.Pointer(cname))
+	defer free(cname)
 	takeScreenshot(cname)
 }
 
 // LoadAutomationEventList - Load automation events list from file, NULL for empty list, capacity = MAX_AUTOMATION_EVENTS
 func LoadAutomationEventList(fileName string) AutomationEventList {
 	cfileName := cString(fileName)
-	defer free(unsafe.Pointer(cfileName))
+	defer free(cfileName)
 
 	ret := loadAutomationEventList(cfileName)
-	v := newAutomationEventListFromPointer(unsafe.Pointer(&ret))
+	v := newAutomationEventListFromPointer(&ret)
 
 	return v
 }
@@ -917,7 +1044,7 @@ func UnloadAutomationEventList(list *AutomationEventList) {
 // ExportAutomationEventList - Export automation events list as text file
 func ExportAutomationEventList(list AutomationEventList, fileName string) bool {
 	cfileName := cString(fileName)
-	defer free(unsafe.Pointer(cfileName))
+	defer free(cfileName)
 
 	ret := exportAutomationEventList(*list.cptr(), cfileName)
 	v := bool(ret)
@@ -1090,7 +1217,7 @@ func GetGamepadAxisMovement(gamepad, axis int32) float32 {
 // SetGamepadMappings - Set internal gamepad mappings (SDL_GameControllerDB)
 func SetGamepadMappings(mappings string) int32 {
 	cmappings := cString(mappings)
-	defer free(unsafe.Pointer(cmappings))
+	defer free(cmappings)
 	ret := setGamepadMappings(cmappings)
 	v := (int32)(ret)
 	return v
@@ -1150,14 +1277,14 @@ func GetMouseY() int32 {
 // GetMousePosition - Returns mouse position XY
 func GetMousePosition() Vector2 {
 	ret := getMousePosition()
-	v := newVector2FromPointer(unsafe.Pointer(&ret))
+	v := newVector2FromPointer(&ret)
 	return v
 }
 
 // GetMouseDelta - Get mouse delta between frames
 func GetMouseDelta() Vector2 {
 	ret := getMouseDelta()
-	v := newVector2FromPointer(unsafe.Pointer(&ret))
+	v := newVector2FromPointer(&ret)
 	return v
 }
 
@@ -1192,7 +1319,7 @@ func GetMouseWheelMove() float32 {
 // GetMouseWheelMoveV - Get mouse wheel movement for both X and Y
 func GetMouseWheelMoveV() Vector2 {
 	ret := getMouseWheelMoveV()
-	v := newVector2FromPointer(unsafe.Pointer(&ret))
+	v := newVector2FromPointer(&ret)
 	return v
 }
 
@@ -1220,7 +1347,7 @@ func GetTouchY() int32 {
 func GetTouchPosition(index int32) Vector2 {
 	cindex := (int32)(index)
 	ret := getTouchPosition(cindex)
-	v := newVector2FromPointer(unsafe.Pointer(&ret))
+	v := newVector2FromPointer(&ret)
 	return v
 }
 
@@ -1241,7 +1368,7 @@ func GetTouchPointCount() int32 {
 
 // BeginVrStereoMode - Begin stereo rendering (requires VR simulator)
 func BeginVrStereoMode(config VrStereoConfig) {
-	beginVrStereoMode(*(*vrStereoConfig)(unsafe.Pointer(&config)))
+	beginVrStereoMode(*(*vrStereoConfig)(&config))
 }
 
 // EndVrStereoMode - End stereo rendering (requires VR simulator)
@@ -1251,12 +1378,12 @@ func EndVrStereoMode() {
 
 // LoadVrStereoConfig - Load VR stereo config for VR simulator device parameters
 func LoadVrStereoConfig(device VrDeviceInfo) VrStereoConfig {
-	ret := loadVrStereoConfig(*(*vrDeviceInfo)(unsafe.Pointer(&device)))
-	return *(*VrStereoConfig)(unsafe.Pointer(&ret))
+	ret := loadVrStereoConfig(*(*vrDeviceInfo)(&device))
+	return *(*VrStereoConfig)(&ret)
 }
 
 // UnloadVrStereoConfig - Unload VR stereo config
 func UnloadVrStereoConfig(config VrStereoConfig) {
-	unloadVrStereoConfig(*(*vrStereoConfig)(unsafe.Pointer(&config)))
+	unloadVrStereoConfig(*(*vrStereoConfig)(&config))
 }
 */
