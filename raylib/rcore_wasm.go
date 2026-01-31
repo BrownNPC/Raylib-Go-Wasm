@@ -776,117 +776,182 @@ func GetCameraMatrix(camera Camera) Matrix {
 	return v
 }
 
-/*
+// GetCameraMatrix2D - Returns camera 2d transform matrix
+//
+//go:wasmimport raylib _GetCameraMatrix2D
+//go:noescape
+func getCameraMatrix2D(mat, camera cptr)
+
 // GetCameraMatrix2D - Returns camera 2d transform matrix
 func GetCameraMatrix2D(camera Camera2D) Matrix {
-	ccamera := camera.cptr()
-	ret := getCameraMatrix2D(*ccamera)
-	v := newMatrixFromPointer(&ret)
+	ccamera, f := copyValueToC(camera)
+	defer f()
+	var v Matrix
+	ret, f := mallocV(v)
+	defer f()
+	getCameraMatrix2D(ret, ccamera)
+	copyValueToGo(ret, &v)
 	return v
 }
 
 // GetWorldToScreen - Returns the screen space position from a 3d world space position
+//
+//go:wasmimport raylib _GetWorldToScreen
+//go:noescape
+func getWorldToScreen(vector2, position, camera cptr)
+
+// GetWorldToScreen - Returns the screen space position from a 3d world space position
 func GetWorldToScreen(position Vector3, camera Camera) Vector2 {
-	cposition := position.cptr()
-	ccamera := camera.cptr()
-	ret := getWorldToScreen(*cposition, *ccamera)
-	v := newVector2FromPointer(&ret)
+	cposition, f := copyValueToC(position)
+	defer f()
+	ccamera, f := copyValueToC(position)
+	defer f()
+	var v Vector2
+	ret, f := mallocV(v)
+	defer f()
+	getWorldToScreen(ret, cposition, ccamera)
+	copyValueToGo(ret, &v)
 	return v
 }
 
 // GetScreenToWorld2D - Returns the world space position for a 2d camera screen space position
+//
+//go:wasmimport raylib _GetScreenToWorld2D
+//go:noescape
+func getScreenToWorld2D(vector2, position cptr, camera cptr)
+
+// GetScreenToWorld2D - Returns the world space position for a 2d camera screen space position
 func GetScreenToWorld2D(position Vector2, camera Camera2D) Vector2 {
-	cposition := position.cptr()
-	ccamera := camera.cptr()
-	ret := getScreenToWorld2D(*cposition, *ccamera)
-	v := newVector2FromPointer(&ret)
+	cposition, f := copyValueToC(position)
+	defer f()
+	ccamera, f := copyValueToC(camera)
+	defer f()
+	var v Vector2
+	ret, f := mallocV(v)
+	defer f()
+	getScreenToWorld2D(ret, cposition, ccamera)
+	copyValueToGo(ret, &v)
 	return v
 }
 
 // GetWorldToScreenEx - Get size position for a 3d world space position
+//
+//go:wasmimport raylib _GetWorldToScreenEx
+//go:noescape
+func getWorldToScreenEx(vector2, position, camera cptr, width int32, height int32)
+
+// GetWorldToScreenEx - Get size position for a 3d world space position
 func GetWorldToScreenEx(position Vector3, camera Camera, width int32, height int32) Vector2 {
-	cposition := position.cptr()
-	ccamera := camera.cptr()
+	cposition, f := copyValueToC(position)
+	defer f()
+	ccamera, f := copyValueToC(camera)
+	defer f()
 	cwidth := (int32)(width)
 	cheight := (int32)(height)
-	ret := getWorldToScreenEx(*cposition, *ccamera, cwidth, cheight)
-	v := newVector2FromPointer(&ret)
+	var v Vector2
+	ret, f := mallocV(v)
+	defer f()
+
+	getWorldToScreenEx(ret, cposition, ccamera, cwidth, cheight)
+	copyValueToGo(ret, &v)
 	return v
 }
 
 // GetWorldToScreen2D - Returns the screen space position for a 2d camera world space position
+//
+//go:wasmimport raylib _GetWorldToScreen2D
+//go:noescape
+func getWorldToScreen2D(vector2, position, camera cptr)
+
+// GetWorldToScreen2D - Returns the screen space position for a 2d camera world space position
 func GetWorldToScreen2D(position Vector2, camera Camera2D) Vector2 {
-	cposition := position.cptr()
-	ccamera := camera.cptr()
-	ret := getWorldToScreen2D(*cposition, *ccamera)
-	v := newVector2FromPointer(&ret)
+	cposition, f := copyValueToC(position)
+	defer f()
+	ccamera, f := copyValueToC(camera)
+	defer f()
+	var v Vector2
+	ret, f := mallocV(v)
+	defer f()
+
+	getWorldToScreen2D(ret, cposition, ccamera)
+	copyValueToGo(ret, &v)
 	return v
 }
 
 // SetTargetFPS - Set target FPS (maximum)
-func SetTargetFPS(fps int32) {
-	cfps := (int32)(fps)
-	setTargetFPS(cfps)
-}
+//
+//go:wasmimport raylib _SetTargetFPS
+//go:noescape
+func SetTargetFPS(fps int32)
 
 // GetFPS - Returns current FPS
-func GetFPS() int32 {
-	ret := getFPS()
-	v := (int32)(ret)
-	return v
-}
+//
+//go:wasmimport raylib _GetFPS
+//go:noescape
+func GetFPS() int32
 
 // GetFrameTime - Returns time in seconds for one frame
-func GetFrameTime() float32 {
-	ret := getFrameTime()
-	v := (float32)(ret)
-	return v
-}
+//
+//go:wasmimport raylib _GetFrameTime
+//go:noescape
+func GetFrameTime() float32
 
 // GetTime - Return time in seconds
-func GetTime() float64 {
-	ret := getTime()
-	v := (float64)(ret)
-	return v
-}
+//
+//go:wasmimport raylib _GetTime
+//go:noescape
+func GetTime() float64
 
 // Custom frame control functions
 // NOTE: SwapScreenBuffer and PollInputEvents are intended for advanced users that want full control over the frame processing
 // By default EndDrawing() does this job: draws everything + SwapScreenBuffer() + manage frame timing + PollInputEvents()
 // To avoid that behaviour and control frame processes manually you can either enable in config.h: SUPPORT_CUSTOM_FRAME_CONTROL
 // or add CGO_CFLAGS="-DSUPPORT_CUSTOM_FRAME_CONTROL=1" to your build
-
 // SwapScreenBuffer - Swap back buffer to front buffer
-func SwapScreenBuffer() {
-	swapScreenBuffer()
-}
+//
+//go:wasmimport raylib _SwapScreenBuffer
+//go:noescape
+func SwapScreenBuffer()
 
 // Register all input events
-func PollInputEvents() {
-	pollInputEvents()
-}
+//
+//go:wasmimport raylib _PollInputEvents
+//go:noescape
+func PollInputEvents()
 
 // WaitTime - Wait for some time (halt program execution)
-func WaitTime(seconds float64) {
-	cseconds := (double)(seconds)
-	waitTime(cseconds)
-}
+//
+//go:wasmimport raylib _WaitTime
+//go:noescape
+func WaitTime(seconds float64)
+
+// Fade - Returns color with alpha applied, alpha goes from 0.0f to 1.0f
+//
+//go:wasmimport raylib _Fade
+func fade(color, col cptr, alpha float32)
 
 // Fade - Returns color with alpha applied, alpha goes from 0.0f to 1.0f
 func Fade(col color.RGBA, alpha float32) color.RGBA {
-	ccolor := colorCptr(col)
-	calpha := (float)(alpha)
-	ret := fade(*ccolor, calpha)
-	v := newColorFromPointer(&ret)
+	ccolor, f := copyValueToC(col)
+	defer f()
+	var v Color
+	ret, f := mallocV(v)
+	defer f()
+	fade(ret, ccolor, alpha)
+	copyValueToGo(ret, &v)
 	return v
 }
 
 // ColorToInt - Get hexadecimal value for a Color (0xRRGGBBAA)
+//
+//go:wasmimport raylib _ColorToInt
+func colorToInt(col cptr) int32
+
+// ColorToInt - Get hexadecimal value for a Color (0xRRGGBBAA)
 func ColorToInt(col color.RGBA) int32 {
-	ccolor := colorCptr(col)
-	ret := colorToInt(*ccolor)
-	v := (int32)(ret)
-	return v
+	ccolor, f := copyValueToC(col)
+	defer f()
+	return colorToInt(ccolor)
 }
 
 // ColorNormalize - Returns color normalized as float [0..1]
@@ -897,25 +962,42 @@ func ColorNormalize(col color.RGBA) Vector4 {
 	result.Y = float32(g) / 255
 	result.Z = float32(b) / 255
 	result.W = float32(a) / 255
-
 	return result
 }
 
 // ColorFromNormalized - Returns Color from normalized values [0..1]
+//
+//go:wasmimport raylib _ColorNormalized
+func colorFromNormalized(col, normalized cptr)
+
+// ColorFromNormalized - Returns Color from normalized values [0..1]
 func ColorFromNormalized(normalized Vector4) color.RGBA {
-	cnormalized := normalized.cptr()
-	ret := colorFromNormalized(*cnormalized)
-	v := newColorFromPointer(&ret)
+	cnormalized, f := copyValueToC(normalized)
+	defer f()
+	var v Color
+	ret, f := mallocV(v)
+	colorFromNormalized(ret, cnormalized)
+	copyValueToGo(ret, &v)
 	return v
 }
 
 // ColorToHSV - Returns HSV values for a Color, hue [0..360], saturation/value [0..1]
+func colorToHSV(vector3, col cptr)
+
+// ColorToHSV - Returns HSV values for a Color, hue [0..360], saturation/value [0..1]
 func ColorToHSV(col color.RGBA) Vector3 {
-	ccolor := colorCptr(col)
-	ret := colorToHSV(*ccolor)
-	v := newVector3FromPointer(&ret)
+	ccolor, f := copyValueToC(col)
+	defer f()
+	var v Vector3
+	ret, f := mallocV(v)
+	defer f()
+	colorToHSV(ret, ccolor)
+	copyValueToGo(ret, &v)
 	return v
 }
+
+/*
+
 
 // ColorFromHSV - Returns a Color from HSV values, hue [0..360], saturation/value [0..1]
 func ColorFromHSV(hue, saturation, value float32) color.RGBA {
