@@ -12,14 +12,16 @@ var rlApiJson []byte
 
 func init() {
 	err := json.Unmarshal(rlApiJson, &Api)
-	panic(err)
+	if err != nil {
+		panic(err)
+	}
 }
 
 type RlDefine struct {
-	Name        string `json:"name"`
-	Type        string `json:"type"`
-	Value       string `json:"value"`
-	Description string `json:"description"`
+	Name        string       `json:"name"`
+	Type        string       `json:"type"`
+	Value       StringyValue `json:"value"`
+	Description string       `json:"description"`
 }
 type RlField struct {
 	Type        string `json:"type"`
@@ -69,4 +71,27 @@ type RlApi struct {
 	Enums     []RlEnum     `json:"enums"`
 	Callbacks []RlCallback `json:"callbacks"`
 	Functions []RlFunction `json:"functions"`
+}
+type StringyValue string
+
+func (s *StringyValue) UnmarshalJSON(b []byte) error {
+	// null
+	if string(b) == "null" {
+		*s = ""
+		return nil
+	}
+
+	// quoted string
+	if len(b) > 0 && b[0] == '"' {
+		var v string
+		if err := json.Unmarshal(b, &v); err != nil {
+			return err
+		}
+		*s = StringyValue(v)
+		return nil
+	}
+
+	// number / bare token → keep textual form
+	*s = StringyValue(b)
+	return nil
 }

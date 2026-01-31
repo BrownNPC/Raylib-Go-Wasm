@@ -1,0 +1,19 @@
+{{- $root := . -}}
+
+//go:build {{.BuildTags}}
+package rl
+
+{{- range .Imports }}
+import {{ . }}
+{{- end }}
+
+{{- range .Structs}}
+
+/* {{ .Description}} */
+type {{ .Name}} struct {
+	{{- range .Fields }}
+	{{ .Name }} {{ .Type }} // {{.Description}}
+	{{- end }}
+}
+
+{{- end}}
