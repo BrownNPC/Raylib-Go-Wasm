@@ -24,9 +24,9 @@ type RlDefine struct {
 	Description string       `json:"description"`
 }
 type RlField struct {
-	Type        string `json:"type"`
-	Name        string `json:"name"`
-	Description string `json:"description"`
+	Type        RlType     `json:"type"`
+	Name        PublicName `json:"name"`
+	Description string     `json:"description"`
 }
 type RlStruct struct {
 	Name        string    `json:"name"`
@@ -71,27 +71,4 @@ type RlApi struct {
 	Enums     []RlEnum     `json:"enums"`
 	Callbacks []RlCallback `json:"callbacks"`
 	Functions []RlFunction `json:"functions"`
-}
-type StringyValue string
-
-func (s *StringyValue) UnmarshalJSON(b []byte) error {
-	// null
-	if string(b) == "null" {
-		*s = ""
-		return nil
-	}
-
-	// quoted string
-	if len(b) > 0 && b[0] == '"' {
-		var v string
-		if err := json.Unmarshal(b, &v); err != nil {
-			return err
-		}
-		*s = StringyValue(v)
-		return nil
-	}
-
-	// number / bare token → keep textual form
-	*s = StringyValue(b)
-	return nil
 }

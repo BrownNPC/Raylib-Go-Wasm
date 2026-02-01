@@ -1,4 +1,3 @@
-
 //go:build js
 
 package rl
