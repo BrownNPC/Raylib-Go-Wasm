@@ -1,30 +1,45 @@
-const overlay = document.getElementById('loading-overlay');
-function hideOverlay() { overlay.style.display = 'none' }
-function showOverlay() { overlay.style.display = 'flex' }
+// disable right click context menu
+document.getElementById("canvas").addEventListener(
+  "contextmenu",
+  (e) => e.preventDefault(),
+);
 
-// show loading overlay
-showOverlay();
-
+// INITIALIZE RAYLIB
 import Module from "./rl/raylib.js";
 
-
 const wasmBinary = await fetch("./rl/raylib.wasm")
-  .then(r => r.arrayBuffer());
+  .then((r) => r.arrayBuffer());
 
-// disable right click context menu
-document.getElementById("canvas").addEventListener('contextmenu', e => e.preventDefault())
-
-let mod = await Module({
-  canvas: document.getElementById('canvas'),
+const raylib = await Module({
+  canvas: document.getElementById("canvas"),
   wasmBinary: new Uint8Array(wasmBinary),
 });
 
-window.mod = mod
+// INITIALIZE GO
 const go = new Go();
-WebAssembly.instantiateStreaming(fetch("main.wasm"), go.importObject)
-  .then(result => {
-    // hide loading overlay before running code
-    hideOverlay();
-    go.run(result.instance);
-  })
-  .catch(console.error);
+// inject raylib
+go.importObject.raylib = raylib;
+go.importObject.globalThis = globalThis;
+globalThis.raylib = raylib;
+
+import { Runtime } from "./runtime.js"; // helper funtions
+//init
+const runtime = new Runtime();
+// inject custom runtime methods
+Object.assign(go.importObject.gojs, {
+  array: runtime.array.bind(runtime),
+  struct: runtime.struct.bind(runtime),
+  CStringFromGoString: runtime.CStringFromGoString.bind(runtime),
+  CStringGetLength: runtime.CStringGetLength.bind(runtime),
+  CopyToC: runtime.CopyToC.bind(runtime),
+  CopyToGo: runtime.CopyToGo.bind(runtime),
+  Alert: runtime.Alert.bind(runtime),
+});
+
+WebAssembly.instantiateStreaming(fetch("main.wasm"), go.importObject).then(
+  (result) => {
+    const instance = result.instance;
+    globalThis.goInstance = instance;
+    go.run(instance);
+  },
+);
