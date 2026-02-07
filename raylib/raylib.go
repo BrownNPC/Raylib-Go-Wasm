@@ -1,3 +1,5 @@
+//go:build js
+
 /*
 Package raylib - Go bindings for raylib, a simple and easy-to-use library to enjoy videogames programming.
 
@@ -11,13 +13,12 @@ package rl
 import (
 	"image/color"
 	"io"
-
-	wasm "github.com/BrownNPC/wasm-ffi-go"
+	"structs"
 )
-
 
 // Wave type, defines audio wave data
 type Wave struct {
+	_ structs.HostLayout
 	// Number of samples
 	FrameCount uint32
 	// Frequency (samples per second)
@@ -27,21 +28,27 @@ type Wave struct {
 	// Number of channels (1-mono, 2-stereo)
 	Channels uint32
 	// Buffer data pointer
-	Data wasm.Pointer
+	Data cptr
 }
 
-// // NewWave - Returns new Wave
-// func NewWave(sampleCount, sampleRate, sampleSize, channels uint32, data []byte) Wave {
-// 	d := wasm.Pointer(&data[0])
-
-// 	return Wave{sampleCount, sampleRate, sampleSize, channels, d}
-// }
+// NewWave - Returns new Wave
+func NewWave(sampleCount, sampleRate, sampleSize, channels uint32, data []byte) Wave {
+	ptr, _ := copySliceToC(data)
+	return Wave{
+		FrameCount: sampleCount,
+		SampleRate: sampleRate,
+		SampleSize: sampleSize,
+		Channels:   channels,
+		Data:       ptr,
+	}
+}
 
 // AudioCallback function.
 type AudioCallback func(data []float32, frames int)
 
 // Sound source type
 type Sound struct {
+	_          structs.HostLayout
 	Stream     AudioStream
 	FrameCount uint32
 	_          [4]byte
@@ -50,16 +57,18 @@ type Sound struct {
 // Music type (file streaming from memory)
 // NOTE: Anything longer than ~10 seconds should be streamed
 type Music struct {
+	_          structs.HostLayout
 	Stream     AudioStream
 	FrameCount uint32
 	Looping    bool
 	CtxType    int32
-	CtxData    wasm.Pointer
+	CtxData    cptr
 }
 
 // AudioStream type
 // NOTE: Useful to create custom audio streams not bound to a specific file
 type AudioStream struct {
+	_ structs.HostLayout
 	// Buffer
 	Buffer *AudioBuffer
 	// Processor
@@ -74,6 +83,7 @@ type AudioStream struct {
 }
 
 type maDataConverter struct {
+	_                       structs.HostLayout
 	FormatIn                uint32
 	FormatOut               uint32
 	ChannelsIn              uint32
@@ -94,6 +104,7 @@ type maDataConverter struct {
 }
 
 type maChannelConverter struct {
+	_              structs.HostLayout
 	Format         uint32
 	ChannelsIn     uint32
 	ChannelsOut    uint32
@@ -109,6 +120,7 @@ type maChannelConverter struct {
 }
 
 type maResampler struct {
+	_                structs.HostLayout
 	PBackend         *byte
 	PBackendVTable   *maResamplingBackendVtable
 	PBackendUserData *byte
@@ -123,6 +135,7 @@ type maResampler struct {
 }
 
 type maResamplingBackendVtable struct {
+	_                             structs.HostLayout
 	OnGetHeapSize                 *[0]byte
 	OnInit                        *[0]byte
 	OnUninit                      *[0]byte
@@ -136,6 +149,7 @@ type maResamplingBackendVtable struct {
 }
 
 type AudioBuffer struct {
+	_                    structs.HostLayout
 	Converter            maDataConverter
 	Callback             *[0]byte
 	Processor            *AudioProcessor
@@ -156,6 +170,7 @@ type AudioBuffer struct {
 }
 
 type AudioProcessor struct {
+	_       structs.HostLayout
 	Process *[0]byte
 	Next    *AudioProcessor
 	Prev    *AudioProcessor
@@ -163,6 +178,7 @@ type AudioProcessor struct {
 
 // AutomationEvent - Automation event
 type AutomationEvent struct {
+	_      structs.HostLayout
 	Frame  uint32
 	Type   uint32
 	Params [4]int32
@@ -170,6 +186,7 @@ type AutomationEvent struct {
 
 // AutomationEventList - Automation event list
 type AutomationEventList struct {
+	_        structs.HostLayout
 	Capacity uint32
 	Count    uint32
 	// Events array (c array)
@@ -490,17 +507,23 @@ var (
 
 // Vector2 type
 type Vector2 struct {
+	_ structs.HostLayout
 	X float32
 	Y float32
 }
 
 // NewVector2 - Returns new Vector2
 func NewVector2(x, y float32) Vector2 {
-	return Vector2{x, y}
+	return Vector2{
+		X: x,
+		Y: y,
+	}
 }
 
 // Vector3 type
 type Vector3 struct {
+	_ structs.HostLayout
+	_ structs.HostLayout
 	X float32
 	Y float32
 	Z float32
@@ -508,11 +531,17 @@ type Vector3 struct {
 
 // NewVector3 - Returns new Vector3
 func NewVector3(x, y, z float32) Vector3 {
-	return Vector3{x, y, z}
+	return Vector3{
+		X: x,
+		Y: y,
+		Z: z,
+	}
 }
 
 // Vector4 type
 type Vector4 struct {
+	_ structs.HostLayout
+	_ structs.HostLayout
 	X float32
 	Y float32
 	Z float32
@@ -521,11 +550,17 @@ type Vector4 struct {
 
 // NewVector4 - Returns new Vector4
 func NewVector4(x, y, z, w float32) Vector4 {
-	return Vector4{x, y, z, w}
+	return Vector4{
+		X: x,
+		Y: y,
+		Z: z,
+		W: w,
+	}
 }
 
 // Matrix type (OpenGL style 4x4 - right handed, column major)
 type Matrix struct {
+	_                structs.HostLayout
 	M0, M4, M8, M12  float32
 	M1, M5, M9, M13  float32
 	M2, M6, M10, M14 float32
@@ -534,11 +569,29 @@ type Matrix struct {
 
 // NewMatrix - Returns new Matrix
 func NewMatrix(m0, m4, m8, m12, m1, m5, m9, m13, m2, m6, m10, m14, m3, m7, m11, m15 float32) Matrix {
-	return Matrix{m0, m4, m8, m12, m1, m5, m9, m13, m2, m6, m10, m14, m3, m7, m11, m15}
+	return Matrix{
+		M0:  m0,
+		M4:  m4,
+		M8:  m8,
+		M12: m12,
+		M1:  m1,
+		M5:  m5,
+		M9:  m9,
+		M13: m13,
+		M2:  m2,
+		M6:  m6,
+		M10: m10,
+		M14: m14,
+		M3:  m3,
+		M7:  m7,
+		M11: m11,
+		M15: m15,
+	}
 }
 
 // Mat2 type (used for polygon shape rotation matrix)
 type Mat2 struct {
+	_   structs.HostLayout
 	M00 float32
 	M01 float32
 	M10 float32
@@ -547,7 +600,12 @@ type Mat2 struct {
 
 // NewMat2 - Returns new Mat2
 func NewMat2(m0, m1, m10, m11 float32) Mat2 {
-	return Mat2{m0, m1, m10, m11}
+	return Mat2{
+		M00: m0,
+		M01: m1,
+		M10: m10,
+		M11: m11,
+	}
 }
 
 // Quaternion, 4 components (Vector4 alias)
@@ -555,7 +613,12 @@ type Quaternion = Vector4
 
 // NewQuaternion - Returns new Quaternion
 func NewQuaternion(x, y, z, w float32) Quaternion {
-	return Quaternion{x, y, z, w}
+	return Quaternion{
+		X: x,
+		Y: y,
+		Z: z,
+		W: w,
+	}
 }
 
 // Color type, RGBA (32bit)
@@ -569,6 +632,7 @@ func NewColor(r, g, b, a uint8) color.RGBA {
 
 // Rectangle type
 type Rectangle struct {
+	_      structs.HostLayout
 	X      float32
 	Y      float32
 	Width  float32
@@ -577,7 +641,12 @@ type Rectangle struct {
 
 // NewRectangle - Returns new Rectangle
 func NewRectangle(x, y, width, height float32) Rectangle {
-	return Rectangle{x, y, width, height}
+	return Rectangle{
+		X:      x,
+		Y:      y,
+		Width:  width,
+		Height: height,
+	}
 }
 
 // ToInt32 converts rectangle to int32 variant
@@ -593,6 +662,7 @@ func (r *Rectangle) ToInt32() RectangleInt32 {
 
 // RectangleInt32 type
 type RectangleInt32 struct {
+	_      structs.HostLayout
 	X      int32
 	Y      int32
 	Width  int32
@@ -612,6 +682,7 @@ func (r *RectangleInt32) ToFloat32() Rectangle {
 
 // Camera3D type, defines a camera position/orientation in 3d space
 type Camera3D struct {
+	_ structs.HostLayout
 	// Camera position
 	Position Vector3
 	// Camera target it looks-at
@@ -629,11 +700,18 @@ type Camera = Camera3D
 
 // NewCamera3D - Returns new Camera3D
 func NewCamera3D(pos, target, up Vector3, fovy float32, ct CameraProjection) Camera3D {
-	return Camera3D{pos, target, up, fovy, ct}
+	return Camera3D{
+		Position:   pos,
+		Target:     target,
+		Up:         up,
+		Fovy:       fovy,
+		Projection: ct,
+	}
 }
 
 // Camera2D type, defines a 2d camera
 type Camera2D struct {
+	_ structs.HostLayout
 	// Camera offset (displacement from target)
 	Offset Vector2
 	// Camera target (rotation and zoom origin)
@@ -646,11 +724,17 @@ type Camera2D struct {
 
 // NewCamera2D - Returns new Camera2D
 func NewCamera2D(offset, target Vector2, rotation, zoom float32) Camera2D {
-	return Camera2D{offset, target, rotation, zoom}
+	return Camera2D{
+		Offset:   offset,
+		Target:   target,
+		Rotation: rotation,
+		Zoom:     zoom,
+	}
 }
 
 // BoundingBox type
 type BoundingBox struct {
+	_ structs.HostLayout
 	// Minimum vertex box-corner
 	Min Vector3
 	// Maximum vertex box-corner
@@ -659,7 +743,10 @@ type BoundingBox struct {
 
 // NewBoundingBox - Returns new BoundingBox
 func NewBoundingBox(min, max Vector3) BoundingBox {
-	return BoundingBox{min, max}
+	return BoundingBox{
+		Min: min,
+		Max: max,
+	}
 }
 
 // Asset file
@@ -782,6 +869,7 @@ const (
 
 // Mesh - Vertex data definning a mesh
 type Mesh struct {
+	_ structs.HostLayout
 	// Number of vertices stored in arrays
 	VertexCount int32
 	// Number of triangles stored (indexed or not)
@@ -820,6 +908,7 @@ type Mesh struct {
 
 // Material type
 type Material struct {
+	_ structs.HostLayout
 	// Shader
 	Shader Shader
 	// Maps
@@ -830,11 +919,12 @@ type Material struct {
 
 // // GetMap - Get pointer to MaterialMap by map type
 // func (mt Material) GetMap(index int32) *MaterialMap {
-// 	return (*MaterialMap)(wasm.Pointer(uintptr(wasm.Pointer(mt.Maps)) + uintptr(index)*wasm.Sizeof(MaterialMap{})))
+// 	return (*MaterialMap)(cptr(uintptr(cptr(mt.Maps)) + uintptr(index)*wasm.Sizeof(MaterialMap{})))
 // }
 
 // MaterialMap type
 type MaterialMap struct {
+	_ structs.HostLayout
 	// Texture
 	Texture Texture2D
 	// Color
@@ -845,6 +935,7 @@ type MaterialMap struct {
 
 // Model is struct of model, meshes, materials and animation data
 type Model struct {
+	_ structs.HostLayout
 	// Local transform matrix
 	Transform Matrix
 	// Number of meshes
@@ -895,12 +986,14 @@ type Model struct {
 
 // BoneInfo type
 type BoneInfo struct {
+	_      structs.HostLayout
 	Name   [32]int8
 	Parent int32
 }
 
 // Transform type
 type Transform struct {
+	_           structs.HostLayout
 	Translation Vector3
 	Rotation    Vector4
 	Scale       Vector3
@@ -908,6 +1001,7 @@ type Transform struct {
 
 // Ray type (useful for raycast)
 type Ray struct {
+	_ structs.HostLayout
 	// Ray position (origin)
 	Position Vector3
 	// Ray direction
@@ -916,11 +1010,15 @@ type Ray struct {
 
 // NewRay - Returns new Ray
 func NewRay(position, direction Vector3) Ray {
-	return Ray{position, direction}
+	return Ray{
+		Position:  position,
+		Direction: direction,
+	}
 }
 
 // ModelAnimation type
 type ModelAnimation struct {
+	_          structs.HostLayout
 	BoneCount  int32
 	FrameCount int32
 	Bones      *BoneInfo
@@ -952,6 +1050,7 @@ func (m ModelAnimation) GetName() string {
 
 // RayCollision type - ray hit information
 type RayCollision struct {
+	_        structs.HostLayout
 	Hit      bool
 	Distance float32
 	Point    Vector3
@@ -960,7 +1059,12 @@ type RayCollision struct {
 
 // NewRayCollision - Returns new RayCollision
 func NewRayCollision(hit bool, distance float32, point, normal Vector3) RayCollision {
-	return RayCollision{hit, distance, point, normal}
+	return RayCollision{
+		Hit:      hit,
+		Distance: distance,
+		Point:    point,
+		Normal:   normal,
+	}
 }
 
 // BlendMode type
@@ -980,29 +1084,38 @@ const (
 
 // Shader type (generic shader)
 type Shader struct {
+	_ structs.HostLayout
 	// Shader program id
 	ID uint32
 	// Shader locations array
-	Locs *int32
+	Locs cptr
 }
 
 // NewShader - Returns new Shader
 func NewShader(id uint32, locs *int32) Shader {
-	return Shader{id, locs}
+	return Shader{
+		ID:   id,
+		Locs: cptr(*locs),
+	}
 }
 
-// // GetLocation - Get shader value's location
-// func (sh Shader) GetLocation(index int32) int32 {
-// 	return *(*int32)(wasm.Pointer(uintptr(wasm.Pointer(sh.Locs)) + uintptr(index*4)))
-// }
+// GetLocation - Get shader value's location
+func (sh Shader) GetLocation(index int32) int32 {
+	var v int32
+	locAddr := sh.Locs + cptr(index)*4
+	copyValueToGo(locAddr, &v)
+	return v
+}
 
-// // UpdateLocation - Update shader value's location
-// func (sh Shader) UpdateLocation(index int32, loc int32) {
-// 	*(*int32)(wasm.Pointer(uintptr(wasm.Pointer(sh.Locs)) + uintptr(index*4))) = loc
-// }
+// UpdateLocation - Update shader value's location
+func (sh Shader) UpdateLocation(index int32, loc int32) {
+	locAddr := sh.Locs * cptr(index) * 4
+	copyToC(&loc, locAddr)
+}
 
 // GlyphInfo - Font character info
 type GlyphInfo struct {
+	_ structs.HostLayout
 	// Character value (Unicode)
 	Value int32
 	// Character offset X when drawing
@@ -1017,11 +1130,18 @@ type GlyphInfo struct {
 
 // NewGlyphInfo - Returns new CharInfo
 func NewGlyphInfo(value int32, offsetX, offsetY, advanceX int32, image Image) GlyphInfo {
-	return GlyphInfo{value, offsetX, offsetY, advanceX, image}
+	return GlyphInfo{
+		Value:    value,
+		OffsetX:  offsetX,
+		OffsetY:  offsetY,
+		AdvanceX: advanceX,
+		Image:    image,
+	}
 }
 
 // Font type, includes texture and charSet array data
 type Font struct {
+	_ structs.HostLayout
 	// Base size (default chars height)
 	BaseSize int32
 	// Number of characters
@@ -1031,9 +1151,11 @@ type Font struct {
 	// Characters texture atlas
 	Texture Texture2D
 	// Characters rectangles in texture
-	Recs *Rectangle
+	// Recs *Rectangle
+	Recs cptr
 	// Characters info data
-	Chars *GlyphInfo
+	// Chars *GlyphInfo
+	Chars cptr
 }
 
 // Font type, defines generation method
@@ -1137,8 +1259,9 @@ const (
 // Image type, bpp always RGBA (32bit)
 // NOTE: Data stored in CPU memory (RAM)
 type Image struct {
+	_ structs.HostLayout
 	// Image raw Data
-	Data wasm.Pointer
+	Data cptr
 	// Image base width
 	Width int32
 	// Image base height
@@ -1151,7 +1274,7 @@ type Image struct {
 
 // // NewImage - Returns new Image
 // func NewImage(data []byte, width, height, mipmaps int32, format PixelFormat) *Image {
-// 	d := wasm.Pointer(&data[0])
+// 	d := cptr(&data[0])
 
 // 	return &Image{d, width, height, mipmaps, format}
 // }
@@ -1159,6 +1282,7 @@ type Image struct {
 // Texture2D type, bpp always RGBA (32bit)
 // NOTE: Data stored in GPU memory
 type Texture2D struct {
+	_ structs.HostLayout
 	// OpenGL texture id
 	ID uint32
 	// Texture base width
@@ -1173,11 +1297,18 @@ type Texture2D struct {
 
 // NewTexture2D - Returns new Texture2D
 func NewTexture2D(id uint32, width, height, mipmaps int32, format PixelFormat) Texture2D {
-	return Texture2D{id, width, height, mipmaps, format}
+	return Texture2D{
+		ID:      id,
+		Width:   width,
+		Height:  height,
+		Mipmaps: mipmaps,
+		Format:  format,
+	}
 }
 
 // RenderTexture2D type, for texture rendering
 type RenderTexture2D struct {
+	_ structs.HostLayout
 	// Render texture (fbo) id
 	ID uint32
 	// Color buffer attachment texture
@@ -1188,7 +1319,11 @@ type RenderTexture2D struct {
 
 // NewRenderTexture2D - Returns new RenderTexture2D
 func NewRenderTexture2D(id uint32, texture, depth Texture2D) RenderTexture2D {
-	return RenderTexture2D{id, texture, depth}
+	return RenderTexture2D{
+		ID:      id,
+		Texture: texture,
+		Depth:   depth,
+	}
 }
 
 // TraceLogCallbackFun - function that will recive the trace log messages
@@ -1229,6 +1364,7 @@ const (
 
 // NPatchInfo type, n-patch layout info
 type NPatchInfo struct {
+	_      structs.HostLayout
 	Source Rectangle    // Texture source rectangle
 	Left   int32        // Left border offset
 	Top    int32        // Top border offset
@@ -1239,6 +1375,7 @@ type NPatchInfo struct {
 
 // VrStereoConfig, VR stereo rendering configuration for simulator
 type VrStereoConfig struct {
+	_                 structs.HostLayout
 	Projection        [2]Matrix  // VR projection matrices (per eye)
 	ViewOffset        [2]Matrix  // VR view offset matrices (per eye)
 	LeftLensCenter    [2]float32 // VR left lens center
@@ -1251,6 +1388,7 @@ type VrStereoConfig struct {
 
 // VrDeviceInfo, Head-Mounted-Display device parameters
 type VrDeviceInfo struct {
+	_                      structs.HostLayout
 	HResolution            int32      // Horizontal resolution in pixels
 	VResolution            int32      // Vertical resolution in pixels
 	HScreenSize            float32    // Horizontal size in meters
