@@ -11,3 +11,11 @@ func LoadTemplate(templ, name string) *template.Template {
 	return template.Must(template.New(name).
 		Parse(templ))
 }
+
+// LoadTemplate takes in a gotempl as a string and a name for the template.
+// It panics if template could not be parsed.
+func LoadTemplateFuncs(templ, name string, funcs template.FuncMap) *template.Template {
+	return template.Must(template.New(name).
+		Funcs(funcs).
+		Parse(templ))
+}

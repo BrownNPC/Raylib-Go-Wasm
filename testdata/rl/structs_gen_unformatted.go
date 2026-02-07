@@ -4,20 +4,20 @@
 
 package rl
 
-/* Vector2, 2 components */
+// Vector2, 2 components
 type Vector2 struct {
 	X float32 // Vector x component
 	Y float32 // Vector y component
 }
 
-/* Vector3, 3 components */
+// Vector3, 3 components
 type Vector3 struct {
 	X float32 // Vector x component
 	Y float32 // Vector y component
 	Z float32 // Vector z component
 }
 
-/* Vector4, 4 components */
+// Vector4, 4 components
 type Vector4 struct {
 	X float32 // Vector x component
 	Y float32 // Vector y component
@@ -25,27 +25,27 @@ type Vector4 struct {
 	W float32 // Vector w component
 }
 
-/* Matrix, 4x4 components, column major, OpenGL style, right-handed */
+// Matrix, 4x4 components, column major, OpenGL style, right-handed
 type Matrix struct {
-	M0  float32 // Matrix first row (4 components)
-	M4  float32 // Matrix first row (4 components)
-	M8  float32 // Matrix first row (4 components)
+	M0 float32 // Matrix first row (4 components)
+	M4 float32 // Matrix first row (4 components)
+	M8 float32 // Matrix first row (4 components)
 	M12 float32 // Matrix first row (4 components)
-	M1  float32 // Matrix second row (4 components)
-	M5  float32 // Matrix second row (4 components)
-	M9  float32 // Matrix second row (4 components)
+	M1 float32 // Matrix second row (4 components)
+	M5 float32 // Matrix second row (4 components)
+	M9 float32 // Matrix second row (4 components)
 	M13 float32 // Matrix second row (4 components)
-	M2  float32 // Matrix third row (4 components)
-	M6  float32 // Matrix third row (4 components)
+	M2 float32 // Matrix third row (4 components)
+	M6 float32 // Matrix third row (4 components)
 	M10 float32 // Matrix third row (4 components)
 	M14 float32 // Matrix third row (4 components)
-	M3  float32 // Matrix fourth row (4 components)
-	M7  float32 // Matrix fourth row (4 components)
+	M3 float32 // Matrix fourth row (4 components)
+	M7 float32 // Matrix fourth row (4 components)
 	M11 float32 // Matrix fourth row (4 components)
 	M15 float32 // Matrix fourth row (4 components)
 }
 
-/* Color, 4 components, R8G8B8A8 (32bit) */
+// Color, 4 components, R8G8B8A8 (32bit)
 type Color struct {
 	R byte // Color red value
 	G byte // Color green value
@@ -53,255 +53,255 @@ type Color struct {
 	A byte // Color alpha value
 }
 
-/* Rectangle, 4 components */
+// Rectangle, 4 components
 type Rectangle struct {
-	X      float32 // Rectangle top-left corner position x
-	Y      float32 // Rectangle top-left corner position y
-	Width  float32 // Rectangle width
+	X float32 // Rectangle top-left corner position x
+	Y float32 // Rectangle top-left corner position y
+	Width float32 // Rectangle width
 	Height float32 // Rectangle height
 }
 
-/* Image, pixel data stored in CPU memory (RAM) */
+// Image, pixel data stored in CPU memory (RAM)
 type Image struct {
-	Data    cptr  // Image raw data
-	Width   int32 // Image base width
-	Height  int32 // Image base height
+	Data cptr // Image raw data
+	Width int32 // Image base width
+	Height int32 // Image base height
 	Mipmaps int32 // Mipmap levels, 1 by default
-	Format  int32 // Data format (PixelFormat type)
+	Format int32 // Data format (PixelFormat type)
 }
 
-/* Texture, tex data stored in GPU memory (VRAM) */
+// Texture, tex data stored in GPU memory (VRAM)
 type Texture struct {
-	Id      uint32 // OpenGL texture id
-	Width   int32  // Texture base width
-	Height  int32  // Texture base height
-	Mipmaps int32  // Mipmap levels, 1 by default
-	Format  int32  // Data format (PixelFormat type)
+	Id uint32 // OpenGL texture id
+	Width int32 // Texture base width
+	Height int32 // Texture base height
+	Mipmaps int32 // Mipmap levels, 1 by default
+	Format int32 // Data format (PixelFormat type)
 }
 
-/* RenderTexture, fbo for texture rendering */
+// RenderTexture, fbo for texture rendering
 type RenderTexture struct {
-	Id      uint32  // OpenGL framebuffer object id
+	Id uint32 // OpenGL framebuffer object id
 	Texture Texture // Color buffer attachment texture
-	Depth   Texture // Depth buffer attachment texture
+	Depth Texture // Depth buffer attachment texture
 }
 
-/* NPatchInfo, n-patch layout info */
+// NPatchInfo, n-patch layout info
 type NPatchInfo struct {
 	Source Rectangle // Texture source rectangle
-	Left   int32     // Left border offset
-	Top    int32     // Top border offset
-	Right  int32     // Right border offset
-	Bottom int32     // Bottom border offset
-	Layout int32     // Layout of the n-patch: 3x3, 1x3 or 3x1
+	Left int32 // Left border offset
+	Top int32 // Top border offset
+	Right int32 // Right border offset
+	Bottom int32 // Bottom border offset
+	Layout int32 // Layout of the n-patch: 3x3, 1x3 or 3x1
 }
 
-/* GlyphInfo, font characters glyphs info */
+// GlyphInfo, font characters glyphs info
 type GlyphInfo struct {
-	Value    int32 // Character value (Unicode)
-	OffsetX  int32 // Character offset X when drawing
-	OffsetY  int32 // Character offset Y when drawing
+	Value int32 // Character value (Unicode)
+	OffsetX int32 // Character offset X when drawing
+	OffsetY int32 // Character offset Y when drawing
 	AdvanceX int32 // Character advance position X
-	Image    Image // Character image data
+	Image Image // Character image data
 }
 
-/* Font, font texture and GlyphInfo array data */
+// Font, font texture and GlyphInfo array data
 type Font struct {
-	BaseSize     int32     // Base size (default chars height)
-	GlyphCount   int32     // Number of glyph characters
-	GlyphPadding int32     // Padding around the glyph characters
-	Texture      Texture2D // Texture atlas containing the glyphs
-	Recs         cptr      // Rectangles in texture for the glyphs
-	Glyphs       cptr      // Glyphs info data
+	BaseSize int32 // Base size (default chars height)
+	GlyphCount int32 // Number of glyph characters
+	GlyphPadding int32 // Padding around the glyph characters
+	Texture Texture2D // Texture atlas containing the glyphs
+	Recs cptr // Rectangles in texture for the glyphs
+	Glyphs cptr // Glyphs info data
 }
 
-/* Camera, defines position/orientation in 3d space */
+// Camera, defines position/orientation in 3d space
 type Camera3D struct {
-	Position   Vector3 // Camera position
-	Target     Vector3 // Camera target it looks-at
-	Up         Vector3 // Camera up vector (rotation over its axis)
-	Fovy       float32 // Camera field-of-view aperture in Y (degrees) in perspective, used as near plane height in world units in orthographic
-	Projection int32   // Camera projection: CAMERA_PERSPECTIVE or CAMERA_ORTHOGRAPHIC
+	Position Vector3 // Camera position
+	Target Vector3 // Camera target it looks-at
+	Up Vector3 // Camera up vector (rotation over its axis)
+	Fovy float32 // Camera field-of-view aperture in Y (degrees) in perspective, used as near plane height in world units in orthographic
+	Projection int32 // Camera projection: CAMERA_PERSPECTIVE or CAMERA_ORTHOGRAPHIC
 }
 
-/* Camera2D, defines position/orientation in 2d space */
+// Camera2D, defines position/orientation in 2d space
 type Camera2D struct {
-	Offset   Vector2 // Camera offset (screen space offset from window origin)
-	Target   Vector2 // Camera target (world space target point that is mapped to screen space offset)
+	Offset Vector2 // Camera offset (screen space offset from window origin)
+	Target Vector2 // Camera target (world space target point that is mapped to screen space offset)
 	Rotation float32 // Camera rotation in degrees (pivots around target)
-	Zoom     float32 // Camera zoom (scaling around target), must not be set to 0, set to 1.0f for no scale
+	Zoom float32 // Camera zoom (scaling around target), must not be set to 0, set to 1.0f for no scale
 }
 
-/* Mesh, vertex data and vao/vbo */
+// Mesh, vertex data and vao/vbo
 type Mesh struct {
-	VertexCount   int32  // Number of vertices stored in arrays
-	TriangleCount int32  // Number of triangles stored (indexed or not)
-	Vertices      cptr   // Vertex position (XYZ - 3 components per vertex) (shader-location = 0)
-	Texcoords     cptr   // Vertex texture coordinates (UV - 2 components per vertex) (shader-location = 1)
-	Texcoords2    cptr   // Vertex texture second coordinates (UV - 2 components per vertex) (shader-location = 5)
-	Normals       cptr   // Vertex normals (XYZ - 3 components per vertex) (shader-location = 2)
-	Tangents      cptr   // Vertex tangents (XYZW - 4 components per vertex) (shader-location = 4)
-	Colors        cptr   // Vertex colors (RGBA - 4 components per vertex) (shader-location = 3)
-	Indices       cptr   // Vertex indices (in case vertex data comes indexed)
-	AnimVertices  cptr   // Animated vertex positions (after bones transformations)
-	AnimNormals   cptr   // Animated normals (after bones transformations)
-	BoneIds       cptr   // Vertex bone ids, max 255 bone ids, up to 4 bones influence by vertex (skinning) (shader-location = 6)
-	BoneWeights   cptr   // Vertex bone weight, up to 4 bones influence by vertex (skinning) (shader-location = 7)
-	BoneMatrices  cptr   // Bones animated transformation matrices
-	BoneCount     int32  // Number of bones
-	VaoId         uint32 // OpenGL Vertex Array Object id
-	VboId         cptr   // OpenGL Vertex Buffer Objects id (default vertex data)
+	VertexCount int32 // Number of vertices stored in arrays
+	TriangleCount int32 // Number of triangles stored (indexed or not)
+	Vertices cptr // Vertex position (XYZ - 3 components per vertex) (shader-location = 0)
+	Texcoords cptr // Vertex texture coordinates (UV - 2 components per vertex) (shader-location = 1)
+	Texcoords2 cptr // Vertex texture second coordinates (UV - 2 components per vertex) (shader-location = 5)
+	Normals cptr // Vertex normals (XYZ - 3 components per vertex) (shader-location = 2)
+	Tangents cptr // Vertex tangents (XYZW - 4 components per vertex) (shader-location = 4)
+	Colors cptr // Vertex colors (RGBA - 4 components per vertex) (shader-location = 3)
+	Indices cptr // Vertex indices (in case vertex data comes indexed)
+	AnimVertices cptr // Animated vertex positions (after bones transformations)
+	AnimNormals cptr // Animated normals (after bones transformations)
+	BoneIds cptr // Vertex bone ids, max 255 bone ids, up to 4 bones influence by vertex (skinning) (shader-location = 6)
+	BoneWeights cptr // Vertex bone weight, up to 4 bones influence by vertex (skinning) (shader-location = 7)
+	BoneMatrices cptr // Bones animated transformation matrices
+	BoneCount int32 // Number of bones
+	VaoId uint32 // OpenGL Vertex Array Object id
+	VboId cptr // OpenGL Vertex Buffer Objects id (default vertex data)
 }
 
-/* Shader */
+// Shader
 type Shader struct {
-	Id   uint32 // Shader program id
-	Locs cptr   // Shader locations array (RL_MAX_SHADER_LOCATIONS)
+	Id uint32 // Shader program id
+	Locs cptr // Shader locations array (RL_MAX_SHADER_LOCATIONS)
 }
 
-/* MaterialMap */
+// MaterialMap
 type MaterialMap struct {
 	Texture Texture2D // Material map texture
-	Color   Color     // Material map color
-	Value   float32   // Material map value
+	Color Color // Material map color
+	Value float32 // Material map value
 }
 
-/* Material, includes shader and maps */
+// Material, includes shader and maps
 type Material struct {
-	Shader Shader     // Material shader
-	Maps   cptr       // Material maps array (MAX_MATERIAL_MAPS)
+	Shader Shader // Material shader
+	Maps cptr // Material maps array (MAX_MATERIAL_MAPS)
 	Params [4]float32 // Material generic parameters (if required)
 }
 
-/* Transform, vertex transformation data */
+// Transform, vertex transformation data
 type Transform struct {
-	Translation Vector3    // Translation
-	Rotation    Quaternion // Rotation
-	Scale       Vector3    // Scale
+	Translation Vector3 // Translation
+	Rotation Quaternion // Rotation
+	Scale Vector3 // Scale
 }
 
-/* Bone, skeletal animation bone */
+// Bone, skeletal animation bone
 type BoneInfo struct {
-	Name   [32]byte // Bone name
-	Parent int32    // Bone parent
+	Name [32]byte // Bone name
+	Parent int32 // Bone parent
 }
 
-/* Model, meshes, materials and animation data */
+// Model, meshes, materials and animation data
 type Model struct {
-	Transform     Matrix // Local transform matrix
-	MeshCount     int32  // Number of meshes
-	MaterialCount int32  // Number of materials
-	Meshes        cptr   // Meshes array
-	Materials     cptr   // Materials array
-	MeshMaterial  cptr   // Mesh material number
-	BoneCount     int32  // Number of bones
-	Bones         cptr   // Bones information (skeleton)
-	BindPose      cptr   // Bones base transformation (pose)
+	Transform Matrix // Local transform matrix
+	MeshCount int32 // Number of meshes
+	MaterialCount int32 // Number of materials
+	Meshes cptr // Meshes array
+	Materials cptr // Materials array
+	MeshMaterial cptr // Mesh material number
+	BoneCount int32 // Number of bones
+	Bones cptr // Bones information (skeleton)
+	BindPose cptr // Bones base transformation (pose)
 }
 
-/* ModelAnimation */
+// ModelAnimation
 type ModelAnimation struct {
-	BoneCount  int32    // Number of bones
-	FrameCount int32    // Number of animation frames
-	Bones      cptr     // Bones information (skeleton)
-	FramePoses cptr     // Poses array by frame
-	Name       [32]byte // Animation name
+	BoneCount int32 // Number of bones
+	FrameCount int32 // Number of animation frames
+	Bones cptr // Bones information (skeleton)
+	FramePoses cptr // Poses array by frame
+	Name [32]byte // Animation name
 }
 
-/* Ray, ray for raycasting */
+// Ray, ray for raycasting
 type Ray struct {
-	Position  Vector3 // Ray position (origin)
+	Position Vector3 // Ray position (origin)
 	Direction Vector3 // Ray direction (normalized)
 }
 
-/* RayCollision, ray hit information */
+// RayCollision, ray hit information
 type RayCollision struct {
-	Hit      bool    // Did the ray hit something?
+	Hit bool // Did the ray hit something?
 	Distance float32 // Distance to the nearest hit
-	Point    Vector3 // Point of the nearest hit
-	Normal   Vector3 // Surface normal of hit
+	Point Vector3 // Point of the nearest hit
+	Normal Vector3 // Surface normal of hit
 }
 
-/* BoundingBox */
+// BoundingBox
 type BoundingBox struct {
 	Min Vector3 // Minimum vertex box-corner
 	Max Vector3 // Maximum vertex box-corner
 }
 
-/* Wave, audio wave data */
+// Wave, audio wave data
 type Wave struct {
 	FrameCount uint32 // Total number of frames (considering channels)
 	SampleRate uint32 // Frequency (samples per second)
 	SampleSize uint32 // Bit depth (bits per sample): 8, 16, 32 (24 not supported)
-	Channels   uint32 // Number of channels (1-mono, 2-stereo, ...)
-	Data       cptr   // Buffer data pointer
+	Channels uint32 // Number of channels (1-mono, 2-stereo, ...)
+	Data cptr // Buffer data pointer
 }
 
-/* AudioStream, custom audio stream */
+// AudioStream, custom audio stream
 type AudioStream struct {
-	Buffer     cptr   // Pointer to internal data used by the audio system
-	Processor  cptr   // Pointer to internal data processor, useful for audio effects
+	Buffer cptr // Pointer to internal data used by the audio system
+	Processor cptr // Pointer to internal data processor, useful for audio effects
 	SampleRate uint32 // Frequency (samples per second)
 	SampleSize uint32 // Bit depth (bits per sample): 8, 16, 32 (24 not supported)
-	Channels   uint32 // Number of channels (1-mono, 2-stereo, ...)
+	Channels uint32 // Number of channels (1-mono, 2-stereo, ...)
 }
 
-/* Sound */
+// Sound
 type Sound struct {
-	Stream     AudioStream // Audio stream
-	FrameCount uint32      // Total number of frames (considering channels)
+	Stream AudioStream // Audio stream
+	FrameCount uint32 // Total number of frames (considering channels)
 }
 
-/* Music, audio stream, anything longer than ~10 seconds should be streamed */
+// Music, audio stream, anything longer than ~10 seconds should be streamed
 type Music struct {
-	Stream     AudioStream // Audio stream
-	FrameCount uint32      // Total number of frames (considering channels)
-	Looping    bool        // Music looping enable
-	CtxType    int32       // Type of music context (audio filetype)
-	CtxData    cptr        // Audio context data, depends on type
+	Stream AudioStream // Audio stream
+	FrameCount uint32 // Total number of frames (considering channels)
+	Looping bool // Music looping enable
+	CtxType int32 // Type of music context (audio filetype)
+	CtxData cptr // Audio context data, depends on type
 }
 
-/* VrDeviceInfo, Head-Mounted-Display device parameters */
+// VrDeviceInfo, Head-Mounted-Display device parameters
 type VrDeviceInfo struct {
-	HResolution            int32      // Horizontal resolution in pixels
-	VResolution            int32      // Vertical resolution in pixels
-	HScreenSize            float32    // Horizontal size in meters
-	VScreenSize            float32    // Vertical size in meters
-	EyeToScreenDistance    float32    // Distance between eye and display in meters
-	LensSeparationDistance float32    // Lens separation distance in meters
-	InterpupillaryDistance float32    // IPD (distance between pupils) in meters
-	LensDistortionValues   [4]float32 // Lens distortion constant parameters
-	ChromaAbCorrection     [4]float32 // Chromatic aberration correction parameters
+	HResolution int32 // Horizontal resolution in pixels
+	VResolution int32 // Vertical resolution in pixels
+	HScreenSize float32 // Horizontal size in meters
+	VScreenSize float32 // Vertical size in meters
+	EyeToScreenDistance float32 // Distance between eye and display in meters
+	LensSeparationDistance float32 // Lens separation distance in meters
+	InterpupillaryDistance float32 // IPD (distance between pupils) in meters
+	LensDistortionValues [4]float32 // Lens distortion constant parameters
+	ChromaAbCorrection [4]float32 // Chromatic aberration correction parameters
 }
 
-/* VrStereoConfig, VR stereo rendering configuration for simulator */
+// VrStereoConfig, VR stereo rendering configuration for simulator
 type VrStereoConfig struct {
-	Projection        [2]Matrix  // VR projection matrices (per eye)
-	ViewOffset        [2]Matrix  // VR view offset matrices (per eye)
-	LeftLensCenter    [2]float32 // VR left lens center
-	RightLensCenter   [2]float32 // VR right lens center
-	LeftScreenCenter  [2]float32 // VR left screen center
+	Projection [2]Matrix // VR projection matrices (per eye)
+	ViewOffset [2]Matrix // VR view offset matrices (per eye)
+	LeftLensCenter [2]float32 // VR left lens center
+	RightLensCenter [2]float32 // VR right lens center
+	LeftScreenCenter [2]float32 // VR left screen center
 	RightScreenCenter [2]float32 // VR right screen center
-	Scale             [2]float32 // VR distortion scale
-	ScaleIn           [2]float32 // VR distortion scale in
+	Scale [2]float32 // VR distortion scale
+	ScaleIn [2]float32 // VR distortion scale in
 }
 
-/* File path list */
+// File path list
 type FilePathList struct {
 	Count uint32 // Filepaths entries count
-	Paths cptr   // Filepaths entries
+	Paths cptr // Filepaths entries
 }
 
-/* Automation event */
+// Automation event
 type AutomationEvent struct {
-	Frame  uint32   // Event frame
-	Type   uint32   // Event type (AutomationEventType)
+	Frame uint32 // Event frame
+	Type uint32 // Event type (AutomationEventType)
 	Params [4]int32 // Event parameters (if required)
 }
 
-/* Automation event list */
+// Automation event list
 type AutomationEventList struct {
 	Capacity uint32 // Events max entries (MAX_AUTOMATION_EVENTS)
-	Count    uint32 // Events entries count
-	Events   cptr   // Events entries
+	Count uint32 // Events entries count
+	Events cptr // Events entries
 }
