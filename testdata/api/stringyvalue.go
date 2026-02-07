@@ -4,6 +4,7 @@ import "encoding/json"
 
 type StringyValue string
 
+// convert the json type to a string.
 func (s *StringyValue) UnmarshalJSON(b []byte) error {
 	// null
 	if string(b) == "null" {

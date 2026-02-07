@@ -20,7 +20,7 @@ import {{ . }}
 {{- end}}
 {{if contains .Type "COLOR"}}
  //{{- .Description}}
- var {{.Name}} = Color{{.Value}}
+ var {{.Name}} = {{.Value}}
 {{- end}}
 
 {{if contains .Type "UNKNOWN"}}

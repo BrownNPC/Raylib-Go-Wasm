@@ -9,37 +9,37 @@ type ConfigFlags = int32
 
 const (
 	// Set to try enabling V-Sync on GPU
-	FLAG_VSYNC_HINT = 64
+	FlagVsyncHint = 64
 	// Set to run program in fullscreen
-	FLAG_FULLSCREEN_MODE = 2
+	FlagFullscreenMode = 2
 	// Set to allow resizable window
-	FLAG_WINDOW_RESIZABLE = 4
+	FlagWindowResizable = 4
 	// Set to disable window decoration (frame and buttons)
-	FLAG_WINDOW_UNDECORATED = 8
+	FlagWindowUndecorated = 8
 	// Set to hide window
-	FLAG_WINDOW_HIDDEN = 128
+	FlagWindowHidden = 128
 	// Set to minimize window (iconify)
-	FLAG_WINDOW_MINIMIZED = 512
+	FlagWindowMinimized = 512
 	// Set to maximize window (expanded to monitor)
-	FLAG_WINDOW_MAXIMIZED = 1024
+	FlagWindowMaximized = 1024
 	// Set to window non focused
-	FLAG_WINDOW_UNFOCUSED = 2048
+	FlagWindowUnfocused = 2048
 	// Set to window always on top
-	FLAG_WINDOW_TOPMOST = 4096
+	FlagWindowTopmost = 4096
 	// Set to allow windows running while minimized
-	FLAG_WINDOW_ALWAYS_RUN = 256
+	FlagWindowAlwaysRun = 256
 	// Set to allow transparent framebuffer
-	FLAG_WINDOW_TRANSPARENT = 16
+	FlagWindowTransparent = 16
 	// Set to support HighDPI
-	FLAG_WINDOW_HIGHDPI = 8192
+	FlagWindowHighdpi = 8192
 	// Set to support mouse passthrough, only supported when FLAG_WINDOW_UNDECORATED
-	FLAG_WINDOW_MOUSE_PASSTHROUGH = 16384
+	FlagWindowMousePassthrough = 16384
 	// Set to run program in borderless windowed mode
-	FLAG_BORDERLESS_WINDOWED_MODE = 32768
+	FlagBorderlessWindowedMode = 32768
 	// Set to try enabling MSAA 4X
-	FLAG_MSAA_4X_HINT = 32
+	FlagMsaa4XHint = 32
 	// Set to try enabling interlaced video format (for V3D)
-	FLAG_INTERLACED_HINT = 65536
+	FlagInterlacedHint = 65536
 )
 
 // Trace log level
@@ -47,21 +47,21 @@ type TraceLogLevel = int32
 
 const (
 	// Display all logs
-	LOG_ALL = 0
+	LogAll = 0
 	// Trace logging, intended for internal use only
-	LOG_TRACE = 1
+	LogTrace = 1
 	// Debug logging, used for internal debugging, it should be disabled on release builds
-	LOG_DEBUG = 2
+	LogDebug = 2
 	// Info logging, used for program execution info
-	LOG_INFO = 3
+	LogInfo = 3
 	// Warning logging, used on recoverable failures
-	LOG_WARNING = 4
+	LogWarning = 4
 	// Error logging, used on unrecoverable failures
-	LOG_ERROR = 5
+	LogError = 5
 	// Fatal logging, used to abort program: exit(EXIT_FAILURE)
-	LOG_FATAL = 6
+	LogFatal = 6
 	// Disable logging
-	LOG_NONE = 7
+	LogNone = 7
 )
 
 // Keyboard keys (US keyboard layout)
@@ -69,225 +69,225 @@ type KeyboardKey = int32
 
 const (
 	// Key: NULL, used for no key pressed
-	KEY_NULL = 0
+	KeyNull = 0
 	// Key: '
-	KEY_APOSTROPHE = 39
+	KeyApostrophe = 39
 	// Key: ,
-	KEY_COMMA = 44
+	KeyComma = 44
 	// Key: -
-	KEY_MINUS = 45
+	KeyMinus = 45
 	// Key: .
-	KEY_PERIOD = 46
+	KeyPeriod = 46
 	// Key: /
-	KEY_SLASH = 47
+	KeySlash = 47
 	// Key: 0
-	KEY_ZERO = 48
+	KeyZero = 48
 	// Key: 1
-	KEY_ONE = 49
+	KeyOne = 49
 	// Key: 2
-	KEY_TWO = 50
+	KeyTwo = 50
 	// Key: 3
-	KEY_THREE = 51
+	KeyThree = 51
 	// Key: 4
-	KEY_FOUR = 52
+	KeyFour = 52
 	// Key: 5
-	KEY_FIVE = 53
+	KeyFive = 53
 	// Key: 6
-	KEY_SIX = 54
+	KeySix = 54
 	// Key: 7
-	KEY_SEVEN = 55
+	KeySeven = 55
 	// Key: 8
-	KEY_EIGHT = 56
+	KeyEight = 56
 	// Key: 9
-	KEY_NINE = 57
+	KeyNine = 57
 	// Key: ;
-	KEY_SEMICOLON = 59
+	KeySemicolon = 59
 	// Key: =
-	KEY_EQUAL = 61
+	KeyEqual = 61
 	// Key: A | a
-	KEY_A = 65
+	KeyA = 65
 	// Key: B | b
-	KEY_B = 66
+	KeyB = 66
 	// Key: C | c
-	KEY_C = 67
+	KeyC = 67
 	// Key: D | d
-	KEY_D = 68
+	KeyD = 68
 	// Key: E | e
-	KEY_E = 69
+	KeyE = 69
 	// Key: F | f
-	KEY_F = 70
+	KeyF = 70
 	// Key: G | g
-	KEY_G = 71
+	KeyG = 71
 	// Key: H | h
-	KEY_H = 72
+	KeyH = 72
 	// Key: I | i
-	KEY_I = 73
+	KeyI = 73
 	// Key: J | j
-	KEY_J = 74
+	KeyJ = 74
 	// Key: K | k
-	KEY_K = 75
+	KeyK = 75
 	// Key: L | l
-	KEY_L = 76
+	KeyL = 76
 	// Key: M | m
-	KEY_M = 77
+	KeyM = 77
 	// Key: N | n
-	KEY_N = 78
+	KeyN = 78
 	// Key: O | o
-	KEY_O = 79
+	KeyO = 79
 	// Key: P | p
-	KEY_P = 80
+	KeyP = 80
 	// Key: Q | q
-	KEY_Q = 81
+	KeyQ = 81
 	// Key: R | r
-	KEY_R = 82
+	KeyR = 82
 	// Key: S | s
-	KEY_S = 83
+	KeyS = 83
 	// Key: T | t
-	KEY_T = 84
+	KeyT = 84
 	// Key: U | u
-	KEY_U = 85
+	KeyU = 85
 	// Key: V | v
-	KEY_V = 86
+	KeyV = 86
 	// Key: W | w
-	KEY_W = 87
+	KeyW = 87
 	// Key: X | x
-	KEY_X = 88
+	KeyX = 88
 	// Key: Y | y
-	KEY_Y = 89
+	KeyY = 89
 	// Key: Z | z
-	KEY_Z = 90
+	KeyZ = 90
 	// Key: [
-	KEY_LEFT_BRACKET = 91
+	KeyLeftBracket = 91
 	// Key: '\'
-	KEY_BACKSLASH = 92
+	KeyBackslash = 92
 	// Key: ]
-	KEY_RIGHT_BRACKET = 93
+	KeyRightBracket = 93
 	// Key: `
-	KEY_GRAVE = 96
+	KeyGrave = 96
 	// Key: Space
-	KEY_SPACE = 32
+	KeySpace = 32
 	// Key: Esc
-	KEY_ESCAPE = 256
+	KeyEscape = 256
 	// Key: Enter
-	KEY_ENTER = 257
+	KeyEnter = 257
 	// Key: Tab
-	KEY_TAB = 258
+	KeyTab = 258
 	// Key: Backspace
-	KEY_BACKSPACE = 259
+	KeyBackspace = 259
 	// Key: Ins
-	KEY_INSERT = 260
+	KeyInsert = 260
 	// Key: Del
-	KEY_DELETE = 261
+	KeyDelete = 261
 	// Key: Cursor right
-	KEY_RIGHT = 262
+	KeyRight = 262
 	// Key: Cursor left
-	KEY_LEFT = 263
+	KeyLeft = 263
 	// Key: Cursor down
-	KEY_DOWN = 264
+	KeyDown = 264
 	// Key: Cursor up
-	KEY_UP = 265
+	KeyUp = 265
 	// Key: Page up
-	KEY_PAGE_UP = 266
+	KeyPageUp = 266
 	// Key: Page down
-	KEY_PAGE_DOWN = 267
+	KeyPageDown = 267
 	// Key: Home
-	KEY_HOME = 268
+	KeyHome = 268
 	// Key: End
-	KEY_END = 269
+	KeyEnd = 269
 	// Key: Caps lock
-	KEY_CAPS_LOCK = 280
+	KeyCapsLock = 280
 	// Key: Scroll down
-	KEY_SCROLL_LOCK = 281
+	KeyScrollLock = 281
 	// Key: Num lock
-	KEY_NUM_LOCK = 282
+	KeyNumLock = 282
 	// Key: Print screen
-	KEY_PRINT_SCREEN = 283
+	KeyPrintScreen = 283
 	// Key: Pause
-	KEY_PAUSE = 284
+	KeyPause = 284
 	// Key: F1
-	KEY_F1 = 290
+	KeyF1 = 290
 	// Key: F2
-	KEY_F2 = 291
+	KeyF2 = 291
 	// Key: F3
-	KEY_F3 = 292
+	KeyF3 = 292
 	// Key: F4
-	KEY_F4 = 293
+	KeyF4 = 293
 	// Key: F5
-	KEY_F5 = 294
+	KeyF5 = 294
 	// Key: F6
-	KEY_F6 = 295
+	KeyF6 = 295
 	// Key: F7
-	KEY_F7 = 296
+	KeyF7 = 296
 	// Key: F8
-	KEY_F8 = 297
+	KeyF8 = 297
 	// Key: F9
-	KEY_F9 = 298
+	KeyF9 = 298
 	// Key: F10
-	KEY_F10 = 299
+	KeyF10 = 299
 	// Key: F11
-	KEY_F11 = 300
+	KeyF11 = 300
 	// Key: F12
-	KEY_F12 = 301
+	KeyF12 = 301
 	// Key: Shift left
-	KEY_LEFT_SHIFT = 340
+	KeyLeftShift = 340
 	// Key: Control left
-	KEY_LEFT_CONTROL = 341
+	KeyLeftControl = 341
 	// Key: Alt left
-	KEY_LEFT_ALT = 342
+	KeyLeftAlt = 342
 	// Key: Super left
-	KEY_LEFT_SUPER = 343
+	KeyLeftSuper = 343
 	// Key: Shift right
-	KEY_RIGHT_SHIFT = 344
+	KeyRightShift = 344
 	// Key: Control right
-	KEY_RIGHT_CONTROL = 345
+	KeyRightControl = 345
 	// Key: Alt right
-	KEY_RIGHT_ALT = 346
+	KeyRightAlt = 346
 	// Key: Super right
-	KEY_RIGHT_SUPER = 347
+	KeyRightSuper = 347
 	// Key: KB menu
-	KEY_KB_MENU = 348
+	KeyKbMenu = 348
 	// Key: Keypad 0
-	KEY_KP_0 = 320
+	KeyKp0 = 320
 	// Key: Keypad 1
-	KEY_KP_1 = 321
+	KeyKp1 = 321
 	// Key: Keypad 2
-	KEY_KP_2 = 322
+	KeyKp2 = 322
 	// Key: Keypad 3
-	KEY_KP_3 = 323
+	KeyKp3 = 323
 	// Key: Keypad 4
-	KEY_KP_4 = 324
+	KeyKp4 = 324
 	// Key: Keypad 5
-	KEY_KP_5 = 325
+	KeyKp5 = 325
 	// Key: Keypad 6
-	KEY_KP_6 = 326
+	KeyKp6 = 326
 	// Key: Keypad 7
-	KEY_KP_7 = 327
+	KeyKp7 = 327
 	// Key: Keypad 8
-	KEY_KP_8 = 328
+	KeyKp8 = 328
 	// Key: Keypad 9
-	KEY_KP_9 = 329
+	KeyKp9 = 329
 	// Key: Keypad .
-	KEY_KP_DECIMAL = 330
+	KeyKpDecimal = 330
 	// Key: Keypad /
-	KEY_KP_DIVIDE = 331
+	KeyKpDivide = 331
 	// Key: Keypad *
-	KEY_KP_MULTIPLY = 332
+	KeyKpMultiply = 332
 	// Key: Keypad -
-	KEY_KP_SUBTRACT = 333
+	KeyKpSubtract = 333
 	// Key: Keypad +
-	KEY_KP_ADD = 334
+	KeyKpAdd = 334
 	// Key: Keypad Enter
-	KEY_KP_ENTER = 335
+	KeyKpEnter = 335
 	// Key: Keypad =
-	KEY_KP_EQUAL = 336
+	KeyKpEqual = 336
 	// Key: Android back button
-	KEY_BACK = 4
+	KeyBack = 4
 	// Key: Android menu button
-	KEY_MENU = 5
+	KeyMenu = 5
 	// Key: Android volume up button
-	KEY_VOLUME_UP = 24
+	KeyVolumeUp = 24
 	// Key: Android volume down button
-	KEY_VOLUME_DOWN = 25
+	KeyVolumeDown = 25
 )
 
 // Mouse buttons
@@ -295,19 +295,19 @@ type MouseButton = int32
 
 const (
 	// Mouse button left
-	MOUSE_BUTTON_LEFT = 0
+	MouseButtonLeft = 0
 	// Mouse button right
-	MOUSE_BUTTON_RIGHT = 1
+	MouseButtonRight = 1
 	// Mouse button middle (pressed wheel)
-	MOUSE_BUTTON_MIDDLE = 2
+	MouseButtonMiddle = 2
 	// Mouse button side (advanced mouse device)
-	MOUSE_BUTTON_SIDE = 3
+	MouseButtonSide = 3
 	// Mouse button extra (advanced mouse device)
-	MOUSE_BUTTON_EXTRA = 4
+	MouseButtonExtra = 4
 	// Mouse button forward (advanced mouse device)
-	MOUSE_BUTTON_FORWARD = 5
+	MouseButtonForward = 5
 	// Mouse button back (advanced mouse device)
-	MOUSE_BUTTON_BACK = 6
+	MouseButtonBack = 6
 )
 
 // Mouse cursor
@@ -315,27 +315,27 @@ type MouseCursor = int32
 
 const (
 	// Default pointer shape
-	MOUSE_CURSOR_DEFAULT = 0
+	MouseCursorDefault = 0
 	// Arrow shape
-	MOUSE_CURSOR_ARROW = 1
+	MouseCursorArrow = 1
 	// Text writing cursor shape
-	MOUSE_CURSOR_IBEAM = 2
+	MouseCursorIbeam = 2
 	// Cross shape
-	MOUSE_CURSOR_CROSSHAIR = 3
+	MouseCursorCrosshair = 3
 	// Pointing hand cursor
-	MOUSE_CURSOR_POINTING_HAND = 4
+	MouseCursorPointingHand = 4
 	// Horizontal resize/move arrow shape
-	MOUSE_CURSOR_RESIZE_EW = 5
+	MouseCursorResizeEw = 5
 	// Vertical resize/move arrow shape
-	MOUSE_CURSOR_RESIZE_NS = 6
+	MouseCursorResizeNs = 6
 	// Top-left to bottom-right diagonal resize/move arrow shape
-	MOUSE_CURSOR_RESIZE_NWSE = 7
+	MouseCursorResizeNwse = 7
 	// The top-right to bottom-left diagonal resize/move arrow shape
-	MOUSE_CURSOR_RESIZE_NESW = 8
+	MouseCursorResizeNesw = 8
 	// The omnidirectional resize/move cursor shape
-	MOUSE_CURSOR_RESIZE_ALL = 9
+	MouseCursorResizeAll = 9
 	// The operation-not-allowed shape
-	MOUSE_CURSOR_NOT_ALLOWED = 10
+	MouseCursorNotAllowed = 10
 )
 
 // Gamepad buttons
@@ -343,41 +343,41 @@ type GamepadButton = int32
 
 const (
 	// Unknown button, just for error checking
-	GAMEPAD_BUTTON_UNKNOWN = 0
+	GamepadButtonUnknown = 0
 	// Gamepad left DPAD up button
-	GAMEPAD_BUTTON_LEFT_FACE_UP = 1
+	GamepadButtonLeftFaceUp = 1
 	// Gamepad left DPAD right button
-	GAMEPAD_BUTTON_LEFT_FACE_RIGHT = 2
+	GamepadButtonLeftFaceRight = 2
 	// Gamepad left DPAD down button
-	GAMEPAD_BUTTON_LEFT_FACE_DOWN = 3
+	GamepadButtonLeftFaceDown = 3
 	// Gamepad left DPAD left button
-	GAMEPAD_BUTTON_LEFT_FACE_LEFT = 4
+	GamepadButtonLeftFaceLeft = 4
 	// Gamepad right button up (i.e. PS3: Triangle, Xbox: Y)
-	GAMEPAD_BUTTON_RIGHT_FACE_UP = 5
+	GamepadButtonRightFaceUp = 5
 	// Gamepad right button right (i.e. PS3: Circle, Xbox: B)
-	GAMEPAD_BUTTON_RIGHT_FACE_RIGHT = 6
+	GamepadButtonRightFaceRight = 6
 	// Gamepad right button down (i.e. PS3: Cross, Xbox: A)
-	GAMEPAD_BUTTON_RIGHT_FACE_DOWN = 7
+	GamepadButtonRightFaceDown = 7
 	// Gamepad right button left (i.e. PS3: Square, Xbox: X)
-	GAMEPAD_BUTTON_RIGHT_FACE_LEFT = 8
+	GamepadButtonRightFaceLeft = 8
 	// Gamepad top/back trigger left (first), it could be a trailing button
-	GAMEPAD_BUTTON_LEFT_TRIGGER_1 = 9
+	GamepadButtonLeftTrigger1 = 9
 	// Gamepad top/back trigger left (second), it could be a trailing button
-	GAMEPAD_BUTTON_LEFT_TRIGGER_2 = 10
+	GamepadButtonLeftTrigger2 = 10
 	// Gamepad top/back trigger right (first), it could be a trailing button
-	GAMEPAD_BUTTON_RIGHT_TRIGGER_1 = 11
+	GamepadButtonRightTrigger1 = 11
 	// Gamepad top/back trigger right (second), it could be a trailing button
-	GAMEPAD_BUTTON_RIGHT_TRIGGER_2 = 12
+	GamepadButtonRightTrigger2 = 12
 	// Gamepad center buttons, left one (i.e. PS3: Select)
-	GAMEPAD_BUTTON_MIDDLE_LEFT = 13
+	GamepadButtonMiddleLeft = 13
 	// Gamepad center buttons, middle one (i.e. PS3: PS, Xbox: XBOX)
-	GAMEPAD_BUTTON_MIDDLE = 14
+	GamepadButtonMiddle = 14
 	// Gamepad center buttons, right one (i.e. PS3: Start)
-	GAMEPAD_BUTTON_MIDDLE_RIGHT = 15
+	GamepadButtonMiddleRight = 15
 	// Gamepad joystick pressed button left
-	GAMEPAD_BUTTON_LEFT_THUMB = 16
+	GamepadButtonLeftThumb = 16
 	// Gamepad joystick pressed button right
-	GAMEPAD_BUTTON_RIGHT_THUMB = 17
+	GamepadButtonRightThumb = 17
 )
 
 // Gamepad axes
@@ -385,17 +385,17 @@ type GamepadAxis = int32
 
 const (
 	// Gamepad left stick X axis
-	GAMEPAD_AXIS_LEFT_X = 0
+	GamepadAxisLeftX = 0
 	// Gamepad left stick Y axis
-	GAMEPAD_AXIS_LEFT_Y = 1
+	GamepadAxisLeftY = 1
 	// Gamepad right stick X axis
-	GAMEPAD_AXIS_RIGHT_X = 2
+	GamepadAxisRightX = 2
 	// Gamepad right stick Y axis
-	GAMEPAD_AXIS_RIGHT_Y = 3
+	GamepadAxisRightY = 3
 	// Gamepad back trigger left, pressure level: [1..-1]
-	GAMEPAD_AXIS_LEFT_TRIGGER = 4
+	GamepadAxisLeftTrigger = 4
 	// Gamepad back trigger right, pressure level: [1..-1]
-	GAMEPAD_AXIS_RIGHT_TRIGGER = 5
+	GamepadAxisRightTrigger = 5
 )
 
 // Material map index
@@ -403,27 +403,27 @@ type MaterialMapIndex = int32
 
 const (
 	// Albedo material (same as: MATERIAL_MAP_DIFFUSE)
-	MATERIAL_MAP_ALBEDO = 0
+	MaterialMapAlbedo = 0
 	// Metalness material (same as: MATERIAL_MAP_SPECULAR)
-	MATERIAL_MAP_METALNESS = 1
+	MaterialMapMetalness = 1
 	// Normal material
-	MATERIAL_MAP_NORMAL = 2
+	MaterialMapNormal = 2
 	// Roughness material
-	MATERIAL_MAP_ROUGHNESS = 3
+	MaterialMapRoughness = 3
 	// Ambient occlusion material
-	MATERIAL_MAP_OCCLUSION = 4
+	MaterialMapOcclusion = 4
 	// Emission material
-	MATERIAL_MAP_EMISSION = 5
+	MaterialMapEmission = 5
 	// Heightmap material
-	MATERIAL_MAP_HEIGHT = 6
+	MaterialMapHeight = 6
 	// Cubemap material (NOTE: Uses GL_TEXTURE_CUBE_MAP)
-	MATERIAL_MAP_CUBEMAP = 7
+	MaterialMapCubemap = 7
 	// Irradiance material (NOTE: Uses GL_TEXTURE_CUBE_MAP)
-	MATERIAL_MAP_IRRADIANCE = 8
+	MaterialMapIrradiance = 8
 	// Prefilter material (NOTE: Uses GL_TEXTURE_CUBE_MAP)
-	MATERIAL_MAP_PREFILTER = 9
+	MaterialMapPrefilter = 9
 	// Brdf material
-	MATERIAL_MAP_BRDF = 10
+	MaterialMapBrdf = 10
 )
 
 // Shader location index
@@ -431,65 +431,65 @@ type ShaderLocationIndex = int32
 
 const (
 	// Shader location: vertex attribute: position
-	SHADER_LOC_VERTEX_POSITION = 0
+	ShaderLocVertexPosition = 0
 	// Shader location: vertex attribute: texcoord01
-	SHADER_LOC_VERTEX_TEXCOORD01 = 1
+	ShaderLocVertexTexcoord01 = 1
 	// Shader location: vertex attribute: texcoord02
-	SHADER_LOC_VERTEX_TEXCOORD02 = 2
+	ShaderLocVertexTexcoord02 = 2
 	// Shader location: vertex attribute: normal
-	SHADER_LOC_VERTEX_NORMAL = 3
+	ShaderLocVertexNormal = 3
 	// Shader location: vertex attribute: tangent
-	SHADER_LOC_VERTEX_TANGENT = 4
+	ShaderLocVertexTangent = 4
 	// Shader location: vertex attribute: color
-	SHADER_LOC_VERTEX_COLOR = 5
+	ShaderLocVertexColor = 5
 	// Shader location: matrix uniform: model-view-projection
-	SHADER_LOC_MATRIX_MVP = 6
+	ShaderLocMatrixMvp = 6
 	// Shader location: matrix uniform: view (camera transform)
-	SHADER_LOC_MATRIX_VIEW = 7
+	ShaderLocMatrixView = 7
 	// Shader location: matrix uniform: projection
-	SHADER_LOC_MATRIX_PROJECTION = 8
+	ShaderLocMatrixProjection = 8
 	// Shader location: matrix uniform: model (transform)
-	SHADER_LOC_MATRIX_MODEL = 9
+	ShaderLocMatrixModel = 9
 	// Shader location: matrix uniform: normal
-	SHADER_LOC_MATRIX_NORMAL = 10
+	ShaderLocMatrixNormal = 10
 	// Shader location: vector uniform: view
-	SHADER_LOC_VECTOR_VIEW = 11
+	ShaderLocVectorView = 11
 	// Shader location: vector uniform: diffuse color
-	SHADER_LOC_COLOR_DIFFUSE = 12
+	ShaderLocColorDiffuse = 12
 	// Shader location: vector uniform: specular color
-	SHADER_LOC_COLOR_SPECULAR = 13
+	ShaderLocColorSpecular = 13
 	// Shader location: vector uniform: ambient color
-	SHADER_LOC_COLOR_AMBIENT = 14
+	ShaderLocColorAmbient = 14
 	// Shader location: sampler2d texture: albedo (same as: SHADER_LOC_MAP_DIFFUSE)
-	SHADER_LOC_MAP_ALBEDO = 15
+	ShaderLocMapAlbedo = 15
 	// Shader location: sampler2d texture: metalness (same as: SHADER_LOC_MAP_SPECULAR)
-	SHADER_LOC_MAP_METALNESS = 16
+	ShaderLocMapMetalness = 16
 	// Shader location: sampler2d texture: normal
-	SHADER_LOC_MAP_NORMAL = 17
+	ShaderLocMapNormal = 17
 	// Shader location: sampler2d texture: roughness
-	SHADER_LOC_MAP_ROUGHNESS = 18
+	ShaderLocMapRoughness = 18
 	// Shader location: sampler2d texture: occlusion
-	SHADER_LOC_MAP_OCCLUSION = 19
+	ShaderLocMapOcclusion = 19
 	// Shader location: sampler2d texture: emission
-	SHADER_LOC_MAP_EMISSION = 20
+	ShaderLocMapEmission = 20
 	// Shader location: sampler2d texture: height
-	SHADER_LOC_MAP_HEIGHT = 21
+	ShaderLocMapHeight = 21
 	// Shader location: samplerCube texture: cubemap
-	SHADER_LOC_MAP_CUBEMAP = 22
+	ShaderLocMapCubemap = 22
 	// Shader location: samplerCube texture: irradiance
-	SHADER_LOC_MAP_IRRADIANCE = 23
+	ShaderLocMapIrradiance = 23
 	// Shader location: samplerCube texture: prefilter
-	SHADER_LOC_MAP_PREFILTER = 24
+	ShaderLocMapPrefilter = 24
 	// Shader location: sampler2d texture: brdf
-	SHADER_LOC_MAP_BRDF = 25
+	ShaderLocMapBrdf = 25
 	// Shader location: vertex attribute: boneIds
-	SHADER_LOC_VERTEX_BONEIDS = 26
+	ShaderLocVertexBoneids = 26
 	// Shader location: vertex attribute: boneWeights
-	SHADER_LOC_VERTEX_BONEWEIGHTS = 27
+	ShaderLocVertexBoneweights = 27
 	// Shader location: array of matrices uniform: boneMatrices
-	SHADER_LOC_BONE_MATRICES = 28
+	ShaderLocBoneMatrices = 28
 	// Shader location: vertex attribute: instanceTransform
-	SHADER_LOC_VERTEX_INSTANCE_TX = 29
+	ShaderLocVertexInstanceTx = 29
 )
 
 // Shader uniform data type
@@ -497,31 +497,31 @@ type ShaderUniformDataType = int32
 
 const (
 	// Shader uniform type: float
-	SHADER_UNIFORM_FLOAT = 0
+	ShaderUniformFloat = 0
 	// Shader uniform type: vec2 (2 float)
-	SHADER_UNIFORM_VEC2 = 1
+	ShaderUniformVec2 = 1
 	// Shader uniform type: vec3 (3 float)
-	SHADER_UNIFORM_VEC3 = 2
+	ShaderUniformVec3 = 2
 	// Shader uniform type: vec4 (4 float)
-	SHADER_UNIFORM_VEC4 = 3
+	ShaderUniformVec4 = 3
 	// Shader uniform type: int
-	SHADER_UNIFORM_INT = 4
+	ShaderUniformInt = 4
 	// Shader uniform type: ivec2 (2 int)
-	SHADER_UNIFORM_IVEC2 = 5
+	ShaderUniformIvec2 = 5
 	// Shader uniform type: ivec3 (3 int)
-	SHADER_UNIFORM_IVEC3 = 6
+	ShaderUniformIvec3 = 6
 	// Shader uniform type: ivec4 (4 int)
-	SHADER_UNIFORM_IVEC4 = 7
+	ShaderUniformIvec4 = 7
 	// Shader uniform type: unsigned int
-	SHADER_UNIFORM_UINT = 8
+	ShaderUniformUint = 8
 	// Shader uniform type: uivec2 (2 unsigned int)
-	SHADER_UNIFORM_UIVEC2 = 9
+	ShaderUniformUivec2 = 9
 	// Shader uniform type: uivec3 (3 unsigned int)
-	SHADER_UNIFORM_UIVEC3 = 10
+	ShaderUniformUivec3 = 10
 	// Shader uniform type: uivec4 (4 unsigned int)
-	SHADER_UNIFORM_UIVEC4 = 11
+	ShaderUniformUivec4 = 11
 	// Shader uniform type: sampler2d
-	SHADER_UNIFORM_SAMPLER2D = 12
+	ShaderUniformSampler2D = 12
 )
 
 // Shader attribute data types
@@ -529,13 +529,13 @@ type ShaderAttributeDataType = int32
 
 const (
 	// Shader attribute type: float
-	SHADER_ATTRIB_FLOAT = 0
+	ShaderAttribFloat = 0
 	// Shader attribute type: vec2 (2 float)
-	SHADER_ATTRIB_VEC2 = 1
+	ShaderAttribVec2 = 1
 	// Shader attribute type: vec3 (3 float)
-	SHADER_ATTRIB_VEC3 = 2
+	ShaderAttribVec3 = 2
 	// Shader attribute type: vec4 (4 float)
-	SHADER_ATTRIB_VEC4 = 3
+	ShaderAttribVec4 = 3
 )
 
 // Pixel formats
@@ -543,53 +543,53 @@ type PixelFormat = int32
 
 const (
 	// 8 bit per pixel (no alpha)
-	PIXELFORMAT_UNCOMPRESSED_GRAYSCALE = 1
+	PixelformatUncompressedGrayscale = 1
 	// 8*2 bpp (2 channels)
-	PIXELFORMAT_UNCOMPRESSED_GRAY_ALPHA = 2
+	PixelformatUncompressedGrayAlpha = 2
 	// 16 bpp
-	PIXELFORMAT_UNCOMPRESSED_R5G6B5 = 3
+	PixelformatUncompressedR5G6B5 = 3
 	// 24 bpp
-	PIXELFORMAT_UNCOMPRESSED_R8G8B8 = 4
+	PixelformatUncompressedR8G8B8 = 4
 	// 16 bpp (1 bit alpha)
-	PIXELFORMAT_UNCOMPRESSED_R5G5B5A1 = 5
+	PixelformatUncompressedR5G5B5A1 = 5
 	// 16 bpp (4 bit alpha)
-	PIXELFORMAT_UNCOMPRESSED_R4G4B4A4 = 6
+	PixelformatUncompressedR4G4B4A4 = 6
 	// 32 bpp
-	PIXELFORMAT_UNCOMPRESSED_R8G8B8A8 = 7
+	PixelformatUncompressedR8G8B8A8 = 7
 	// 32 bpp (1 channel - float)
-	PIXELFORMAT_UNCOMPRESSED_R32 = 8
+	PixelformatUncompressedR32 = 8
 	// 32*3 bpp (3 channels - float)
-	PIXELFORMAT_UNCOMPRESSED_R32G32B32 = 9
+	PixelformatUncompressedR32G32B32 = 9
 	// 32*4 bpp (4 channels - float)
-	PIXELFORMAT_UNCOMPRESSED_R32G32B32A32 = 10
+	PixelformatUncompressedR32G32B32A32 = 10
 	// 16 bpp (1 channel - half float)
-	PIXELFORMAT_UNCOMPRESSED_R16 = 11
+	PixelformatUncompressedR16 = 11
 	// 16*3 bpp (3 channels - half float)
-	PIXELFORMAT_UNCOMPRESSED_R16G16B16 = 12
+	PixelformatUncompressedR16G16B16 = 12
 	// 16*4 bpp (4 channels - half float)
-	PIXELFORMAT_UNCOMPRESSED_R16G16B16A16 = 13
+	PixelformatUncompressedR16G16B16A16 = 13
 	// 4 bpp (no alpha)
-	PIXELFORMAT_COMPRESSED_DXT1_RGB = 14
+	PixelformatCompressedDxt1Rgb = 14
 	// 4 bpp (1 bit alpha)
-	PIXELFORMAT_COMPRESSED_DXT1_RGBA = 15
+	PixelformatCompressedDxt1Rgba = 15
 	// 8 bpp
-	PIXELFORMAT_COMPRESSED_DXT3_RGBA = 16
+	PixelformatCompressedDxt3Rgba = 16
 	// 8 bpp
-	PIXELFORMAT_COMPRESSED_DXT5_RGBA = 17
+	PixelformatCompressedDxt5Rgba = 17
 	// 4 bpp
-	PIXELFORMAT_COMPRESSED_ETC1_RGB = 18
+	PixelformatCompressedEtc1Rgb = 18
 	// 4 bpp
-	PIXELFORMAT_COMPRESSED_ETC2_RGB = 19
+	PixelformatCompressedEtc2Rgb = 19
 	// 8 bpp
-	PIXELFORMAT_COMPRESSED_ETC2_EAC_RGBA = 20
+	PixelformatCompressedEtc2EacRgba = 20
 	// 4 bpp
-	PIXELFORMAT_COMPRESSED_PVRT_RGB = 21
+	PixelformatCompressedPvrtRgb = 21
 	// 4 bpp
-	PIXELFORMAT_COMPRESSED_PVRT_RGBA = 22
+	PixelformatCompressedPvrtRgba = 22
 	// 8 bpp
-	PIXELFORMAT_COMPRESSED_ASTC_4x4_RGBA = 23
+	PixelformatCompressedAstc4X4Rgba = 23
 	// 2 bpp
-	PIXELFORMAT_COMPRESSED_ASTC_8x8_RGBA = 24
+	PixelformatCompressedAstc8X8Rgba = 24
 )
 
 // Texture parameters: filter mode
@@ -597,17 +597,17 @@ type TextureFilter = int32
 
 const (
 	// No filter, just pixel approximation
-	TEXTURE_FILTER_POINT = 0
+	TextureFilterPoint = 0
 	// Linear filtering
-	TEXTURE_FILTER_BILINEAR = 1
+	TextureFilterBilinear = 1
 	// Trilinear filtering (linear with mipmaps)
-	TEXTURE_FILTER_TRILINEAR = 2
+	TextureFilterTrilinear = 2
 	// Anisotropic filtering 4x
-	TEXTURE_FILTER_ANISOTROPIC_4X = 3
+	TextureFilterAnisotropic4X = 3
 	// Anisotropic filtering 8x
-	TEXTURE_FILTER_ANISOTROPIC_8X = 4
+	TextureFilterAnisotropic8X = 4
 	// Anisotropic filtering 16x
-	TEXTURE_FILTER_ANISOTROPIC_16X = 5
+	TextureFilterAnisotropic16X = 5
 )
 
 // Texture parameters: wrap mode
@@ -615,13 +615,13 @@ type TextureWrap = int32
 
 const (
 	// Repeats texture in tiled mode
-	TEXTURE_WRAP_REPEAT = 0
+	TextureWrapRepeat = 0
 	// Clamps texture to edge pixel in tiled mode
-	TEXTURE_WRAP_CLAMP = 1
+	TextureWrapClamp = 1
 	// Mirrors and repeats the texture in tiled mode
-	TEXTURE_WRAP_MIRROR_REPEAT = 2
+	TextureWrapMirrorRepeat = 2
 	// Mirrors and clamps to border the texture in tiled mode
-	TEXTURE_WRAP_MIRROR_CLAMP = 3
+	TextureWrapMirrorClamp = 3
 )
 
 // Cubemap layouts
@@ -629,15 +629,15 @@ type CubemapLayout = int32
 
 const (
 	// Automatically detect layout type
-	CUBEMAP_LAYOUT_AUTO_DETECT = 0
+	CubemapLayoutAutoDetect = 0
 	// Layout is defined by a vertical line with faces
-	CUBEMAP_LAYOUT_LINE_VERTICAL = 1
+	CubemapLayoutLineVertical = 1
 	// Layout is defined by a horizontal line with faces
-	CUBEMAP_LAYOUT_LINE_HORIZONTAL = 2
+	CubemapLayoutLineHorizontal = 2
 	// Layout is defined by a 3x4 cross with cubemap faces
-	CUBEMAP_LAYOUT_CROSS_THREE_BY_FOUR = 3
+	CubemapLayoutCrossThreeByFour = 3
 	// Layout is defined by a 4x3 cross with cubemap faces
-	CUBEMAP_LAYOUT_CROSS_FOUR_BY_THREE = 4
+	CubemapLayoutCrossFourByThree = 4
 )
 
 // Font type, defines generation method
@@ -645,11 +645,11 @@ type FontType = int32
 
 const (
 	// Default font generation, anti-aliased
-	FONT_DEFAULT = 0
+	FontDefault = 0
 	// Bitmap font generation, no anti-aliasing
-	FONT_BITMAP = 1
+	FontBitmap = 1
 	// SDF font generation, requires external shader
-	FONT_SDF = 2
+	FontSdf = 2
 )
 
 // Color blending modes (pre-defined)
@@ -657,21 +657,21 @@ type BlendMode = int32
 
 const (
 	// Blend textures considering alpha (default)
-	BLEND_ALPHA = 0
+	BlendAlpha = 0
 	// Blend textures adding colors
-	BLEND_ADDITIVE = 1
+	BlendAdditive = 1
 	// Blend textures multiplying colors
-	BLEND_MULTIPLIED = 2
+	BlendMultiplied = 2
 	// Blend textures adding colors (alternative)
-	BLEND_ADD_COLORS = 3
+	BlendAddColors = 3
 	// Blend textures subtracting colors (alternative)
-	BLEND_SUBTRACT_COLORS = 4
+	BlendSubtractColors = 4
 	// Blend premultiplied textures considering alpha
-	BLEND_ALPHA_PREMULTIPLY = 5
+	BlendAlphaPremultiply = 5
 	// Blend textures using custom src/dst factors (use rlSetBlendFactors())
-	BLEND_CUSTOM = 6
+	BlendCustom = 6
 	// Blend textures using custom rgb/alpha separate src/dst factors (use rlSetBlendFactorsSeparate())
-	BLEND_CUSTOM_SEPARATE = 7
+	BlendCustomSeparate = 7
 )
 
 // Gesture
@@ -679,27 +679,27 @@ type Gesture = int32
 
 const (
 	// No gesture
-	GESTURE_NONE = 0
+	GestureNone = 0
 	// Tap gesture
-	GESTURE_TAP = 1
+	GestureTap = 1
 	// Double tap gesture
-	GESTURE_DOUBLETAP = 2
+	GestureDoubletap = 2
 	// Hold gesture
-	GESTURE_HOLD = 4
+	GestureHold = 4
 	// Drag gesture
-	GESTURE_DRAG = 8
+	GestureDrag = 8
 	// Swipe right gesture
-	GESTURE_SWIPE_RIGHT = 16
+	GestureSwipeRight = 16
 	// Swipe left gesture
-	GESTURE_SWIPE_LEFT = 32
+	GestureSwipeLeft = 32
 	// Swipe up gesture
-	GESTURE_SWIPE_UP = 64
+	GestureSwipeUp = 64
 	// Swipe down gesture
-	GESTURE_SWIPE_DOWN = 128
+	GestureSwipeDown = 128
 	// Pinch in gesture
-	GESTURE_PINCH_IN = 256
+	GesturePinchIn = 256
 	// Pinch out gesture
-	GESTURE_PINCH_OUT = 512
+	GesturePinchOut = 512
 )
 
 // Camera system modes
@@ -707,15 +707,15 @@ type CameraMode = int32
 
 const (
 	// Camera custom, controlled by user (UpdateCamera() does nothing)
-	CAMERA_CUSTOM = 0
+	CameraCustom = 0
 	// Camera free mode
-	CAMERA_FREE = 1
+	CameraFree = 1
 	// Camera orbital, around target, zoom supported
-	CAMERA_ORBITAL = 2
+	CameraOrbital = 2
 	// Camera first person
-	CAMERA_FIRST_PERSON = 3
+	CameraFirstPerson = 3
 	// Camera third person
-	CAMERA_THIRD_PERSON = 4
+	CameraThirdPerson = 4
 )
 
 // Camera projection
@@ -723,9 +723,9 @@ type CameraProjection = int32
 
 const (
 	// Perspective projection
-	CAMERA_PERSPECTIVE = 0
+	CameraPerspective = 0
 	// Orthographic projection
-	CAMERA_ORTHOGRAPHIC = 1
+	CameraOrthographic = 1
 )
 
 // N-patch layout
@@ -733,9 +733,9 @@ type NPatchLayout = int32
 
 const (
 	// Npatch layout: 3x3 tiles
-	NPATCH_NINE_PATCH = 0
+	NpatchNinePatch = 0
 	// Npatch layout: 1x3 tiles
-	NPATCH_THREE_PATCH_VERTICAL = 1
+	NpatchThreePatchVertical = 1
 	// Npatch layout: 3x1 tiles
-	NPATCH_THREE_PATCH_HORIZONTAL = 2
+	NpatchThreePatchHorizontal = 2
 )

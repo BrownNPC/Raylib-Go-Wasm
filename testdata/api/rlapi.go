@@ -3,9 +3,6 @@ package api
 import (
 	_ "embed"
 	"encoding/json"
-	"fmt"
-	"slices"
-	"strings"
 )
 
 var Api RlApi
@@ -27,38 +24,11 @@ type RlDefine struct {
 	Description string       `json:"description"`
 }
 
-func FixDefines(defs []RlDefine) []RlDefine {
-	defs = slices.Clone(defs)
-	for i, d := range defs {
-		def := &defs[i]
-		switch d.Type {
-		case "STRING":
-			def.Value = "\"" + def.Value + "\""
-		case "FLOAT_MATH":
-			def.Value = StringyValue(strings.ReplaceAll(string(def.Value), "f", ""))
-		case "COLOR":
-			v := strings.ReplaceAll(string(def.Value), "CLITERAL(Color)", "")
-			def.Value = StringyValue(v)
-		case "UNKNOWN":
-			switch def.Name {
-			case "GetMouseRay":
-				def.Value = StringyValue(fmt.Sprintf("var %s = %s", def.Name, def.Value))
-			case "RLAPI":
-				*def = RlDefine{}
-			default:
-				def.Value = StringyValue(
-					fmt.Sprintf("const %v = %v", def.Name, def.Value),
-				)
-			}
-		}
-	}
-	return defs
-}
 
 type RlField struct {
-	Type        RlType     `json:"type"`
-	Name        PublicName `json:"name"`
-	Description string     `json:"description"`
+	Type        string `json:"type"`
+	Name        string `json:"name"`
+	Description string `json:"description"`
 }
 type RlStruct struct {
 	Name        string    `json:"name"`

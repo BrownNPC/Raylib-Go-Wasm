@@ -1,11 +1,9 @@
 package main
 
 import (
-	"bytes"
 	"codegen/api"
 	"codegen/templates"
 	_ "embed"
-	"os"
 	"slices"
 	"text/template"
 )
@@ -19,80 +17,40 @@ var definesTempl string
 //go:embed templates/enums.go.gotmpl
 var enumsTempl string
 
+//go:embed templates/aliases.go.gotmpl
+var aliasesTempl string
+
 type Model struct {
 	BuildTags string
 	Imports   []string
 	Structs   []api.RlStruct
 	Defines   []api.RlDefine
 	Enums     []api.RlEnum
+	Aliases   []api.RlAlias
 }
 
 func main() {
-
-	// recordedTypes := map[string]struct{}{}
-
-	// for _, s := range api.Api.Structs {
-	// 	for _, t := range s.Fields {
-	// 		if _, ok := recordedTypes[t.Type]; !ok {
-	// 			recordedTypes[t.Type] = struct{}{}
-	// 			fmt.Println(t.Type)
-	// 		}
-	// 	}
-	// }
-
 	m := Model{
 		BuildTags: "js",
 		Imports:   []string{},
-		Structs:   api.Api.Structs,
-		Defines:   api.FixDefines(api.Api.Defines),
-		Enums:     api.Api.Enums,
+		Structs:   slices.Clone(api.Api.Structs),
+		// C #define macros need special parsing. And Names need to be PascalCase.
+		Defines: ParseDefines(api.Api.Defines),
+		Enums:   slices.Clone(api.Api.Enums),
+		Aliases: slices.Clone(api.Api.Aliases),
 	}
-	{
-		structs := templates.LoadTemplate(structsTempl, "structs")
-		var buf bytes.Buffer
-		if err := structs.Execute(&buf, m); err != nil {
-			panic(err)
-		}
-		if err := os.WriteFile("rl/structs_gen_unformatted.go", buf.Bytes(), 0644); err != nil {
-			panic(err)
-		}
+	// convert C types to Go and use PascalCase for field names.
+	for _, s := range m.Structs {
+		ProcessStructFields(s.Fields)
 	}
-	{
-		defines := templates.LoadTemplateFuncs(definesTempl, "defines",
-			template.FuncMap{
-				"eq":       func(a, b any) bool { return a == b },
-				"contains": func(a any, b ...any) bool { return slices.Contains(b, a) },
-			})
-		var buf bytes.Buffer
-		if err := defines.Execute(&buf, m); err != nil {
-			panic(err)
-		}
-		if err := os.WriteFile("rl/defines_gen_unformatted.go", buf.Bytes(), 0644); err != nil {
-			panic(err)
-		}
+	// Use PascalCase for enum names.
+	PascalCaseEnums(m.Enums)
+	funcs := template.FuncMap{
+		"eq":       func(a, b any) bool { return a == b },
+		"contains": func(a any, b ...any) bool { return slices.Contains(b, a) },
 	}
-	{
-		enums := templates.LoadTemplateFuncs(enumsTempl, "enums",
-			template.FuncMap{
-				"eq":       func(a, b any) bool { return a == b },
-				"contains": func(a any, b ...any) bool { return slices.Contains(b, a) },
-			})
-		var buf bytes.Buffer
-		if err := enums.Execute(&buf, m); err != nil {
-			panic(err)
-		}
-		if err := os.WriteFile("rl/enums_gen_unformatted.go", buf.Bytes(), 0644); err != nil {
-			panic(err)
-		}
-	}
-
-	// formatted, err := format.Source(buf.Bytes())
-
-	// if err != nil {
-	// 	panic(err)
-	// }
-
-	// if err := os.WriteFile("rl/structs_gen.go", formatted, 0644); err != nil {
-	// 	panic(err)
-	// }
+	templates.GenerateCodeFormatted(m, structsTempl, "structs", nil)
+	templates.GenerateCodeFormatted(m, enumsTempl, "enums", nil)
+	templates.GenerateCodeFormatted(m, definesTempl, "defines", funcs)
+	templates.GenerateCodeFormatted(m, aliasesTempl, "aliases", funcs)
 }
