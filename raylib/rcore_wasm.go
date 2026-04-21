@@ -2174,7 +2174,6 @@ func ExportImageToMemory(image Image, fileType string) []byte {
 	return zero
 }
 
-
 // GenImageGradientLinear - Generate image: linear gradient, direction in degrees [0..360], 0=Vertical gradient
 func GenImageGradientLinear(width int, height int, direction int, start color.RGBA, end color.RGBA) *Image {
 	var zero *Image
@@ -2590,7 +2589,6 @@ func LoadTexture(fileName string) Texture2D {
 	wasm.Free(fl...)
 	return v
 }
-
 
 // LoadTextureCubemap - Load cubemap from image, multiple image cubemap layouts supported
 func LoadTextureCubemap(image *Image, layout int32) Texture2D {
@@ -3921,7 +3919,6 @@ func SetCallbackFunc() {
 	_, fl := setCallbackFunc.Call()
 	wasm.Free(fl...)
 }
-
 
 // ToImage converts a Image to Go image.Image
 func ToImage() image.Image {

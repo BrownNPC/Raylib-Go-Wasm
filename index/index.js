@@ -21,6 +21,8 @@ const go = new Go();
 go.importObject.raylib = raylib;
 go.importObject.globalThis = globalThis;
 globalThis.raylib = raylib;
+// compatibility with old bindings (v1)
+globalThis.mod = raylib;
 
 import { Runtime } from "./runtime.js"; // helper funtions
 //init
@@ -43,4 +45,3 @@ WebAssembly.instantiateStreaming(fetch("main.wasm"), go.importObject).then(
     go.run(instance);
   },
 );
-

@@ -1,5 +1,4 @@
 //go:build js
-
 package wasm
 
 import (
@@ -7,17 +6,17 @@ import (
 	"unsafe"
 )
 
-// cptr is a pointer to raylib wasm memory
-type cptr = uint32
+// Cptr is a pointer to raylib wasm memory
+type Cptr = uint32
 
 // Allocates memory on raylib heap
 //
 //go:wasmimport raylib _malloc
 //go:noescape
-func malloc(size cptr) cptr
+func malloc(size Cptr) Cptr
 
 // malloc the size of V
-func mallocV[T any](V T) (cptr, func()) {
+func mallocV[T any](V T) (Cptr, func()) {
 	ptr := malloc(sizeof(V))
 	return ptr, func() { free(ptr) }
 }
@@ -26,7 +25,7 @@ func mallocV[T any](V T) (cptr, func()) {
 //
 //go:wasmimport raylib _free
 //go:noescape
-func free(cptr)
+func free(Cptr)
 
 // _copyToC copies a Go type/struct to C memory. Useful for copying slices and structs.
 //
@@ -37,7 +36,7 @@ func free(cptr)
 //
 //go:wasmimport gojs CopyToC
 //go:noescape
-func _copyToC(Value unsafe.Pointer, srcSize, dstCptr cptr)
+func _copyToC(Value unsafe.Pointer, srcSize, dstCptr Cptr)
 
 // copies C memory to a Go pointer. Useful for copying C structs into Go structs
 //
@@ -56,10 +55,10 @@ func _copyToC(Value unsafe.Pointer, srcSize, dstCptr cptr)
 //
 //go:wasmimport gojs CopyToGo
 //go:noescape
-func _copyToGo(dstGoPtr unsafe.Pointer, size cptr, src cptr)
+func _copyToGo(dstGoPtr unsafe.Pointer, size Cptr, src Cptr)
 
 // Copies the src value to the dst cptr
-func copyToC[T any](src T, dst cptr) {
+func copyToC[T any](src T, dst Cptr) {
 	size := sizeof(src)
 	_copyToC(unsafe.Pointer(&src), size, dst)
 }
@@ -68,16 +67,16 @@ func copyToC[T any](src T, dst cptr) {
 //
 //go:wasmimport gojs CStringFromGoString
 //go:noescape
-func cString(string) cptr
+func cString(string) Cptr
 
 // Scan for null terminator and return length excluding the null terminator.
 //
 //go:wasmimport gojs CStringGetLength
 //go:noescape
-func _cStringGetLength(cstr cptr) cptr
+func _cStringGetLength(cstr Cptr) Cptr
 
 // Copies a C string to Go memory without freeing the C string.
-func goString(cstr cptr) string {
+func goString(cstr Cptr) string {
 	size := _cStringGetLength(cstr)
 	dstStr := make([]byte, size)
 	copySliceToGo(cstr, dstStr)
@@ -87,7 +86,7 @@ func goString(cstr cptr) string {
 // copyValueToC copies a value to C and returns a pointer to it.
 //
 // NOTE: Value cannot be a slice. For a slice, use [copySliceToC]
-func copyValueToC[T any](srcValue T) (cptr, func()) {
+func copyValueToC[T any](srcValue T) (Cptr, func()) {
 	dst, free := mallocV(srcValue)
 	copyToC(srcValue, dst)
 	return dst, free
@@ -96,9 +95,9 @@ func copyValueToC[T any](srcValue T) (cptr, func()) {
 // copySliceToC allocates a copy of a slice in C memory and returns a cptr to it.
 //
 // NOTE: Value MUST be a slice
-func copySliceToC[Slice ~[]E, E any](s Slice) (cptr, func()) {
+func copySliceToC[Slice ~[]E, E any](s Slice) (Cptr, func()) {
 	// size of the slice's underlying array in bytes
-	sliceSize := cptr(unsafe.Sizeof(s[:1][0])) * cptr(len(s))
+	sliceSize := Cptr(unsafe.Sizeof(s[:1][0])) * Cptr(len(s))
 	// allocate C array to hold Value
 	dstCptr := malloc(sliceSize)
 	// copy underlying array memory to C
@@ -110,7 +109,7 @@ func copySliceToC[Slice ~[]E, E any](s Slice) (cptr, func()) {
 // Useful for copying structs
 //
 // NOTE: Slices are not supported. Use [copySliceToGo]
-func copyValueToGo[T any](src cptr, dst *T) {
+func copyValueToGo[T any](src Cptr, dst *T) {
 	size := sizeof(*dst)
 	_copyToGo(unsafe.Pointer(dst), size, src)
 }
@@ -118,13 +117,13 @@ func copyValueToGo[T any](src cptr, dst *T) {
 // copySliceToGo copies a C array into a Go Slice.
 //
 // It copies bytes to the underlying array of the slice.
-func copySliceToGo[Slice ~[]E, E any](src cptr, dst Slice) {
+func copySliceToGo[Slice ~[]E, E any](src Cptr, dst Slice) {
 	// size of underlying array
 	var occupiedSize = len(dst)
 	if occupiedSize == 0 {
 		occupiedSize = cap(dst)
 	}
-	size := cptr(unsafe.Sizeof(dst[0])) * cptr(occupiedSize)
+	size := Cptr(unsafe.Sizeof(dst[0])) * Cptr(occupiedSize)
 	dstPtr := unsafe.SliceData(dst)
 	_copyToGo(unsafe.Pointer(dstPtr), size, src)
 }
@@ -147,4 +146,4 @@ func SetMain(UpdateAndDrawFrame func()) {
 }
 
 // return sizeof of v in bytes
-func sizeof[T any](v T) cptr { return cptr(unsafe.Sizeof(v)) }
+func sizeof[T any](v T) Cptr { return Cptr(unsafe.Sizeof(v)) }
