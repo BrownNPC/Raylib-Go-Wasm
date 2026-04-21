@@ -5,19 +5,22 @@ import (
 	"fmt"
 	"slices"
 	"strings"
+	"unicode"
 
 	"github.com/iancoleman/strcase"
 )
 
 // GoTypeFromC maps a C type to a Go type
+var oneToOneTypes = map[string]string{
+	"char":          "byte",
+	"float":         "float32",
+	"double":        "float64",
+	"unsigned char": "byte",
+	"unsigned int":  "uint32",
+	"int":           "int32",
+}
+
 func GoTypeFromC(t string) string {
-	oneToOneTypes := map[string]string{
-		"char":          "byte",
-		"float":         "float32",
-		"unsigned char": "byte",
-		"unsigned int":  "uint32",
-		"int":           "int32",
-	}
 	if mapping, ok := oneToOneTypes[t]; ok {
 		return mapping
 	}
@@ -40,8 +43,7 @@ func GoTypeFromC(t string) string {
 // It also makes the Name of the define PascalCase
 // This function maps them to the proper Go constructs.
 // See template templates/defines.go.gotmpl
-func ParseDefines(defs []api.RlDefine) []api.RlDefine {
-	defs = slices.Clone(defs)
+func ParseDefines(defs []api.RlDefine) {
 	for i, d := range defs {
 		def := &defs[i]
 		// make name of defines PascalCase
@@ -68,12 +70,11 @@ func ParseDefines(defs []api.RlDefine) []api.RlDefine {
 				*def = api.RlDefine{}
 			default:
 				def.Value = api.StringyValue(
-					fmt.Sprintf("const %v = %v", def.Name, def.Value),
+					fmt.Sprintf("const %v = %v", def.Name, PascalCase(string(def.Value))),
 				)
 			}
 		}
 	}
-	return defs
 }
 
 // Sets the Name field to PascaleCase. And converts type field to a Go type.
@@ -102,3 +103,22 @@ func PascalCaseEnums(enums []api.RlEnum) {
 
 // convert string to PascalCase
 func PascalCase(v string) string { return strcase.ToCamel(v) }
+
+func firstLetterLower(s string) string {
+	var b strings.Builder
+	b.Grow(len(s))
+	// first letter lowercase
+	b.WriteRune(unicode.ToLower([]rune(s)[0]))
+	// remaining
+	b.WriteString(string([]rune(s)[1:]))
+	return b.String()
+}
+func firstLetterUpper(s string) string {
+	var b strings.Builder
+	b.Grow(len(s))
+	// first letter lowercase
+	b.WriteRune(unicode.ToUpper([]rune(s)[0]))
+	// remaining
+	b.WriteString(string([]rune(s)[1:]))
+	return b.String()
+}

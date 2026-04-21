@@ -52,7 +52,7 @@ var Green = Color{0, 228, 48, 255}
 var Lime = Color{0, 158, 47, 255}
 
 //Dark Green
-var Darkgreen = Color{0, 117, 44, 255}
+var DarkGreen = Color{0, 117, 44, 255}
 
 //Sky Blue
 var Skyblue = Color{102, 191, 255, 255}
@@ -97,25 +97,25 @@ var Magenta = Color{255, 0, 255, 255}
 var Raywhite = Color{245, 245, 245, 255}
 
 //
-const MouseLeftButton = MOUSE_BUTTON_LEFT
+const MouseLeftButton = MouseButtonLeft
 
 //
-const MouseRightButton = MOUSE_BUTTON_RIGHT
+const MouseRightButton = MouseButtonRight
 
 //
-const MouseMiddleButton = MOUSE_BUTTON_MIDDLE
+const MouseMiddleButton = MouseButtonMiddle
 
 //
-const MaterialMapDiffuse = MATERIAL_MAP_ALBEDO
+const MaterialMapDiffuse = MaterialMapAlbedo
 
 //
-const MaterialMapSpecular = MATERIAL_MAP_METALNESS
+const MaterialMapSpecular = MaterialMapMetalness
 
 //
-const ShaderLocMapDiffuse = SHADER_LOC_MAP_ALBEDO
+const ShaderLocMapDiffuse = ShaderLocMapAlbedo
 
 //
-const ShaderLocMapSpecular = SHADER_LOC_MAP_METALNESS
+const ShaderLocMapSpecular = ShaderLocMapMetalness
 
 //Compatibility hack for previous raylib versions
 var GetMouseRay = GetScreenToWorldRay

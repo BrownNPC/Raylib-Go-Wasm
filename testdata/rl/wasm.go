@@ -59,9 +59,9 @@ func _copyToC(Value unsafe.Pointer, srcSize, dstCptr cptr)
 func _copyToGo(dstGoPtr unsafe.Pointer, size cptr, src cptr)
 
 // Copies the src value to the dst cptr
-func copyToC[T any](src *T, dst cptr) {
+func copyToC[T any](src T, dst cptr) {
 	size := sizeof(src)
-	_copyToC(unsafe.Pointer(src), size, dst)
+	_copyToC(unsafe.Pointer(&src), size, dst)
 }
 
 // The alocated C string lives on the raylib heap and must be free()'d
@@ -88,10 +88,9 @@ func goString(cstr cptr) string {
 //
 // NOTE: Value cannot be a slice. For a slice, use [copySliceToC]
 func copyValueToC[T any](srcValue T) (cptr, func()) {
-	size := sizeof(srcValue)
-	dst := malloc(size)
-	copyToC(&srcValue, dst)
-	return dst, func() { free(dst) }
+	dst, free := mallocV(srcValue)
+	copyToC(srcValue, dst)
+	return dst, free
 }
 
 // copySliceToC allocates a copy of a slice in C memory and returns a cptr to it.
@@ -99,7 +98,7 @@ func copyValueToC[T any](srcValue T) (cptr, func()) {
 // NOTE: Value MUST be a slice
 func copySliceToC[Slice ~[]E, E any](s Slice) (cptr, func()) {
 	// size of the slice's underlying array in bytes
-	sliceSize := cptr(unsafe.Sizeof(s[0])) * cptr(len(s))
+	sliceSize := cptr(unsafe.Sizeof(s[:1][0])) * cptr(len(s))
 	// allocate C array to hold Value
 	dstCptr := malloc(sliceSize)
 	// copy underlying array memory to C
