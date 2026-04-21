@@ -1,5 +1,3 @@
-module codegen
+module github.com/BrownNPC/Raylib-Go-Wasm/wasm-runtime
 
-go 1.25.6
-
-require github.com/iancoleman/strcase v0.3.0 // indirect
+go 1.26.1

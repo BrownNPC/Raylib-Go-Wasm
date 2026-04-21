@@ -1,6 +1,6 @@
 //go:build js
 
-package rl
+package wasm
 
 import (
 	"syscall/js"
