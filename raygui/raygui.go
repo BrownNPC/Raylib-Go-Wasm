@@ -3,7 +3,11 @@
 package raygui
 
 import (
+	"image/color"
+	"unsafe"
+
 	rl "github.com/BrownNPC/Raylib-Go-Wasm/raylib"
+	wasm "github.com/BrownNPC/Raylib-Go-Wasm/wasm-runtime"
 )
 
 type (
@@ -467,74 +471,116 @@ const (
 	ICON_255                     IconID = 255
 )
 
-/*
 //----------------------------------------------------------------------------------
 // Gui Setup Functions Definition
 //----------------------------------------------------------------------------------
 
+//go:wasmimport raylib _GuiEnable
+//go:noescape
+func guiEnable()
+
 // Enable gui global state
 func Enable() {
-	C.GuiEnable()
+	guiEnable()
 }
+
+//go:wasmimport raylib _GuiDisable
+//go:noescape
+func guiDisable()
 
 // Disable gui global state
 func Disable() {
-	C.GuiDisable()
+	guiDisable()
 }
+
+//go:wasmimport raylib _GuiLock
+//go:noescape
+func guiLock()
 
 // Lock gui global state
 func Lock() {
-	C.GuiLock()
+	guiLock()
 }
+
+//go:wasmimport raylib _GuiUnlock
+//go:noescape
+func guiUnlock()
 
 // Unlock gui global state
 func Unlock() {
-	C.GuiUnlock()
+	guiUnlock()
 }
+
+//go:wasmimport raylib _GuiIsLocked
+//go:noescape
+func guiIsLocked() int32
 
 // Check if gui is locked (global state)
 func IsLocked() bool {
-	return bool(C.GuiIsLocked())
+	return wasm.GoBool(guiIsLocked())
 }
+
+//go:wasmimport raylib _GuiSetAlpha
+//go:noescape
+func guiSetAlpha(alpha float32)
 
 // Set gui controls alpha global state
 func SetAlpha(alpha float32) {
-	calpha := C.float(alpha)
-	C.GuiSetAlpha(calpha)
+	calpha := float32(alpha)
+	guiSetAlpha(calpha)
 }
+
+//go:wasmimport raylib _GuiSetState
+//go:noescape
+func guiSetState(state int32)
 
 // Set gui state (global state)
 func SetState(state PropertyValue) {
-	cstate := C.int(state)
-	C.GuiSetState(cstate)
+	cstate := int32(state)
+	guiSetState(cstate)
 }
+
+//go:wasmimport raylib _GuiGetState
+//go:noescape
+func guiGetState() PropertyValue
 
 // Get gui state (global state)
 func GetState() PropertyValue {
-	return PropertyValue(C.GuiGetState())
+	return PropertyValue(guiGetState())
 }
+
+//go:wasmimport raylib _GuiSetFont
+//go:noescape
+func guiSetFont(font *rl.Font)
 
 // Set custom gui font
 func SetFont(font rl.Font) {
-	cfont := (*C.Font)(unsafe.Pointer(&font))
-	C.GuiSetFont(*cfont)
+	cfont := (*rl.Font)(unsafe.Pointer(&font))
+	guiSetFont(cfont)
 }
+
+//go:wasmimport raylib _GuiGetFont
+//go:noescape
+func guiGetFont() *rl.Font
 
 // Get custom gui font
 func GetFont() rl.Font {
-	ret := C.GuiGetFont()
-	ptr := unsafe.Pointer(&ret)
+	ret := guiGetFont()
+	ptr := unsafe.Pointer(ret)
 	return *(*rl.Font)(ptr)
 }
 
+//go:wasmimport raylib _GuiSetStyle
+//go:noescape
+func guiSetStyle(control, property, value int32) int32
+
 // Set control style property value
 func SetStyle(control ControlID, property PropertyID, value PropertyValue) {
-	ccontrol := C.int(control)
-	cproperty := C.int(property)
-	cvalue := C.int(value)
-	C.GuiSetStyle(ccontrol, cproperty, cvalue)
+	ccontrol := int32(control)
+	cproperty := int32(property)
+	cvalue := int32(value)
+	guiSetStyle(ccontrol, cproperty, cvalue)
 }
-*/
 
 //go:wasmimport raylib _GuiGetStyle
 //go:noescape
@@ -547,9 +593,12 @@ func GetStyle(control ControlID, property PropertyID) PropertyValue {
 	return PropertyValue(guiGetStyle(ccontrol, cproperty))
 }
 
-/*
+//go:wasmimport raylib _GuiGetColor
+//go:noescape
+func guiGetColor(control, property uint16) rl.Color
+
 func GetColor(control ControlID, property PropertyID) rl.Color {
-	color := C.GuiGetStyle(C.int(control), C.int(property))
+	color := guiGetStyle(int32(control), int32(property))
 	return rl.Color{R: uint8(color >> 24), G: uint8(color >> 16), B: uint8(color >> 8), A: uint8(color)}
 }
 
@@ -557,291 +606,357 @@ func GetColor(control ControlID, property PropertyID) rl.Color {
 // Gui Controls Functions Definition
 //----------------------------------------------------------------------------------
 
+//go:wasmimport raylib _GuiWindowBox
+//go:noescape
+func guiWindowBox(bounds rl.Rectangle, title wasm.Cptr) int32
+
 // Window Box control
 func WindowBox(bounds rl.Rectangle, title string) bool {
-	var cbounds C.struct_Rectangle
-	cbounds.height = C.float(bounds.Height)
-	cbounds.x = C.float(bounds.X)
-	cbounds.y = C.float(bounds.Y)
-	cbounds.width = C.float(bounds.Width)
-	var ctitle *C.char
+	var cbounds rl.Rectangle
+	cbounds.Height = float32(bounds.Height)
+	cbounds.X = float32(bounds.X)
+	cbounds.Y = float32(bounds.Y)
+	cbounds.Width = float32(bounds.Width)
+	var ctitle wasm.Cptr
 	if len(title) > 0 {
-		ctitle = C.CString(title)
-		defer C.free(unsafe.Pointer(ctitle))
+		ctitle = wasm.CString(title)
+		defer wasm.Free(ctitle)
 	}
-	return C.GuiWindowBox(cbounds, ctitle) != 0
+	return guiWindowBox(cbounds, ctitle) != 0
 }
+
+//go:wasmimport raylib _GuiGroupBox
+//go:noescape
+func guiGroupBox(bounds rl.Rectangle, text wasm.Cptr)
 
 // Group Box control with text name
 func GroupBox(bounds rl.Rectangle, text string) {
-	var cbounds C.struct_Rectangle
-	cbounds.height = C.float(bounds.Height)
-	cbounds.x = C.float(bounds.X)
-	cbounds.y = C.float(bounds.Y)
-	cbounds.width = C.float(bounds.Width)
-	var ctext *C.char
+	var cbounds rl.Rectangle
+	cbounds.Height = float32(bounds.Height)
+	cbounds.X = float32(bounds.X)
+	cbounds.Y = float32(bounds.Y)
+	cbounds.Width = float32(bounds.Width)
+	var ctext wasm.Cptr
 	if len(text) > 0 {
-		ctext = C.CString(text)
-		defer C.free(unsafe.Pointer(ctext))
+		ctext = wasm.CString(text)
+		defer wasm.Free(ctext)
 	}
-	C.GuiGroupBox(cbounds, ctext)
+	guiGroupBox(cbounds, ctext)
 }
+
+//go:wasmimport raylib _GuiLine
+//go:noescape
+func guiLine(bounds rl.Rectangle, text wasm.Cptr)
 
 // Line control
 func Line(bounds rl.Rectangle, text string) {
-	var cbounds C.struct_Rectangle
-	cbounds.x = C.float(bounds.X)
-	cbounds.y = C.float(bounds.Y)
-	cbounds.width = C.float(bounds.Width)
-	cbounds.height = C.float(bounds.Height)
-	var ctext *C.char
+	var cbounds rl.Rectangle
+	cbounds.X = float32(bounds.X)
+	cbounds.Y = float32(bounds.Y)
+	cbounds.Width = float32(bounds.Width)
+	cbounds.Height = float32(bounds.Height)
+	var ctext wasm.Cptr
 	if len(text) > 0 {
-		ctext = C.CString(text)
-		defer C.free(unsafe.Pointer(ctext))
+		ctext = wasm.CString(text)
+		defer wasm.Free(ctext)
 	}
-	C.GuiLine(cbounds, ctext)
+	guiLine(cbounds, ctext)
 }
+
+//go:wasmimport raylib _GuiPanel
+//go:noescape
+func guiPanel(bounds rl.Rectangle, text wasm.Cptr)
 
 // Panel control
 func Panel(bounds rl.Rectangle, text string) {
-	var cbounds C.struct_Rectangle
-	cbounds.width = C.float(bounds.Width)
-	cbounds.height = C.float(bounds.Height)
-	cbounds.x = C.float(bounds.X)
-	cbounds.y = C.float(bounds.Y)
-	var ctext *C.char
+	var cbounds rl.Rectangle
+	cbounds.Width = float32(bounds.Width)
+	cbounds.Height = float32(bounds.Height)
+	cbounds.X = float32(bounds.X)
+	cbounds.Y = float32(bounds.Y)
+	var ctext wasm.Cptr
 	if len(text) > 0 {
-		ctext = C.CString(text)
-		defer C.free(unsafe.Pointer(ctext))
+		ctext = wasm.CString(text)
+		defer wasm.Free(ctext)
 	}
-	C.GuiPanel(cbounds, ctext)
+	guiPanel(cbounds, ctext)
 }
+
+/*
+//go:wasmimport raylib _GuiTabBar
+//go:noescape
+func guiTabBar(bounds rl.Rectangle, text []wasm.Cptr, active *int32) int32
 
 // Tab Bar control, returns the current TAB closing requested, -1 otherwise
 func TabBar(bounds rl.Rectangle, text []string, active *int32) int32 {
-	var cbounds C.struct_Rectangle
-	cbounds.x = C.float(bounds.X)
-	cbounds.y = C.float(bounds.Y)
-	cbounds.width = C.float(bounds.Width)
-	cbounds.height = C.float(bounds.Height)
+	var cbounds rl.Rectangle
+	cbounds.X = float32(bounds.X)
+	cbounds.Y = float32(bounds.Y)
+	cbounds.Width = float32(bounds.Width)
+	cbounds.Height = float32(bounds.Height)
 
 	ctext := NewCStringArrayFromSlice(text)
 	defer ctext.Free()
 
-	count := C.int(len(text))
+	count := int32(len(text))
 
 	if active == nil {
 		active = new(int32)
 	}
-	cactive := C.int(*active)
+	cactive := int32(*active)
 	defer func() {
 		*active = int32(cactive)
 	}()
-	return int32(C.GuiTabBar(cbounds, (**C.char)(ctext.Pointer), count, &cactive))
+	return int32(guiTabBar(cbounds, (*wasm.Cptr)(ctext.Pointer), count, cactive))
 }
+*/
+
+//go:wasmimport raylib _GuiScrollPanel
+//go:noescape
+func guiScrollPanel(bounds rl.Rectangle, text wasm.Cptr, content rl.Rectangle, scroll *rl.Vector2, view *rl.Rectangle)
 
 // Scroll Panel control
 func ScrollPanel(bounds rl.Rectangle, text string, content rl.Rectangle, scroll *rl.Vector2, view *rl.Rectangle) {
-	var cbounds C.struct_Rectangle
-	cbounds.x = C.float(bounds.X)
-	cbounds.y = C.float(bounds.Y)
-	cbounds.width = C.float(bounds.Width)
-	cbounds.height = C.float(bounds.Height)
-	var ctext *C.char
+	var cbounds rl.Rectangle
+	cbounds.X = float32(bounds.X)
+	cbounds.Y = float32(bounds.Y)
+	cbounds.Width = float32(bounds.Width)
+	cbounds.Height = float32(bounds.Height)
+	var ctext wasm.Cptr
 	if len(text) > 0 {
-		ctext = C.CString(text)
-		defer C.free(unsafe.Pointer(ctext))
+		ctext = wasm.CString(text)
+		defer wasm.Free(ctext)
 	}
-	var ccontent C.struct_Rectangle
-	ccontent.x = C.float(content.X)
-	ccontent.y = C.float(content.Y)
-	ccontent.width = C.float(content.Width)
-	ccontent.height = C.float(content.Height)
-	var cscroll C.struct_Vector2
-	cscroll.x = C.float(scroll.X)
-	cscroll.y = C.float(scroll.Y)
+	var ccontent rl.Rectangle
+	ccontent.X = float32(content.X)
+	ccontent.Y = float32(content.Y)
+	ccontent.Width = float32(content.Width)
+	ccontent.Height = float32(content.Height)
+	var cscroll rl.Vector2
+	cscroll.X = float32(scroll.X)
+	cscroll.Y = float32(scroll.Y)
 	defer func() {
-		scroll.X = float32(cscroll.x)
-		scroll.Y = float32(cscroll.y)
+		scroll.X = float32(cscroll.X)
+		scroll.Y = float32(cscroll.Y)
 	}()
-	var cview C.struct_Rectangle
-	cview.x = C.float(view.X)
-	cview.y = C.float(view.Y)
-	cview.width = C.float(view.Width)
-	cview.height = C.float(view.Height)
+	var cview rl.Rectangle
+	cview.X = float32(view.X)
+	cview.Y = float32(view.Y)
+	cview.Width = float32(view.Width)
+	cview.Height = float32(view.Height)
 	defer func() {
-		view.X = float32(cview.x)
-		view.Y = float32(cview.y)
-		view.Width = float32(cview.width)
-		view.Height = float32(cview.height)
+		view.X = float32(cview.X)
+		view.Y = float32(cview.Y)
+		view.Width = float32(cview.Width)
+		view.Height = float32(cview.Height)
 	}()
 
-	C.GuiScrollPanel(cbounds, ctext, ccontent, &cscroll, &cview)
+	guiScrollPanel(cbounds, ctext, ccontent, &cscroll, &cview)
 }
+
+//go:wasmimport raylib _GuiLabel
+//go:noescape
+func guiLabel(bounds rl.Rectangle, text wasm.Cptr)
 
 // Label control
 func Label(bounds rl.Rectangle, text string) {
-	var cbounds C.struct_Rectangle
-	cbounds.x = C.float(bounds.X)
-	cbounds.y = C.float(bounds.Y)
-	cbounds.width = C.float(bounds.Width)
-	cbounds.height = C.float(bounds.Height)
-	var ctext *C.char
+	var cbounds rl.Rectangle
+	cbounds.X = float32(bounds.X)
+	cbounds.Y = float32(bounds.Y)
+	cbounds.Width = float32(bounds.Width)
+	cbounds.Height = float32(bounds.Height)
+	var ctext wasm.Cptr
 	if len(text) > 0 {
-		ctext = C.CString(text)
-		defer C.free(unsafe.Pointer(ctext))
+		ctext = wasm.CString(text)
+		defer wasm.Free(ctext)
 	}
-	C.GuiLabel(cbounds, ctext)
+	guiLabel(cbounds, ctext)
 }
+
+//go:wasmimport raylib _GuiButton
+//go:noescape
+func guiButton(bounds rl.Rectangle, text wasm.Cptr) int32
 
 // Button control, returns true when clicked
 func Button(bounds rl.Rectangle, text string) bool {
-	var cbounds C.struct_Rectangle
-	cbounds.x = C.float(bounds.X)
-	cbounds.y = C.float(bounds.Y)
-	cbounds.width = C.float(bounds.Width)
-	cbounds.height = C.float(bounds.Height)
-	var ctext *C.char
+	var cbounds rl.Rectangle
+	cbounds.X = float32(bounds.X)
+	cbounds.Y = float32(bounds.Y)
+	cbounds.Width = float32(bounds.Width)
+	cbounds.Height = float32(bounds.Height)
+	var ctext wasm.Cptr
 	if len(text) > 0 {
-		ctext = C.CString(text)
-		defer C.free(unsafe.Pointer(ctext))
+		ctext = wasm.CString(text)
+		defer wasm.Free(ctext)
 	}
-	return C.GuiButton(cbounds, ctext) != 0
+	return guiButton(cbounds, ctext) != 0
 }
+
+//go:wasmimport raylib _GuiLabelButton
+//go:noescape
+func guiLabelButton(bounds rl.Rectangle, text wasm.Cptr) int32
 
 // LabelButton control, returns true when clicked
 func LabelButton(bounds rl.Rectangle, text string) bool {
-	var cbounds C.struct_Rectangle
-	cbounds.x = C.float(bounds.X)
-	cbounds.y = C.float(bounds.Y)
-	cbounds.width = C.float(bounds.Width)
-	cbounds.height = C.float(bounds.Height)
-	var ctext *C.char
+	var cbounds rl.Rectangle
+	cbounds.X = float32(bounds.X)
+	cbounds.Y = float32(bounds.Y)
+	cbounds.Width = float32(bounds.Width)
+	cbounds.Height = float32(bounds.Height)
+	var ctext wasm.Cptr
 	if len(text) > 0 {
-		ctext = C.CString(text)
-		defer C.free(unsafe.Pointer(ctext))
+		ctext = wasm.CString(text)
+		defer wasm.Free(ctext)
 	}
-	return C.GuiLabelButton(cbounds, ctext) != 0
+	return guiLabelButton(cbounds, ctext) != 0
 }
+
+//go:wasmimport raylib _GuiToggle
+//go:noescape
+func guiToggle(bounds rl.Rectangle, text wasm.Cptr, active int32) int32
 
 // Toggle control, returns true when active
 func Toggle(bounds rl.Rectangle, text string, active bool) bool {
-	var cbounds C.struct_Rectangle
-	cbounds.x = C.float(bounds.X)
-	cbounds.y = C.float(bounds.Y)
-	cbounds.width = C.float(bounds.Width)
-	cbounds.height = C.float(bounds.Height)
-	var ctext *C.char
+	var cbounds rl.Rectangle
+	cbounds.X = float32(bounds.X)
+	cbounds.Y = float32(bounds.Y)
+	cbounds.Width = float32(bounds.Width)
+	cbounds.Height = float32(bounds.Height)
+	var ctext wasm.Cptr
 	if len(text) > 0 {
-		ctext = C.CString(text)
-		defer C.free(unsafe.Pointer(ctext))
+		ctext = wasm.CString(text)
+		defer wasm.Free(ctext)
 	}
-	cactive := C.bool(active)
-	C.GuiToggle(cbounds, ctext, &cactive)
-	return bool(cactive)
+	cactive := wasm.CBool(active)
+	guiToggle(cbounds, ctext, cactive)
+	return wasm.GoBool(cactive)
 }
+
+//go:wasmimport raylib _GuiToggleGroup
+//go:noescape
+func guiToggleGroup(bounds rl.Rectangle, text wasm.Cptr, active int32) int32
 
 // ToggleGroup control, returns active toggle index
 func ToggleGroup(bounds rl.Rectangle, text string, active int32) int32 {
-	var cbounds C.struct_Rectangle
-	cbounds.x = C.float(bounds.X)
-	cbounds.y = C.float(bounds.Y)
-	cbounds.width = C.float(bounds.Width)
-	cbounds.height = C.float(bounds.Height)
-	var ctext *C.char
+	var cbounds rl.Rectangle
+	cbounds.X = float32(bounds.X)
+	cbounds.Y = float32(bounds.Y)
+	cbounds.Width = float32(bounds.Width)
+	cbounds.Height = float32(bounds.Height)
+	var ctext wasm.Cptr
 	if len(text) > 0 {
-		ctext = C.CString(text)
-		defer C.free(unsafe.Pointer(ctext))
+		ctext = wasm.CString(text)
+		defer wasm.Free(ctext)
 	}
-	cactive := C.int(active)
-	C.GuiToggleGroup(cbounds, ctext, &cactive)
+	cactive := int32(active)
+	guiToggleGroup(cbounds, ctext, cactive)
 	return int32(cactive)
 }
+
+//go:wasmimport raylib _GuiToggleSlider
+//go:noescape
+func guiToggleSlider(bounds rl.Rectangle, text wasm.Cptr, active int32) int32
 
 // ToggleSlider control, returns true when clicked
 func ToggleSlider(bounds rl.Rectangle, text string, active int32) int32 {
-	var cbounds C.struct_Rectangle
-	cbounds.x = C.float(bounds.X)
-	cbounds.y = C.float(bounds.Y)
-	cbounds.width = C.float(bounds.Width)
-	cbounds.height = C.float(bounds.Height)
-	var ctext *C.char
+	var cbounds rl.Rectangle
+	cbounds.X = float32(bounds.X)
+	cbounds.Y = float32(bounds.Y)
+	cbounds.Width = float32(bounds.Width)
+	cbounds.Height = float32(bounds.Height)
+	var ctext wasm.Cptr
 	if len(text) > 0 {
-		ctext = C.CString(text)
-		defer C.free(unsafe.Pointer(ctext))
+		ctext = wasm.CString(text)
+		defer wasm.Free(ctext)
 	}
-	cactive := C.int(active)
-	C.GuiToggleSlider(cbounds, ctext, &cactive)
+	cactive := int32(active)
+	guiToggleSlider(cbounds, ctext, cactive)
 	return int32(cactive)
 }
+
+//go:wasmimport raylib _GuiCheckBox
+//go:noescape
+func guiCheckBox(bounds rl.Rectangle, text wasm.Cptr, checked int32) int32
 
 // CheckBox control, returns true when active
 func CheckBox(bounds rl.Rectangle, text string, checked bool) bool {
-	var cbounds C.struct_Rectangle
-	cbounds.x = C.float(bounds.X)
-	cbounds.y = C.float(bounds.Y)
-	cbounds.width = C.float(bounds.Width)
-	cbounds.height = C.float(bounds.Height)
-	var ctext *C.char
+	var cbounds rl.Rectangle
+	cbounds.X = float32(bounds.X)
+	cbounds.Y = float32(bounds.Y)
+	cbounds.Width = float32(bounds.Width)
+	cbounds.Height = float32(bounds.Height)
+	var ctext wasm.Cptr
 	if len(text) > 0 {
-		ctext = C.CString(text)
-		defer C.free(unsafe.Pointer(ctext))
+		ctext = wasm.CString(text)
+		defer wasm.Free(ctext)
 	}
-	cchecked := C.bool(checked)
-	C.GuiCheckBox(cbounds, ctext, &cchecked)
-	return bool(cchecked)
+	cchecked := wasm.CBool(checked)
+	return wasm.GoBool(guiCheckBox(cbounds, ctext, cchecked))
 }
+
+//go:wasmimport raylib _GuiComboBox
+//go:noescape
+func guiComboBox(bounds rl.Rectangle, text wasm.Cptr, active int32) int32
 
 // ComboBox control, returns selected item index
 func ComboBox(bounds rl.Rectangle, text string, active int32) int32 {
-	var cbounds C.struct_Rectangle
-	cbounds.x = C.float(bounds.X)
-	cbounds.y = C.float(bounds.Y)
-	cbounds.width = C.float(bounds.Width)
-	cbounds.height = C.float(bounds.Height)
-	var ctext *C.char
+	var cbounds rl.Rectangle
+	cbounds.X = float32(bounds.X)
+	cbounds.Y = float32(bounds.Y)
+	cbounds.Width = float32(bounds.Width)
+	cbounds.Height = float32(bounds.Height)
+	var ctext wasm.Cptr
 	if len(text) > 0 {
-		ctext = C.CString(text)
-		defer C.free(unsafe.Pointer(ctext))
+		ctext = wasm.CString(text)
+		defer wasm.Free(ctext)
 	}
-	cactive := C.int(active)
-	C.GuiComboBox(cbounds, ctext, &cactive)
+	cactive := int32(active)
+	guiComboBox(cbounds, ctext, cactive)
 	return int32(cactive)
 }
 
+//go:wasmimport raylib _GuiDropdownBox
+//go:noescape
+func guiDropdownBox(bounds rl.Rectangle, text wasm.Cptr, active *int32, editMode int32) int32
+
 // DropdownBox control, returns true when clicked
 func DropdownBox(bounds rl.Rectangle, text string, active *int32, editMode bool) bool {
-	var cbounds C.struct_Rectangle
-	cbounds.x = C.float(bounds.X)
-	cbounds.y = C.float(bounds.Y)
-	cbounds.width = C.float(bounds.Width)
-	cbounds.height = C.float(bounds.Height)
-	var ctext *C.char
+	var cbounds rl.Rectangle
+	cbounds.X = float32(bounds.X)
+	cbounds.Y = float32(bounds.Y)
+	cbounds.Width = float32(bounds.Width)
+	cbounds.Height = float32(bounds.Height)
+	var ctext wasm.Cptr
 	if len(text) > 0 {
-		ctext = C.CString(text)
-		defer C.free(unsafe.Pointer(ctext))
+		ctext = wasm.CString(text)
+		defer wasm.Free(ctext)
 	}
 
 	if active == nil {
 		active = new(int32)
 	}
-	cactive := C.int(*active)
+	cactive := int32(*active)
 	defer func() {
 		*active = int32(cactive)
 	}()
 
-	ceditMode := C.bool(editMode)
+	ceditMode := wasm.CBool(editMode)
 
-	return C.GuiDropdownBox(cbounds, ctext, &cactive, ceditMode) != 0
+	return guiDropdownBox(cbounds, ctext, &cactive, ceditMode) != 0
 }
 
+/*
+//go:wasmimport raylib _GuiTextBox
+//go:noescape
+func guiTextBox(bounds rl.Rectangle, text *wasm.Cptr, textSize int32, editMode int32) int32
+
 // TextBox control, updates input text, returns true on ENTER pressed or defocused
-func TextBox(bounds rl.Rectangle, text *string, textSize int, editMode bool) bool {
-	var cbounds C.struct_Rectangle
-	cbounds.x = C.float(bounds.X)
-	cbounds.y = C.float(bounds.Y)
-	cbounds.width = C.float(bounds.Width)
-	cbounds.height = C.float(bounds.Height)
+func TextBox(bounds rl.Rectangle, text *string, textSize int32, editMode bool) bool {
+	var cbounds rl.Rectangle
+	cbounds.X = float32(bounds.X)
+	cbounds.Y = float32(bounds.Y)
+	cbounds.Width = float32(bounds.Width)
+	cbounds.Height = float32(bounds.Height)
 
 	bs := []byte(*text)
 	if len(bs) == 0 {
@@ -850,85 +965,99 @@ func TextBox(bounds rl.Rectangle, text *string, textSize int, editMode bool) boo
 	if 0 < len(bs) && bs[len(bs)-1] != byte(0) { // minimalize allocation
 		bs = append(bs, byte(0)) // for next input symbols
 	}
-	ctext := (*C.char)(unsafe.Pointer(&bs[0]))
+	ctext := (wasm.Cptr)(unsafe.Pointer(bs[0]))
 	defer func() {
 		*text = strings.Trim(string(bs), "\x00")
-		// no need : C.free(unsafe.Pointer(ctext))
+		// no need : wasm.Free(ctext)
 	}()
 
-	ctextSize := C.int(textSize)
-	ceditMode := C.bool(editMode)
+	ctextSize := int32(textSize)
+	ceditMode := wasm.CBool(editMode)
 
-	return C.GuiTextBox(cbounds, ctext, ctextSize, ceditMode) != 0
+	return guiTextBox(cbounds, ctext, ctextSize, ceditMode) != 0
 }
+*/
+
+//go:wasmimport raylib _GuiSpinner
+//go:noescape
+func guiSpinner(bounds rl.Rectangle, text wasm.Cptr, value *int32, minValue, maxValue int32, editMode int32) int32
 
 // Spinner control, sets value to the selected number and returns true when clicked.
 func Spinner(bounds rl.Rectangle, text string, value *int32, minValue, maxValue int, editMode bool) bool {
-	var cbounds C.struct_Rectangle
-	cbounds.x = C.float(bounds.X)
-	cbounds.y = C.float(bounds.Y)
-	cbounds.width = C.float(bounds.Width)
-	cbounds.height = C.float(bounds.Height)
-	var ctext *C.char
+	var cbounds rl.Rectangle
+	cbounds.X = float32(bounds.X)
+	cbounds.Y = float32(bounds.Y)
+	cbounds.Width = float32(bounds.Width)
+	cbounds.Height = float32(bounds.Height)
+	var ctext wasm.Cptr
 	if len(text) > 0 {
-		ctext = C.CString(text)
-		defer C.free(unsafe.Pointer(ctext))
+		ctext = wasm.CString(text)
+		defer wasm.Free(ctext)
 	}
 
 	if value == nil {
 		value = new(int32)
 	}
-	cvalue := C.int(*value)
+	cvalue := int32(*value)
 	defer func() {
 		*value = int32(cvalue)
 	}()
 
-	cminValue := C.int(minValue)
-	cmaxValue := C.int(maxValue)
-	ceditMode := C.bool(editMode)
+	cminValue := int32(minValue)
+	cmaxValue := int32(maxValue)
+	ceditMode := wasm.CBool(editMode)
 
-	return C.GuiSpinner(cbounds, ctext, &cvalue, cminValue, cmaxValue, ceditMode) != 0
+	return guiSpinner(cbounds, ctext, &cvalue, cminValue, cmaxValue, ceditMode) != 0
 }
+
+//go:wasmimport raylib _GuiValueBox
+//go:noescape
+func guiValueBox(bounds rl.Rectangle, text wasm.Cptr, value *int32, minValue, maxValue int32, editMode int32) int32
 
 // ValueBox control, updates input text with numbers
 func ValueBox(bounds rl.Rectangle, text string, value *int32, minValue, maxValue int, editMode bool) bool {
-	var cbounds C.struct_Rectangle
-	cbounds.x = C.float(bounds.X)
-	cbounds.y = C.float(bounds.Y)
-	cbounds.width = C.float(bounds.Width)
-	cbounds.height = C.float(bounds.Height)
-	var ctext *C.char
+	var cbounds rl.Rectangle
+	cbounds.X = float32(bounds.X)
+	cbounds.Y = float32(bounds.Y)
+	cbounds.Width = float32(bounds.Width)
+	cbounds.Height = float32(bounds.Height)
+	var ctext wasm.Cptr
 	if len(text) > 0 {
-		ctext = C.CString(text)
-		defer C.free(unsafe.Pointer(ctext))
+		ctext = wasm.CString(text)
+		defer wasm.Free(ctext)
 	}
 
 	if value == nil {
 		value = new(int32)
 	}
-	cvalue := C.int(*value)
+	cvalue := int32(*value)
 	defer func() {
 		*value = int32(cvalue)
 	}()
 
-	cminValue := C.int(minValue)
-	cmaxValue := C.int(maxValue)
-	ceditMode := C.bool(editMode)
+	cminValue := int32(minValue)
+	cmaxValue := int32(maxValue)
+	ceditMode := wasm.CBool(editMode)
 
-	return C.GuiValueBox(cbounds, ctext, &cvalue, cminValue, cmaxValue, ceditMode) != 0
+	return guiValueBox(cbounds, ctext, &cvalue, cminValue, cmaxValue, ceditMode) != 0
 }
+
+/*
+//go:wasmimport raylib _GuiValueBoxFloat
+//go:noescape
+func guiValueBoxFloat(bounds rl.Rectangle, text wasm.Cptr, textValue *wasm.Cptr, value *float32, editMode int32) int32
 
 // Floating point Value Box control, updates input val_str with numbers
 func ValueBoxFloat(bounds rl.Rectangle, text string, textValue *string, value *float32, editMode bool) bool {
-	var cbounds C.struct_Rectangle
-	cbounds.x = C.float(bounds.X)
-	cbounds.y = C.float(bounds.Y)
-	cbounds.width = C.float(bounds.Width)
-	cbounds.height = C.float(bounds.Height)
-	var ctext *C.char
+	var cbounds rl.Rectangle
+	cbounds.X = float32(bounds.X)
+	cbounds.Y = float32(bounds.Y)
+	cbounds.Width = float32(bounds.Width)
+	cbounds.Height = float32(bounds.Height)
+	var ctext wasm.Cptr
 	if len(text) > 0 {
-		ctext = C.CString(text)
-		defer C.free(unsafe.Pointer(ctext))
+		ctext = wasm.CString(text)
+		defer wasm.Free(ctext)
 	}
 
 	bs := []byte(*textValue)
@@ -938,178 +1067,211 @@ func ValueBoxFloat(bounds rl.Rectangle, text string, textValue *string, value *f
 	if 0 < len(bs) && bs[len(bs)-1] != byte(0) { // minimalize allocation
 		bs = append(bs, byte(0)) // for next input symbols
 	}
-	ctextValue := (*C.char)(unsafe.Pointer(&bs[0]))
+	ctextValue := (wasm.Cptr)(unsafe.Pointer(bs[0]))
 	defer func() {
 		*textValue = strings.Trim(string(bs), "\x00")
-		// no need : C.free(unsafe.Pointer(ctext))
+		// no need : wasm.Free(ctext)
 	}()
 
 	if value == nil {
 		value = new(float32)
 	}
-	cvalue := C.float(*value)
+	cvalue := float32(*value)
 	defer func() {
 		*value = float32(cvalue)
 	}()
 
-	return C.GuiValueBoxFloat(cbounds, ctext, ctextValue, &cvalue, C.bool(editMode)) != 0
+	return guiValueBoxFloat(cbounds, ctext, ctextValue, &cvalue, wasm.CBool(editMode)) != 0
 }
+*/
+
+//go:wasmimport raylib _GuiSlider
+//go:noescape
+func guiSlider(bounds rl.Rectangle, textLeft, textRight wasm.Cptr, value, minValue, maxValue float32) float32
 
 // Slider control
 func Slider(bounds rl.Rectangle, textLeft, textRight string, value, minValue, maxValue float32) float32 {
-	var cbounds C.struct_Rectangle
-	cbounds.x = C.float(bounds.X)
-	cbounds.y = C.float(bounds.Y)
-	cbounds.width = C.float(bounds.Width)
-	cbounds.height = C.float(bounds.Height)
+	var cbounds rl.Rectangle
+	cbounds.X = float32(bounds.X)
+	cbounds.Y = float32(bounds.Y)
+	cbounds.Width = float32(bounds.Width)
+	cbounds.Height = float32(bounds.Height)
 
-	var ctextLeft *C.char
+	var ctextLeft wasm.Cptr
 	if len(textLeft) > 0 {
-		ctextLeft = C.CString(textLeft)
-		defer C.free(unsafe.Pointer(ctextLeft))
+		ctextLeft = wasm.CString(textLeft)
+		defer wasm.Free(ctextLeft)
 	}
 
-	var ctextRight *C.char
+	var ctextRight wasm.Cptr
 	if len(textRight) > 0 {
-		ctextRight = C.CString(textRight)
-		defer C.free(unsafe.Pointer(ctextRight))
+		ctextRight = wasm.CString(textRight)
+		defer wasm.Free(ctextRight)
 	}
 
-	cvalue := C.float(value)
-	cminValue := C.float(minValue)
-	cmaxValue := C.float(maxValue)
-	C.GuiSlider(cbounds, ctextLeft, ctextRight, &cvalue, cminValue, cmaxValue)
+	cvalue := float32(value)
+	cminValue := float32(minValue)
+	cmaxValue := float32(maxValue)
+	guiSlider(cbounds, ctextLeft, ctextRight, cvalue, cminValue, cmaxValue)
 	return float32(cvalue)
 }
+
+//go:wasmimport raylib _GuiSliderBar
+//go:noescape
+func guiSliderBar(bounds rl.Rectangle, textLeft, textRight wasm.Cptr, value, minValue, maxValue float32) float32
 
 // SliderBar control, returns selected value
 func SliderBar(bounds rl.Rectangle, textLeft, textRight string, value, minValue, maxValue float32) float32 {
-	var cbounds C.struct_Rectangle
-	cbounds.width = C.float(bounds.Width)
-	cbounds.height = C.float(bounds.Height)
-	cbounds.x = C.float(bounds.X)
-	cbounds.y = C.float(bounds.Y)
+	var cbounds rl.Rectangle
+	cbounds.Width = float32(bounds.Width)
+	cbounds.Height = float32(bounds.Height)
+	cbounds.X = float32(bounds.X)
+	cbounds.Y = float32(bounds.Y)
 
-	var ctextLeft *C.char
+	var ctextLeft wasm.Cptr
 	if len(textLeft) > 0 {
-		ctextLeft = C.CString(textLeft)
-		defer C.free(unsafe.Pointer(ctextLeft))
+		ctextLeft = wasm.CString(textLeft)
+		defer wasm.Free(ctextLeft)
 	}
 
-	var ctextRight *C.char
+	var ctextRight wasm.Cptr
 	if len(textRight) > 0 {
-		ctextRight = C.CString(textRight)
-		defer C.free(unsafe.Pointer(ctextRight))
+		ctextRight = wasm.CString(textRight)
+		defer wasm.Free(ctextRight)
 	}
 
-	cvalue := C.float(value)
-	cminValue := C.float(minValue)
-	cmaxValue := C.float(maxValue)
-	C.GuiSliderBar(cbounds, ctextLeft, ctextRight, &cvalue, cminValue, cmaxValue)
+	cvalue := float32(value)
+	cminValue := float32(minValue)
+	cmaxValue := float32(maxValue)
+	guiSliderBar(cbounds, ctextLeft, ctextRight, cvalue, cminValue, cmaxValue)
 	return float32(cvalue)
 }
 
+//go:wasmimport raylib _GuiProgressBar
+//go:noescape
+func guiProgressBar(bounds rl.Rectangle, textLeft, textRight wasm.Cptr, value, minValue, maxValue float32) float32
+
 // ProgressBar control, shows current progress value
 func ProgressBar(bounds rl.Rectangle, textLeft, textRight string, value, minValue, maxValue float32) float32 {
-	var cbounds C.struct_Rectangle
-	cbounds.width = C.float(bounds.Width)
-	cbounds.height = C.float(bounds.Height)
-	cbounds.x = C.float(bounds.X)
-	cbounds.y = C.float(bounds.Y)
+	var cbounds rl.Rectangle
+	cbounds.Width = float32(bounds.Width)
+	cbounds.Height = float32(bounds.Height)
+	cbounds.X = float32(bounds.X)
+	cbounds.Y = float32(bounds.Y)
 
-	var ctextLeft *C.char
+	var ctextLeft wasm.Cptr
 	if len(textLeft) > 0 {
-		ctextLeft = C.CString(textLeft)
-		defer C.free(unsafe.Pointer(ctextLeft))
+		ctextLeft = wasm.CString(textLeft)
+		defer wasm.Free(ctextLeft)
 	}
 
-	var ctextRight *C.char
+	var ctextRight wasm.Cptr
 	if len(textRight) > 0 {
-		ctextRight = C.CString(textRight)
-		defer C.free(unsafe.Pointer(ctextRight))
+		ctextRight = wasm.CString(textRight)
+		defer wasm.Free(ctextRight)
 	}
 
-	cvalue := C.float(value)
-	cminValue := C.float(minValue)
-	cmaxValue := C.float(maxValue)
-	C.GuiProgressBar(cbounds, ctextLeft, ctextRight, &cvalue, cminValue, cmaxValue)
+	cvalue := float32(value)
+	cminValue := float32(minValue)
+	cmaxValue := float32(maxValue)
+	guiProgressBar(cbounds, ctextLeft, ctextRight, cvalue, cminValue, cmaxValue)
 	return float32(cvalue)
 }
 
 // StatusBar control, shows info text
+
+//go:wasmimport raylib _GuiStatusBar
+//go:noescape
+func guiStatusBar(bounds rl.Rectangle, text wasm.Cptr)
+
 func StatusBar(bounds rl.Rectangle, text string) {
-	var cbounds C.struct_Rectangle
-	cbounds.x = C.float(bounds.X)
-	cbounds.y = C.float(bounds.Y)
-	cbounds.width = C.float(bounds.Width)
-	cbounds.height = C.float(bounds.Height)
-	var ctext *C.char
+	var cbounds rl.Rectangle
+	cbounds.X = float32(bounds.X)
+	cbounds.Y = float32(bounds.Y)
+	cbounds.Width = float32(bounds.Width)
+	cbounds.Height = float32(bounds.Height)
+	var ctext wasm.Cptr
 	if len(text) > 0 {
-		ctext = C.CString(text)
-		defer C.free(unsafe.Pointer(ctext))
+		ctext = wasm.CString(text)
+		defer wasm.Free(ctext)
 	}
-	C.GuiStatusBar(cbounds, ctext)
+	guiStatusBar(cbounds, ctext)
 }
 
 // DummyRectangle control, intended for placeholding
+
+//go:wasmimport raylib _GuiDummyRec
+//go:noescape
+func guiDummyRec(bounds rl.Rectangle, text wasm.Cptr)
+
 func DummyRec(bounds rl.Rectangle, text string) {
-	var cbounds C.struct_Rectangle
-	cbounds.x = C.float(bounds.X)
-	cbounds.y = C.float(bounds.Y)
-	cbounds.width = C.float(bounds.Width)
-	cbounds.height = C.float(bounds.Height)
-	var ctext *C.char
+	var cbounds rl.Rectangle
+	cbounds.X = float32(bounds.X)
+	cbounds.Y = float32(bounds.Y)
+	cbounds.Width = float32(bounds.Width)
+	cbounds.Height = float32(bounds.Height)
+	var ctext wasm.Cptr
 	if len(text) > 0 {
-		ctext = C.CString(text)
-		defer C.free(unsafe.Pointer(ctext))
+		ctext = wasm.CString(text)
+		defer wasm.Free(ctext)
 	}
-	C.GuiDummyRec(cbounds, ctext)
+	guiDummyRec(cbounds, ctext)
 }
 
 // ListView control, returns selected list item index
+
+//go:wasmimport raylib _GuiListView
+//go:noescape
+func guiListView(bounds rl.Rectangle, text wasm.Cptr, scrollIndex *int32, active int32) int32
+
 func ListView(bounds rl.Rectangle, text string, scrollIndex *int32, active int32) int32 {
-	var cbounds C.struct_Rectangle
-	cbounds.x = C.float(bounds.X)
-	cbounds.y = C.float(bounds.Y)
-	cbounds.width = C.float(bounds.Width)
-	cbounds.height = C.float(bounds.Height)
-	var ctext *C.char
+	var cbounds rl.Rectangle
+	cbounds.X = float32(bounds.X)
+	cbounds.Y = float32(bounds.Y)
+	cbounds.Width = float32(bounds.Width)
+	cbounds.Height = float32(bounds.Height)
+	var ctext wasm.Cptr
 	if len(text) > 0 {
-		ctext = C.CString(text)
-		defer C.free(unsafe.Pointer(ctext))
+		ctext = wasm.CString(text)
+		defer wasm.Free(ctext)
 	}
 
 	if scrollIndex == nil {
 		scrollIndex = new(int32)
 	}
-	cscrollIndex := C.int(*scrollIndex)
+	cscrollIndex := int32(*scrollIndex)
 	defer func() {
 		*scrollIndex = int32(cscrollIndex)
 	}()
 
-	cactive := C.int(active)
+	cactive := int32(active)
 
-	C.GuiListView(cbounds, ctext, &cscrollIndex, &cactive)
+	guiListView(cbounds, ctext, &cscrollIndex, cactive)
 	return int32(cactive)
 }
 
+/*
+//go:wasmimport raylib _GuiListViewEx
+//go:noescape
+func guiListViewEx(bounds rl.Rectangle, text []wasm.Cptr, focus, scrollIndex *int32, active *int32) int32
+
 // ListView control with extended parameters
 func ListViewEx(bounds rl.Rectangle, text []string, focus, scrollIndex *int32, active int32) int32 {
-	var cbounds C.struct_Rectangle
-	cbounds.x = C.float(bounds.X)
-	cbounds.y = C.float(bounds.Y)
-	cbounds.width = C.float(bounds.Width)
-	cbounds.height = C.float(bounds.Height)
+	var cbounds rl.Rectangle
+	cbounds.X = float32(bounds.X)
+	cbounds.Y = float32(bounds.Y)
+	cbounds.Width = float32(bounds.Width)
+	cbounds.Height = float32(bounds.Height)
 
 	ctext := NewCStringArrayFromSlice(text)
 	defer ctext.Free()
 
-	count := C.int(len(text))
+	count := int32(len(text))
 
 	if focus == nil {
 		focus = new(int32)
 	}
-	cfocus := C.int(*focus)
+	cfocus := int32(*focus)
 	defer func() {
 		*focus = int32(cfocus)
 	}()
@@ -1117,202 +1279,236 @@ func ListViewEx(bounds rl.Rectangle, text []string, focus, scrollIndex *int32, a
 	if scrollIndex == nil {
 		scrollIndex = new(int32)
 	}
-	cscrollIndex := C.int(*scrollIndex)
+	cscrollIndex := int32(*scrollIndex)
 	defer func() {
 		*scrollIndex = int32(cscrollIndex)
 	}()
 
-	cactive := C.int(active)
+	cactive := int32(active)
 
-	C.GuiListViewEx(cbounds, (**C.char)(ctext.Pointer), count, &cfocus, &cscrollIndex, &cactive)
+	guiListViewEx(cbounds, (*wasm.Cptr)(ctext.Pointer), count, cfocus, cscrollIndex, cactive)
 	return int32(cactive)
 }
+*/
+
+//go:wasmimport raylib _GuiColorPanel
+//go:noescape
+func guiColorPanel(bounds rl.Rectangle, text wasm.Cptr, color rl.Color) rl.Color
 
 // ColorPanel control, Color (RGBA) variant
 func ColorPanel(bounds rl.Rectangle, text string, color rl.Color) rl.Color {
-	var cbounds C.struct_Rectangle
-	cbounds.x = C.float(bounds.X)
-	cbounds.y = C.float(bounds.Y)
-	cbounds.width = C.float(bounds.Width)
-	cbounds.height = C.float(bounds.Height)
-	var ctext *C.char
+	var cbounds rl.Rectangle
+	cbounds.X = float32(bounds.X)
+	cbounds.Y = float32(bounds.Y)
+	cbounds.Width = float32(bounds.Width)
+	cbounds.Height = float32(bounds.Height)
+	var ctext wasm.Cptr
 	if len(text) > 0 {
-		ctext = C.CString(text)
-		defer C.free(unsafe.Pointer(ctext))
+		ctext = wasm.CString(text)
+		defer wasm.Free(ctext)
 	}
-	var ccolor C.struct_Color
-	ccolor.b = C.uchar(color.B)
-	ccolor.a = C.uchar(color.A)
-	ccolor.r = C.uchar(color.R)
-	ccolor.g = C.uchar(color.G)
-	C.GuiColorPanel(cbounds, ctext, &ccolor)
+	var ccolor rl.Color
+	ccolor.B = uint8(color.B)
+	ccolor.A = uint8(color.A)
+	ccolor.R = uint8(color.R)
+	ccolor.G = uint8(color.G)
+	guiColorPanel(cbounds, ctext, ccolor)
 	var goRes rl.Color
-	goRes.A = byte(ccolor.a)
-	goRes.R = byte(ccolor.r)
-	goRes.G = byte(ccolor.g)
-	goRes.B = byte(ccolor.b)
+	goRes.A = byte(ccolor.A)
+	goRes.R = byte(ccolor.R)
+	goRes.G = byte(ccolor.G)
+	goRes.B = byte(ccolor.B)
 	return goRes
 }
 
+//go:wasmimport raylib _GuiColorBarAlpha
+//go:noescape
+func guiColorBarAlpha(bounds rl.Rectangle, text wasm.Cptr, alpha float32) float32
+
 // ColorBarAlpha control, returns alpha value normalized [0..1]
 func ColorBarAlpha(bounds rl.Rectangle, text string, alpha float32) float32 {
-	var cbounds C.struct_Rectangle
-	cbounds.width = C.float(bounds.Width)
-	cbounds.height = C.float(bounds.Height)
-	cbounds.x = C.float(bounds.X)
-	cbounds.y = C.float(bounds.Y)
-	var ctext *C.char
+	var cbounds rl.Rectangle
+	cbounds.Width = float32(bounds.Width)
+	cbounds.Height = float32(bounds.Height)
+	cbounds.X = float32(bounds.X)
+	cbounds.Y = float32(bounds.Y)
+	var ctext wasm.Cptr
 	if len(text) > 0 {
-		ctext = C.CString(text)
-		defer C.free(unsafe.Pointer(ctext))
+		ctext = wasm.CString(text)
+		defer wasm.Free(ctext)
 	}
-	calpha := C.float(alpha)
-	C.GuiColorBarAlpha(cbounds, ctext, &calpha)
+	calpha := float32(alpha)
+	guiColorBarAlpha(cbounds, ctext, calpha)
 	return float32(calpha)
 }
 
+//go:wasmimport raylib _GuiColorBarHue
+//go:noescape
+func guiColorBarHue(bounds rl.Rectangle, text wasm.Cptr, value float32) float32
+
 // ColorBarHue control, returns alpha value normalized [0..1]
 func ColorBarHue(bounds rl.Rectangle, text string, value float32) float32 {
-	var cbounds C.struct_Rectangle
-	cbounds.x = C.float(bounds.X)
-	cbounds.y = C.float(bounds.Y)
-	cbounds.width = C.float(bounds.Width)
-	cbounds.height = C.float(bounds.Height)
-	var ctext *C.char
+	var cbounds rl.Rectangle
+	cbounds.X = float32(bounds.X)
+	cbounds.Y = float32(bounds.Y)
+	cbounds.Width = float32(bounds.Width)
+	cbounds.Height = float32(bounds.Height)
+	var ctext wasm.Cptr
 	if len(text) > 0 {
-		ctext = C.CString(text)
-		defer C.free(unsafe.Pointer(ctext))
+		ctext = wasm.CString(text)
+		defer wasm.Free(ctext)
 	}
-	cvalue := C.float(value)
-	C.GuiColorBarHue(cbounds, ctext, &cvalue)
+	cvalue := float32(value)
+	guiColorBarHue(cbounds, ctext, cvalue)
 	return float32(cvalue)
 }
+
+//go:wasmimport raylib _GuiColorPicker
+//go:noescape
+func guiColorPicker(bounds rl.Rectangle, text wasm.Cptr, color rl.Color) rl.Color
 
 // ColorPicker control (multiple color controls)
 // NOTE: this picker converts RGB to HSV, which can cause the Hue control to jump. If you have this problem, consider using the HSV variant instead
 func ColorPicker(bounds rl.Rectangle, text string, color rl.Color) rl.Color {
-	var cbounds C.struct_Rectangle
-	cbounds.width = C.float(bounds.Width)
-	cbounds.height = C.float(bounds.Height)
-	cbounds.x = C.float(bounds.X)
-	cbounds.y = C.float(bounds.Y)
-	var ctext *C.char
+	var cbounds rl.Rectangle
+	cbounds.Width = float32(bounds.Width)
+	cbounds.Height = float32(bounds.Height)
+	cbounds.X = float32(bounds.X)
+	cbounds.Y = float32(bounds.Y)
+	var ctext wasm.Cptr
 	if len(text) > 0 {
-		ctext = C.CString(text)
-		defer C.free(unsafe.Pointer(ctext))
+		ctext = wasm.CString(text)
+		defer wasm.Free(ctext)
 	}
-	var ccolor C.struct_Color
-	ccolor.r = C.uchar(color.R)
-	ccolor.g = C.uchar(color.G)
-	ccolor.b = C.uchar(color.B)
-	ccolor.a = C.uchar(color.A)
-	C.GuiColorPicker(cbounds, ctext, &ccolor)
+	var ccolor rl.Color
+	ccolor.R = uint8(color.R)
+	ccolor.G = uint8(color.G)
+	ccolor.B = uint8(color.B)
+	ccolor.A = uint8(color.A)
+	guiColorPicker(cbounds, ctext, ccolor)
 	var goRes rl.Color
-	goRes.A = byte(ccolor.a)
-	goRes.R = byte(ccolor.r)
-	goRes.G = byte(ccolor.g)
-	goRes.B = byte(ccolor.b)
+	goRes.A = byte(ccolor.A)
+	goRes.R = byte(ccolor.R)
+	goRes.G = byte(ccolor.G)
+	goRes.B = byte(ccolor.B)
 	return goRes
 }
 
+//go:wasmimport raylib _GuiColorPickerHSV
+//go:noescape
+func guiColorPickerHSV(bounds rl.Rectangle, text wasm.Cptr, colorHSV *rl.Vector3) int32
+
 // ColorPicker control that avoids conversion to RGB on each call (multiple color controls)
 func ColorPickerHSV(bounds rl.Rectangle, text string, colorHSV *rl.Vector3) int32 {
-	var cbounds C.struct_Rectangle
-	cbounds.width = C.float(bounds.Width)
-	cbounds.height = C.float(bounds.Height)
-	cbounds.x = C.float(bounds.X)
-	cbounds.y = C.float(bounds.Y)
+	var cbounds rl.Rectangle
+	cbounds.Width = float32(bounds.Width)
+	cbounds.Height = float32(bounds.Height)
+	cbounds.X = float32(bounds.X)
+	cbounds.Y = float32(bounds.Y)
 
-	var ctext *C.char
+	var ctext wasm.Cptr
 	if len(text) > 0 {
-		ctext = C.CString(text)
-		defer C.free(unsafe.Pointer(ctext))
+		ctext = wasm.CString(text)
+		defer wasm.Free(ctext)
 	}
 
-	var ccolorHSV C.struct_Vector3
-	ccolorHSV.x = C.float(colorHSV.X)
-	ccolorHSV.y = C.float(colorHSV.Y)
-	ccolorHSV.z = C.float(colorHSV.Z)
+	var ccolorHSV rl.Vector3
+	ccolorHSV.X = float32(colorHSV.X)
+	ccolorHSV.Y = float32(colorHSV.Y)
+	ccolorHSV.Z = float32(colorHSV.Z)
 	defer func() {
-		colorHSV.X = float32(ccolorHSV.x)
-		colorHSV.Y = float32(ccolorHSV.y)
-		colorHSV.Z = float32(ccolorHSV.z)
+		colorHSV.X = float32(ccolorHSV.X)
+		colorHSV.Y = float32(ccolorHSV.Y)
+		colorHSV.Z = float32(ccolorHSV.Z)
 	}()
 
-	return int32(C.GuiColorPickerHSV(cbounds, ctext, &ccolorHSV))
+	return int32(guiColorPickerHSV(cbounds, ctext, &ccolorHSV))
 }
+
+//go:wasmimport raylib _GuiColorPanelHSV
+//go:noescape
+func guiColorPanelHSV(bounds rl.Rectangle, text wasm.Cptr, colorHSV *rl.Vector3) int32
 
 // ColorPanel control that returns HSV color value
 func ColorPanelHSV(bounds rl.Rectangle, text string, colorHSV *rl.Vector3) int32 {
-	var cbounds C.struct_Rectangle
-	cbounds.width = C.float(bounds.Width)
-	cbounds.height = C.float(bounds.Height)
-	cbounds.x = C.float(bounds.X)
-	cbounds.y = C.float(bounds.Y)
+	var cbounds rl.Rectangle
+	cbounds.Width = float32(bounds.Width)
+	cbounds.Height = float32(bounds.Height)
+	cbounds.X = float32(bounds.X)
+	cbounds.Y = float32(bounds.Y)
 
-	var ctext *C.char
+	var ctext wasm.Cptr
 	if len(text) > 0 {
-		ctext = C.CString(text)
-		defer C.free(unsafe.Pointer(ctext))
+		ctext = wasm.CString(text)
+		defer wasm.Free(ctext)
 	}
 
-	var ccolorHSV C.struct_Vector3
-	ccolorHSV.x = C.float(colorHSV.X)
-	ccolorHSV.y = C.float(colorHSV.Y)
-	ccolorHSV.z = C.float(colorHSV.Z)
+	var ccolorHSV rl.Vector3
+	ccolorHSV.X = float32(colorHSV.X)
+	ccolorHSV.Y = float32(colorHSV.Y)
+	ccolorHSV.Z = float32(colorHSV.Z)
 	defer func() {
-		colorHSV.X = float32(ccolorHSV.x)
-		colorHSV.Y = float32(ccolorHSV.y)
-		colorHSV.Z = float32(ccolorHSV.z)
+		colorHSV.X = float32(ccolorHSV.X)
+		colorHSV.Y = float32(ccolorHSV.Y)
+		colorHSV.Z = float32(ccolorHSV.Z)
 	}()
 
-	return int32(C.GuiColorPanelHSV(cbounds, ctext, &ccolorHSV))
+	return int32(guiColorPanelHSV(cbounds, ctext, &ccolorHSV))
 }
+
+//go:wasmimport raylib _GuiMessageBox
+//go:noescape
+func guiMessageBox(bounds rl.Rectangle, title, message, buttons wasm.Cptr) int32
 
 // MessageBox control
 func MessageBox(bounds rl.Rectangle, title, message, buttons string) int32 {
-	var cbounds C.struct_Rectangle
-	cbounds.x = C.float(bounds.X)
-	cbounds.y = C.float(bounds.Y)
-	cbounds.width = C.float(bounds.Width)
-	cbounds.height = C.float(bounds.Height)
-	var ctitle *C.char
+	var cbounds rl.Rectangle
+	cbounds.X = float32(bounds.X)
+	cbounds.Y = float32(bounds.Y)
+	cbounds.Width = float32(bounds.Width)
+	cbounds.Height = float32(bounds.Height)
+	var ctitle wasm.Cptr
 	if len(title) > 0 {
-		ctitle = C.CString(title)
-		defer C.free(unsafe.Pointer(ctitle))
+		ctitle = wasm.CString(title)
+		defer wasm.Free(ctitle)
 	}
-	var cmessage *C.char
+	var cmessage wasm.Cptr
 	if len(message) > 0 {
-		cmessage = C.CString(message)
-		defer C.free(unsafe.Pointer(cmessage))
+		cmessage = wasm.CString(message)
+		defer wasm.Free(cmessage)
 	}
-	cbuttons := C.CString(buttons)
-	defer C.free(unsafe.Pointer(cbuttons))
-	return int32(C.GuiMessageBox(cbounds, ctitle, cmessage, cbuttons))
+	cbuttons := wasm.CString(buttons)
+	defer wasm.Free(cbuttons)
+	return int32(guiMessageBox(cbounds, ctitle, cmessage, cbuttons))
 }
+
+/*
+//go:wasmimport raylib _GuiTextInputBox
+//go:noescape
+func guiTextInputBox(bounds rl.Rectangle, title, message, buttons wasm.Cptr, text *wasm.Cptr, textMaxSize int32, secretViewActive *int32) int32
 
 // TextInputBox control, ask for text
 func TextInputBox(bounds rl.Rectangle, title, message, buttons string, text *string, textMaxSize int32, secretViewActive *bool) int32 {
-	var cbounds C.struct_Rectangle
-	cbounds.x = C.float(bounds.X)
-	cbounds.y = C.float(bounds.Y)
-	cbounds.width = C.float(bounds.Width)
-	cbounds.height = C.float(bounds.Height)
+	var cbounds rl.Rectangle
+	cbounds.X = float32(bounds.X)
+	cbounds.Y = float32(bounds.Y)
+	cbounds.Width = float32(bounds.Width)
+	cbounds.Height = float32(bounds.Height)
 
-	var ctitle *C.char
+	var ctitle wasm.Cptr
 	if len(title) > 0 {
-		ctitle = C.CString(title)
-		defer C.free(unsafe.Pointer(ctitle))
+		ctitle = wasm.CString(title)
+		defer wasm.Free(ctitle)
 	}
 
-	var cmessage *C.char
+	var cmessage wasm.Cptr
 	if len(message) > 0 {
-		cmessage = C.CString(message)
-		defer C.free(unsafe.Pointer(cmessage))
+		cmessage = wasm.CString(message)
+		defer wasm.Free(cmessage)
 	}
 
-	cbuttons := C.CString(buttons)
-	defer C.free(unsafe.Pointer(cbuttons))
+	cbuttons := wasm.CString(buttons)
+	defer wasm.Free(cbuttons)
 
 	bs := []byte(*text)
 	if len(bs) == 0 {
@@ -1321,42 +1517,47 @@ func TextInputBox(bounds rl.Rectangle, title, message, buttons string, text *str
 	if 0 < len(bs) && bs[len(bs)-1] != byte(0) { // minimalize allocation
 		bs = append(bs, byte(0)) // for next input symbols
 	}
-	ctext := (*C.char)(unsafe.Pointer(&bs[0]))
+	ctext := (wasm.Cptr)(unsafe.Pointer(bs[0]))
 	defer func() {
 		*text = strings.TrimSpace(strings.Trim(string(bs), "\x00"))
-		// no need : C.free(unsafe.Pointer(ctext))
+		// no need : wasm.Free(ctext)
 	}()
 
-	ctextMaxSize := C.int(textMaxSize)
+	ctextMaxSize := int32(textMaxSize)
 
-	csecretViewActive := C.bool(*secretViewActive)
+	csecretViewActive := wasm.CBool(*secretViewActive)
 	defer func() {
-		*secretViewActive = bool(csecretViewActive)
+		*secretViewActive = wasm.GoBool(csecretViewActive)
 	}()
 
-	return int32(C.GuiTextInputBox(cbounds, ctitle, cmessage, cbuttons, ctext, ctextMaxSize, &csecretViewActive))
+	return int32(guiTextInputBox(cbounds, ctitle, cmessage, cbuttons, ctext, ctextMaxSize, &csecretViewActive))
 }
+*/
+
+//go:wasmimport raylib _GuiGrid
+//go:noescape
+func guiGrid(bounds rl.Rectangle, text wasm.Cptr, spacing float32, subdivs int32, mouseCell *rl.Vector2) int32
 
 // Grid control, returns mouse cell position
 func Grid(bounds rl.Rectangle, text string, spacing float32, subdivs int32, mouseCell *rl.Vector2) int32 {
-	var cbounds C.struct_Rectangle
-	cbounds.y = C.float(bounds.Y)
-	cbounds.width = C.float(bounds.Width)
-	cbounds.height = C.float(bounds.Height)
-	cbounds.x = C.float(bounds.X)
-	var ctext *C.char
+	var cbounds rl.Rectangle
+	cbounds.Y = float32(bounds.Y)
+	cbounds.Width = float32(bounds.Width)
+	cbounds.Height = float32(bounds.Height)
+	cbounds.X = float32(bounds.X)
+	var ctext wasm.Cptr
 	if len(text) > 0 {
-		ctext = C.CString(text)
-		defer C.free(unsafe.Pointer(ctext))
+		ctext = wasm.CString(text)
+		defer wasm.Free(ctext)
 	}
-	cspacing := C.float(spacing)
-	csubdivs := C.int(subdivs)
-	var cmouseCell C.struct_Vector2
-	cmouseCell.x = C.float(mouseCell.X)
-	cmouseCell.y = C.float(mouseCell.Y)
-	res := C.GuiGrid(cbounds, ctext, cspacing, csubdivs, &cmouseCell)
-	mouseCell.X = float32(cmouseCell.x)
-	mouseCell.Y = float32(cmouseCell.y)
+	cspacing := float32(spacing)
+	csubdivs := int32(subdivs)
+	var cmouseCell rl.Vector2
+	cmouseCell.X = float32(mouseCell.X)
+	cmouseCell.Y = float32(mouseCell.Y)
+	res := guiGrid(cbounds, ctext, cspacing, csubdivs, &cmouseCell)
+	mouseCell.X = float32(cmouseCell.X)
+	mouseCell.Y = float32(cmouseCell.Y)
 	return int32(res)
 }
 
@@ -1365,173 +1566,247 @@ func Grid(bounds rl.Rectangle, text string, spacing float32, subdivs int32, mous
 // NOTE: Tooltips requires some global variables: tooltipPtr
 //----------------------------------------------------------------------------------
 
+//go:wasmimport raylib _GuiEnableTooltip
+//go:noescape
+func guiEnableTooltip()
+
 // Enable gui tooltips (global state)
 func EnableTooltip() {
-	C.GuiEnableTooltip()
+	guiEnableTooltip()
 }
+
+//go:wasmimport raylib _GuiDisableTooltip
+//go:noescape
+func guiDisableTooltip()
 
 // Disable gui tooltips (global state)
 func DisableTooltip() {
-	C.GuiDisableTooltip()
+	guiDisableTooltip()
 }
+
+//go:wasmimport raylib _GuiSetTooltip
+//go:noescape
+func guiSetTooltip(tooltip wasm.Cptr)
 
 // Set tooltip string
 func SetTooltip(tooltip string) {
-	ctooltip := C.CString(tooltip)
-	defer C.free(unsafe.Pointer(ctooltip))
-	C.GuiSetTooltip(ctooltip)
+	ctooltip := wasm.CString(tooltip)
+	defer wasm.Free(ctooltip)
+	guiSetTooltip(ctooltip)
 }
 
 //----------------------------------------------------------------------------------
 // Styles loading functions
 //----------------------------------------------------------------------------------
 
+//go:wasmimport raylib _GuiLoadStyle
+//go:noescape
+func guiLoadStyle(fileName wasm.Cptr)
+
 // Load raygui style file (.rgs)
 func LoadStyle(fileName string) {
-	cfileName := C.CString(fileName)
-	defer C.free(unsafe.Pointer(cfileName))
-	C.GuiLoadStyle(cfileName)
+	cfileName := wasm.CString(fileName)
+	defer wasm.Free(cfileName)
+	guiLoadStyle(cfileName)
 }
+
+//go:wasmimport raylib _GuiLoadStyleDefault
+//go:noescape
+func guiLoadStyleDefault()
 
 // Load style default over global style
 func LoadStyleDefault() {
-	C.GuiLoadStyleDefault()
+	guiLoadStyleDefault()
 }
+
+//go:wasmimport raylib _GuiIconText
+//go:noescape
+func guiIconText(iconId int32, text wasm.Cptr) wasm.Cptr
 
 // IconText gets text with icon id prepended (if supported)
 func IconText(iconId IconID, text string) string {
-	ciconId := C.int(iconId)
-	ctext := C.CString(text)
-	defer C.free(unsafe.Pointer(ctext))
-	return C.GoString(C.GuiIconText(ciconId, ctext))
+	ciconId := int32(iconId)
+	ctext := wasm.CString(text)
+	defer wasm.Free(ctext)
+	return wasm.GoString(guiIconText(ciconId, ctext))
 }
+
+//go:wasmimport raylib _GuiLoadIcons
+//go:noescape
+func guiLoadIcons(fileName wasm.Cptr, loadIconsName int32)
 
 // Load raygui icons file (.rgi)
 func LoadIcons(fileName string, loadIconsName bool) {
-	cfileName := C.CString(fileName)
-	defer C.free(unsafe.Pointer(cfileName))
-	C.GuiLoadIcons(cfileName, C.bool(loadIconsName))
+	cfileName := wasm.CString(fileName)
+	defer wasm.Free(cfileName)
+	guiLoadIcons(cfileName, wasm.CBool(loadIconsName))
 }
+
+/*
+//go:wasmimport raylib _GuiLoadIconsFromMemory
+//go:noescape
+func guiLoadIconsFromMemory(data []byte, size int32, loadIconsName int32)
 
 // Load icons from memory (Binary files only)
 func LoadIconsFromMemory(data []byte, loadIconsName bool) {
-	C.GuiLoadIconsFromMemory((*C.uchar)(unsafe.Pointer(&data[0])), C.int(len(data)), C.bool(loadIconsName))
+	guiLoadIconsFromMemory((*uint8)(unsafe.Pointer(data[0])), int32(len(data)), wasm.CBool(loadIconsName))
 }
+*/
+
+//go:wasmimport raylib _GuiDrawIcon
+//go:noescape
+func guiDrawIcon(iconId, posX, posY, pixelSize int32, col color.RGBA)
 
 // Draw icon using pixel size at specified position
 func DrawIcon(iconId IconID, posX, posY, pixelSize int32, col color.RGBA) {
-	C.GuiDrawIcon(C.int(iconId), C.int(posX), C.int(posY), C.int(pixelSize), *(*C.Color)(unsafe.Pointer(&col)))
+	guiDrawIcon(int32(iconId), int32(posX), int32(posY), int32(pixelSize), col)
 }
+
+//go:wasmimport raylib _GuiSetIconScale
+//go:noescape
+func guiSetIconScale(scale int32)
 
 // Set icon drawing size
 func SetIconScale(scale int32) {
-	C.GuiSetIconScale(C.int(scale))
+	guiSetIconScale(int32(scale))
 }
+
+//go:wasmimport raylib _GuiGetTextWidth
+//go:noescape
+func guiGetTextWidth(text wasm.Cptr) int32
 
 // Get text width considering gui style and icon size (if required)
 func GetTextWidth(text string) int32 {
-	ctext := C.CString(text)
-	defer C.free(unsafe.Pointer(ctext))
-	return int32(C.GuiGetTextWidth(ctext))
+	ctext := wasm.CString(text)
+	defer wasm.Free(ctext)
+	return int32(guiGetTextWidth(ctext))
 }
 
 //----------------------------------------------------------------------------------
 // Module Internal Functions Definition
 //----------------------------------------------------------------------------------
 
+/*
+//go:wasmimport raylib _GuiLoadStyleFromMemory
+//go:noescape
+func guiLoadStyleFromMemory(data wasm.Cptr, size int32)
+
 // Load style from memory (Binary files only)
 func LoadStyleFromMemory(data []byte) {
-	C.GuiLoadStyleFromMemory((*C.uchar)(unsafe.Pointer(&data[0])), C.int(len(data)))
+	guiLoadStyleFromMemory((*uint8)(unsafe.Pointer(data[0])), int32(len(data)))
 }
+*/
+
+//go:wasmimport raylib _GuiScrollBar
+//go:noescape
+func guiScrollBar(bounds rl.Rectangle, value, minValue, maxValue int32) int32
 
 // ScrollBar control
 func ScrollBar(bounds rl.Rectangle, value, minValue, maxValue int32) int32 {
-	var cbounds C.struct_Rectangle
-	cbounds.x = C.float(bounds.X)
-	cbounds.y = C.float(bounds.Y)
-	cbounds.width = C.float(bounds.Width)
-	cbounds.height = C.float(bounds.Height)
+	var cbounds rl.Rectangle
+	cbounds.X = float32(bounds.X)
+	cbounds.Y = float32(bounds.Y)
+	cbounds.Width = float32(bounds.Width)
+	cbounds.Height = float32(bounds.Height)
 
-	cvalue := C.int(value)
-	cminValue := C.int(minValue)
-	cmaxValue := C.int(maxValue)
+	cvalue := int32(value)
+	cminValue := int32(minValue)
+	cmaxValue := int32(maxValue)
 
-	return int32(C.GuiScrollBar(cbounds, cvalue, cminValue, cmaxValue))
+	return int32(guiScrollBar(cbounds, cvalue, cminValue, cmaxValue))
 }
 
 // Color fade-in or fade-out, alpha value normalized [0..1]
 // WARNING: It multiplies current alpha by alpha scale factor
+
+//go:wasmimport raylib _GuiFade
+//go:noescape
+func guiFade(color rl.Color, alpha float32) rl.Color
+
 func Fade(color rl.Color, alpha float32) rl.Color {
-	ccolor := C.struct_Color{C.uchar(color.R), C.uchar(color.G), C.uchar(color.B), C.uchar(color.A)}
-	calpha := C.float(alpha)
-	cresult := C.GuiFade(ccolor, calpha)
-	return rl.Color{R: uint8(cresult.r), G: uint8(cresult.g), B: uint8(cresult.b), A: uint8(cresult.a)}
+	ccolor := rl.Color{uint8(color.R), uint8(color.G), uint8(color.B), uint8(color.A)}
+	calpha := float32(alpha)
+	cresult := guiFade(ccolor, calpha)
+	return rl.Color{R: uint8(cresult.R), G: uint8(cresult.G), B: uint8(cresult.B), A: uint8(cresult.A)}
 }
 
 //----------------------------------------------------------------------------------
 // Additional Draw functions
 //----------------------------------------------------------------------------------
 
+//go:wasmimport raylib _GuiDrawRectangle
+//go:noescape
+func guiDrawRectangle(bounds rl.Rectangle, borderWidth int32, borderColor, fillColor rl.Color)
+
 func DrawRectangle(bounds rl.Rectangle, borderWidth int32, borderColor, fillColor rl.Color) {
-	var cbounds C.struct_Rectangle
-	cbounds.x = C.float(bounds.X)
-	cbounds.y = C.float(bounds.Y)
-	cbounds.width = C.float(bounds.Width)
-	cbounds.height = C.float(bounds.Height)
+	var cbounds rl.Rectangle
+	cbounds.X = float32(bounds.X)
+	cbounds.Y = float32(bounds.Y)
+	cbounds.Width = float32(bounds.Width)
+	cbounds.Height = float32(bounds.Height)
 
-	var cborderColor C.struct_Color
-	cborderColor.r = C.uchar(borderColor.R)
-	cborderColor.g = C.uchar(borderColor.G)
-	cborderColor.b = C.uchar(borderColor.B)
-	cborderColor.a = C.uchar(borderColor.A)
+	var cborderColor rl.Color
+	cborderColor.R = uint8(borderColor.R)
+	cborderColor.G = uint8(borderColor.G)
+	cborderColor.B = uint8(borderColor.B)
+	cborderColor.A = uint8(borderColor.A)
 
-	var cfillColor C.struct_Color
-	cfillColor.r = C.uchar(fillColor.R)
-	cfillColor.g = C.uchar(fillColor.G)
-	cfillColor.b = C.uchar(fillColor.B)
-	cfillColor.a = C.uchar(fillColor.A)
+	var cfillColor rl.Color
+	cfillColor.R = uint8(fillColor.R)
+	cfillColor.G = uint8(fillColor.G)
+	cfillColor.B = uint8(fillColor.B)
+	cfillColor.A = uint8(fillColor.A)
 
-	bw := C.int(borderWidth)
+	bw := int32(borderWidth)
 
-	C.GuiDrawRectangle(cbounds, bw, cborderColor, cfillColor)
+	guiDrawRectangle(cbounds, bw, cborderColor, cfillColor)
 }
 
 // DrawText - static void GuiDrawText(const char *text, Rectangle textBounds, int alignment, Color tint);
+
+//go:wasmimport raylib _GuiDrawText
+//go:noescape
+func guiDrawText(text wasm.Cptr, position rl.Rectangle, alignment int32, color rl.Color)
+
 func DrawText(text string, position rl.Rectangle, alignment int32, color rl.Color) {
-	ctext := C.CString(text)
-	defer C.free(unsafe.Pointer(ctext))
+	ctext := wasm.CString(text)
+	defer wasm.Free(ctext)
 
-	var cposition C.struct_Rectangle
-	cposition.x = C.float(position.X)
-	cposition.y = C.float(position.Y)
-	cposition.width = C.float(position.Width)
-	cposition.height = C.float(position.Height)
+	var cposition rl.Rectangle
+	cposition.X = float32(position.X)
+	cposition.Y = float32(position.Y)
+	cposition.Width = float32(position.Width)
+	cposition.Height = float32(position.Height)
 
-	calignment := C.int(alignment)
-	var ccolor C.struct_Color
-	ccolor.r = C.uchar(color.R)
-	ccolor.g = C.uchar(color.G)
-	ccolor.b = C.uchar(color.B)
-	ccolor.a = C.uchar(color.A)
+	calignment := int32(alignment)
+	var ccolor rl.Color
+	ccolor.R = uint8(color.R)
+	ccolor.G = uint8(color.G)
+	ccolor.B = uint8(color.B)
+	ccolor.A = uint8(color.A)
 
-	C.GuiDrawText(ctext, cposition, calignment, ccolor)
+	guiDrawText(ctext, cposition, calignment, ccolor)
 }
 
 // GetTextBounds - static Rectangle GetTextBounds(int control, Rectangle bounds)
-func GetTextBounds(control ControlID, bounds rl.Rectangle) rl.Rectangle {
-	var cbounds C.struct_Rectangle
-	cbounds.x = C.float(bounds.X)
-	cbounds.y = C.float(bounds.Y)
-	cbounds.width = C.float(bounds.Width)
-	cbounds.height = C.float(bounds.Height)
 
-	ccontrol := C.int(control)
-	cretBounds := C.GetTextBounds(ccontrol, cbounds)
+//go:wasmimport raylib _GuiGetTextBounds
+//go:noescape
+func guiGetTextBounds(control uint16, bounds rl.Rectangle) rl.Rectangle
+
+func GetTextBounds(control ControlID, bounds rl.Rectangle) rl.Rectangle {
+	var cbounds rl.Rectangle
+	cbounds.X = float32(bounds.X)
+	cbounds.Y = float32(bounds.Y)
+	cbounds.Width = float32(bounds.Width)
+	cbounds.Height = float32(bounds.Height)
+
+	ccontrol := uint16(control)
+	cretBounds := guiGetTextBounds(ccontrol, cbounds)
 	return rl.Rectangle{
-		X:      float32(cretBounds.x),
-		Y:      float32(cretBounds.y),
-		Width:  float32(cretBounds.width),
-		Height: float32(cretBounds.height),
+		X:      float32(cretBounds.X),
+		Y:      float32(cretBounds.Y),
+		Width:  float32(cretBounds.Width),
+		Height: float32(cretBounds.Height),
 	}
 }
-*/

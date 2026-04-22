@@ -3,7 +3,7 @@
 package main
 
 import (
-	"github.com/gen2brain/raylib-go/raygui"
+	rg "github.com/gen2brain/raylib-go/raygui"
 	rl "github.com/gen2brain/raylib-go/raylib"
 )
 
@@ -12,7 +12,7 @@ func main() {
 
 	update := func() {
 		rl.BeginDrawing()
-		rl.ClearBackground(raygui.GetStyle(raygui.DEFAULT, raygui.BASE_COLOR_PRESSED).AsColor())
+		rl.ClearBackground(rg.GetStyle(rg.DEFAULT, rg.BASE_COLOR_PRESSED).AsColor())
 		rl.EndDrawing()
 	}
 	rl.SetMain(update)

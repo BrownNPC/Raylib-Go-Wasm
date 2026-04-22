@@ -97,6 +97,12 @@ class Runtime {
     // return cstr
     this.setInt32(sp + 8 * 3, cstr);
   };
+  // func(int32) bool
+  // returns a C int32
+  CBoolFromGoBool = (b) => {
+    if (b == true) return 1;
+    return 0;
+  };
   // func(src unsafe.Pointer, srcSize, dstCptr cptr)
   // copies Go memory to C memory. Useful for copying slices and structs.
   // Destination C array must have enough space.
