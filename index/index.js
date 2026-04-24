@@ -29,8 +29,6 @@ import { Runtime } from "./runtime.js"; // helper funtions
 const runtime = new Runtime();
 // inject custom runtime methods
 Object.assign(go.importObject.gojs, {
-  array: runtime.array.bind(runtime),
-  struct: runtime.struct.bind(runtime),
   CStringFromGoString: runtime.CStringFromGoString.bind(runtime),
   CStringGetLength: runtime.CStringGetLength.bind(runtime),
   CStringArrayGetLength: runtime.CStringArrayGetLength.bind(runtime),

@@ -68,7 +68,7 @@ func CopyToC[T any](src *T, dst Ptr) {
 }
 
 // Copies srcSize bytes from src into dst.
-func CopyTGo[T any](src Ptr, srcSize Ptr, dst *T) {
+func CopyToGo[T any](src Ptr, srcSize Ptr, dst *T) {
 	_copyToGo(unsafe.Pointer(dst), srcSize, src)
 }
 
@@ -86,7 +86,7 @@ func _cStringGetLength(cstr Ptr) Ptr
 
 // Scan for null terminator and return length excluding the null terminator.
 //
-//go:wasmimport gojs CStringGetLength
+//go:wasmimport gojs CStringArrayGetLength
 //go:noescape
 func CStringArrayGetLength(cstrArray Ptr) Ptr
 
