@@ -6,7 +6,7 @@ import (
 	"image/color"
 
 	wasm "github.com/BrownNPC/Raylib-Go-Wasm/wasm-runtime"
-	rl "github.com/gen2brain/raylib-go/raylib"
+	rl "github.com/BrownNPC/Raylib-Go-Wasm/raylib"
 )
 
 type (
@@ -862,26 +862,18 @@ func TextBox(bounds rl.Rectangle, text *string, textSize int32, editMode bool) b
 	defer free()
 
 	// Allocate writable buffer of size textSize
-	ctext := wasm.malloc(wasm.Ptr(textSize))
-	defer wasm.Free(ctext)
-
-	// Copy current text into buffer and ensure NUL-termination
+	// Truncate to textSize-1 and NUL-terminate
 	currentText := []byte(*text)
 	if len(currentText) > int(textSize)-1 {
 		currentText = currentText[:int(textSize)-1]
 	}
-	// Zero-fill the buffer
-	for i := wasm.Ptr(0); i < wasm.Ptr(textSize); i++ {
-		wasm.CopyToC(&[]byte{0}[0], ctext+i)
-	}
-	// Copy the actual text
-	if len(currentText) > 0 {
-		wasm.CopySliceToGo(ctext, currentText)
-		for i, b := range currentText {
-			src := []byte{b}
-			wasm.CopyToC(&src[0], ctext+wasm.Ptr(i))
-		}
-	}
+	// Create a zero-filled buffer of size textSize
+	buffer := make([]byte, textSize)
+	copy(buffer, currentText)
+	// buffer is already zero-filled by make, so NUL-termination is automatic
+
+	ctext, freeText := wasm.CopySliceToC(buffer)
+	defer freeText()
 
 	ctextSize := int32(textSize)
 	ceditMode := wasm.BtoI(editMode)
@@ -896,7 +888,7 @@ func TextBox(bounds rl.Rectangle, text *string, textSize int32, editMode bool) b
 
 //go:wasmimport raylib _GuiSpinner
 //go:noescape
-func guiSpinner(bounds wasm.Ptr, text wasm.Ptr, value wasm.Ptr, minValue, maxValue int32, editMode bool) int32
+func guiSpinner(bounds wasm.Ptr, text wasm.Ptr, value wasm.Ptr, minValue, maxValue int32, editMode int32) int32
 
 // Spinner control, sets value to the selected number and returns true when clicked.
 func Spinner(bounds rl.Rectangle, text string, value *int32, minValue, maxValue int, editMode bool) bool {
@@ -916,7 +908,7 @@ func Spinner(bounds rl.Rectangle, text string, value *int32, minValue, maxValue 
 		free()
 	}()
 
-	return guiSpinner(cbounds, ctext, cvalue, int32(minValue), int32(maxValue), editMode) != 0
+	return guiSpinner(cbounds, ctext, cvalue, int32(minValue), int32(maxValue), wasm.BtoI(editMode)) != 0
 }
 
 //go:wasmimport raylib _GuiValueBox
@@ -1140,20 +1132,19 @@ func ListViewEx(bounds rl.Rectangle, text []string,
 		free()
 	}()
 
-	cactive, free := wasm.CopyValueToC(&active)
-	defer func() {
-		wasm.CopyValueToGo(cactive, &active)
-		free()
-	}()
+	cactive, freeActive := wasm.CopyValueToC(&active)
+	defer freeActive()
 
-	cfocus, free := wasm.CopyValueToC(focus)
-	defer func() {
-		wasm.CopyValueToGo(cfocus, focus)
-		free()
-	}()
+	cfocus, freeFocus := wasm.CopyValueToC(focus)
+	defer freeFocus()
 
 	count := int32(len(text))
 	guiListViewEx(cbounds, ctext.Pointer, count, cscrollIndex, cactive, cfocus)
+
+	// Copy values back before freeing
+	wasm.CopyValueToGo(cactive, &active)
+	wasm.CopyValueToGo(cfocus, focus)
+
 	return active
 }
 
@@ -1323,26 +1314,18 @@ func TextInputBox(bounds rl.Rectangle, title, message, buttons string, text *str
 	defer wasm.Free(cbuttons)
 
 	// Allocate writable buffer of size textMaxSize
-	ctext := wasm.malloc(wasm.Ptr(textMaxSize))
-	defer wasm.Free(ctext)
-
-	// Copy current text into buffer and ensure NUL-termination
+	// Truncate to textMaxSize-1 and NUL-terminate
 	currentText := []byte(*text)
 	if len(currentText) > int(textMaxSize)-1 {
 		currentText = currentText[:int(textMaxSize)-1]
 	}
-	// Zero-fill the buffer
-	for i := wasm.Ptr(0); i < wasm.Ptr(textMaxSize); i++ {
-		src := []byte{0}
-		wasm.CopyToC(&src[0], ctext+i)
-	}
-	// Copy the actual text
-	if len(currentText) > 0 {
-		for i, b := range currentText {
-			src := []byte{b}
-			wasm.CopyToC(&src[0], ctext+wasm.Ptr(i))
-		}
-	}
+	// Create a zero-filled buffer of size textMaxSize
+	buffer := make([]byte, textMaxSize)
+	copy(buffer, currentText)
+	// buffer is already zero-filled by make, so NUL-termination is automatic
+
+	ctext, freeText := wasm.CopySliceToC(buffer)
+	defer freeText()
 
 	ctextMaxSize := int32(textMaxSize)
 
