@@ -97,11 +97,22 @@ class Runtime {
     // return cstr
     this.setInt32(sp + 8 * 3, cstr);
   };
-  // func(int32) bool
-  // returns a C int32
-  CBoolFromGoBool = (b) => {
-    if (b == true) return 1;
-    return 0;
+  CStringArrayGetLength = (sp) => {
+    sp >>>= 0;
+
+    const basePtr = this.getInt32(sp + 8 * 1);
+    const heap32 = raylib.HEAP32;
+
+    let count = 0;
+    const idx = basePtr >> 2; // convert byte offset → i32 index
+
+    while (true) {
+      const ptr = heap32[idx + count];
+      if (ptr === 0) break;
+      count++;
+    }
+
+    this.setInt32(sp + 8 * 2, count);
   };
   // func(src unsafe.Pointer, srcSize, dstCptr cptr)
   // copies Go memory to C memory. Useful for copying slices and structs.
@@ -157,4 +168,3 @@ class Runtime {
 }
 
 export { Runtime };
-

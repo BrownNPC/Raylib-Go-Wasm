@@ -1,4 +1,2 @@
-github.com/BrownNPC/Raylib-Go-Wasm/raylib v0.0.0-20260126231012-27bc0271203c h1:DqSkpCRDO3o1O/+b5O9buJGTKnF6bdeGi5DLNBoW2Sc=
-github.com/BrownNPC/Raylib-Go-Wasm/raylib v0.0.0-20260126231012-27bc0271203c/go.mod h1:u1eTrnnsR5NVJMWwlQEq/FoeDPAKmq9PoRCiO8lwVH4=
 github.com/BrownNPC/wasm-ffi-go v1.2.0 h1:Lknst90sTLTkE870OKNP/Vw36TohQIJ4ln8W1IG9Zl0=
 github.com/BrownNPC/wasm-ffi-go v1.2.0/go.mod h1:D5+RBMb672fgw6vPz4HOWYxpyrmPrIao8VqlXihOFFg=
