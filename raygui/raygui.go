@@ -1172,13 +1172,11 @@ func ColorPanel(bounds rl.Rectangle, text string, color rl.Color) rl.Color {
 	defer free()
 
 	var v rl.Color
-	ret, free := wasm.CopyValueToC(&v)
-	defer func() {
-		wasm.CopyValueToGo(ret, &v)
-		free()
-	}()
-	guiColorPanel(ret, cbounds, ctext, ccolor)
+	ret, freeRet := wasm.MallocV[rl.Color]()
+	defer freeRet()
 
+	guiColorPanel(ret, cbounds, ctext, ccolor)
+	wasm.CopyValueToGo(ret, &v)
 	return v
 }
 
