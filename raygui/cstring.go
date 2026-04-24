@@ -39,7 +39,8 @@ func NewCStringArrayFromPointer(p wasm.Ptr) *CStringArray {
 }
 
 // NewCStringArrayFromSlice makes an instance of CStringArray then copy the
-// input slice to it.
+// input slice to it. The returned CStringArray takes ownership of the allocated
+// C memory and must be Free()d by the caller.
 func NewCStringArrayFromSlice(ss []string) *CStringArray {
 	var arr CStringArray
 	arr.Copy(ss)
@@ -56,9 +57,9 @@ func (arr *CStringArray) ToSlice() []string {
 	var ss []string
 	p := arr.Pointer
 	//NOTE: upstream raylib-go does this wrong.
-	for {
+	for i := 0; i < arr.Length; i++ {
 		var cs wasm.Ptr
-		wasm.CopyTGo(p, wasm.PTR_SIZE, &cs)
+		wasm.CopyToGo(p, wasm.PTR_SIZE, &cs)
 		if cs == 0 { // skip NULL - the last element
 			break
 		}
@@ -71,6 +72,11 @@ func (arr *CStringArray) ToSlice() []string {
 // TODO: do this in the runtime if possible.
 // Copy converts Go slice of strings to C underlying struct of CStringArray
 func (arr *CStringArray) Copy(ss []string) {
+	// Free existing C memory if any
+	if arr.Pointer != 0 || arr.Length > 0 {
+		arr.Free()
+	}
+
 	arr.Length = len(ss) + 1 // one more element for NULL at the end
 	arr.Pointer = makeStringArray(arr.Length)
 
@@ -93,7 +99,7 @@ func (arr *CStringArray) Free() {
 	for i := range wasm.Ptr(arr.Length) {
 		idx := (i * wasm.PTR_SIZE)
 		var cs wasm.Ptr
-		wasm.CopyTGo(arr.Pointer+idx, wasm.PTR_SIZE, &cs)
+		wasm.CopyToGo(arr.Pointer+idx, wasm.PTR_SIZE, &cs)
 		if cs == 0 { // skip NULL - the last element
 			break
 		}

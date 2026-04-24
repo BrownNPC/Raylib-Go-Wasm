@@ -556,6 +556,7 @@ func GetFont() rl.Font {
 	defer free()
 
 	guiGetFont(v)
+	wasm.CopyValueToGo(v, &ret)
 	return ret
 }
 
@@ -679,15 +680,15 @@ func guiScrollPanel(bounds wasm.Ptr, text wasm.Ptr, content wasm.Ptr, scroll was
 
 // Scroll Panel control
 func ScrollPanel(bounds rl.Rectangle, text string, content rl.Rectangle, scroll *rl.Vector2, view *rl.Rectangle) {
-	cbounds, free := wasm.MallocV[rl.Rectangle]()
+	cbounds, free := wasm.CopyValueToC(&bounds)
 	defer free()
 	ctext := wasm.CString(text)
 	defer wasm.Free(ctext)
 
-	ccontent, free := wasm.MallocV[rl.Rectangle]()
+	ccontent, free := wasm.CopyValueToC(&content)
 	defer free()
 
-	cscroll, free := wasm.MallocV[rl.Vector2]()
+	cscroll, free := wasm.CopyValueToC(scroll)
 	defer free()
 
 	cview, free := wasm.CopyValueToC(view)
@@ -705,7 +706,7 @@ func guiLabel(bounds wasm.Ptr, text wasm.Ptr)
 
 // Label control
 func Label(bounds rl.Rectangle, text string) {
-	cbounds, free := wasm.MallocV[rl.Rectangle]()
+	cbounds, free := wasm.CopyValueToC(&bounds)
 	defer free()
 
 	ctext := wasm.CString(text)
@@ -719,7 +720,7 @@ func guiButton(bounds wasm.Ptr, text wasm.Ptr) int32
 
 // Button control, returns true when clicked
 func Button(bounds rl.Rectangle, text string) bool {
-	cbounds, free := wasm.MallocV[rl.Rectangle]()
+	cbounds, free := wasm.CopyValueToC(&bounds)
 	defer free()
 
 	ctext := wasm.CString(text)
@@ -734,7 +735,7 @@ func guiLabelButton(bounds wasm.Ptr, text wasm.Ptr) int32
 
 // LabelButton control, returns true when clicked
 func LabelButton(bounds rl.Rectangle, text string) bool {
-	cbounds, free := wasm.MallocV[rl.Rectangle]()
+	cbounds, free := wasm.CopyValueToC(&bounds)
 	defer free()
 
 	ctext := wasm.CString(text)
@@ -764,7 +765,7 @@ func guiToggleGroup(bounds wasm.Ptr, text wasm.Ptr, active int32) int32
 // ToggleGroup control, returns active toggle index
 func ToggleGroup(bounds rl.Rectangle, text string, active int32) int32 {
 
-	cbounds, free := wasm.MallocV[rl.Rectangle]()
+	cbounds, free := wasm.CopyValueToC(&bounds)
 	defer free()
 
 	ctext := wasm.CString(text)
@@ -779,7 +780,7 @@ func guiToggleSlider(bounds wasm.Ptr, text wasm.Ptr, active int32) int32
 // ToggleSlider control, returns true when clicked
 func ToggleSlider(bounds rl.Rectangle, text string, active int32) int32 {
 
-	cbounds, free := wasm.MallocV[rl.Rectangle]()
+	cbounds, free := wasm.CopyValueToC(&bounds)
 	defer free()
 
 	ctext := wasm.CString(text)
@@ -789,23 +790,23 @@ func ToggleSlider(bounds rl.Rectangle, text string, active int32) int32 {
 
 //go:wasmimport raylib _GuiCheckBox
 //go:noescape
-func guiCheckBox(bounds wasm.Ptr, text wasm.Ptr, checked bool) int32
+func guiCheckBox(bounds wasm.Ptr, text wasm.Ptr, checked wasm.Ptr) int32
 
 // CheckBox control, returns true when active
 func CheckBox(bounds rl.Rectangle, text string, checked bool) bool {
 
-	cbounds, free := wasm.MallocV[rl.Rectangle]()
-	defer free()
+	cbounds, freeBounds := wasm.CopyValueToC(&bounds)
+	defer freeBounds()
 
 	ctext := wasm.CString(text)
 	defer wasm.Free(ctext)
 
-	cchecked, free := wasm.CopyValueToC(&checked)
+	cchecked, freeChecked := wasm.CopyValueToC(&checked)
 	defer func() {
 		wasm.CopyValueToGo(cchecked,&checked)
-		free()
+		freeChecked()
 	}()
-	guiCheckBox(cbounds, ctext, checked)
+	guiCheckBox(cbounds, ctext, cchecked)
 	return checked
 }
 
@@ -815,7 +816,7 @@ func guiComboBox(bounds wasm.Ptr, text wasm.Ptr, active int32) int32
 
 // ComboBox control, returns selected item index
 func ComboBox(bounds rl.Rectangle, text string, active int32) int32 {
-	cbounds, free := wasm.MallocV[rl.Rectangle]()
+	cbounds, free := wasm.CopyValueToC(&bounds)
 	defer free()
 
 	ctext := wasm.CString(text)
@@ -830,7 +831,7 @@ func guiDropdownBox(bounds wasm.Ptr, text wasm.Ptr, active wasm.Ptr, editMode in
 // DropdownBox control, returns true when clicked
 func DropdownBox(bounds rl.Rectangle, text string, active *int32, editMode bool) bool {
 
-	cbounds, free := wasm.MallocV[rl.Rectangle]()
+	cbounds, free := wasm.CopyValueToC(&bounds)
 	defer free()
 
 	ctext := wasm.CString(text)
@@ -857,19 +858,40 @@ func guiTextBox(bounds wasm.Ptr, text wasm.Ptr, textSize int32, editMode int32) 
 // TextBox control, updates input text, returns true on ENTER pressed or defocused
 func TextBox(bounds rl.Rectangle, text *string, textSize int32, editMode bool) bool {
 
-	cbounds, free := wasm.MallocV[rl.Rectangle]()
+	cbounds, free := wasm.CopyValueToC(&bounds)
 	defer free()
 
-	ctext := wasm.CString(*text)
-	defer func() {
-		*text = wasm.GoString(ctext)
-		wasm.Free(ctext)
-	}()
+	// Allocate writable buffer of size textSize
+	ctext := wasm.malloc(wasm.Ptr(textSize))
+	defer wasm.Free(ctext)
+
+	// Copy current text into buffer and ensure NUL-termination
+	currentText := []byte(*text)
+	if len(currentText) > int(textSize)-1 {
+		currentText = currentText[:int(textSize)-1]
+	}
+	// Zero-fill the buffer
+	for i := wasm.Ptr(0); i < wasm.Ptr(textSize); i++ {
+		wasm.CopyToC(&[]byte{0}[0], ctext+i)
+	}
+	// Copy the actual text
+	if len(currentText) > 0 {
+		wasm.CopySliceToGo(ctext, currentText)
+		for i, b := range currentText {
+			src := []byte{b}
+			wasm.CopyToC(&src[0], ctext+wasm.Ptr(i))
+		}
+	}
 
 	ctextSize := int32(textSize)
 	ceditMode := wasm.BtoI(editMode)
 
-	return guiTextBox(cbounds, ctext, ctextSize, ceditMode) != 0
+	result := guiTextBox(cbounds, ctext, ctextSize, ceditMode) != 0
+
+	// Copy the result back
+	*text = wasm.GoString(ctext)
+
+	return result
 }
 
 //go:wasmimport raylib _GuiSpinner
@@ -879,7 +901,7 @@ func guiSpinner(bounds wasm.Ptr, text wasm.Ptr, value wasm.Ptr, minValue, maxVal
 // Spinner control, sets value to the selected number and returns true when clicked.
 func Spinner(bounds rl.Rectangle, text string, value *int32, minValue, maxValue int, editMode bool) bool {
 
-	cbounds, free := wasm.MallocV[rl.Rectangle]()
+	cbounds, free := wasm.CopyValueToC(&bounds)
 	defer free()
 
 	ctext := wasm.CString(text)
@@ -904,7 +926,7 @@ func guiValueBox(bounds wasm.Ptr, text wasm.Ptr, value wasm.Ptr, minValue, maxVa
 // ValueBox control, updates input text with numbers
 func ValueBox(bounds rl.Rectangle, text string, value *int32, minValue, maxValue int, editMode bool) bool {
 
-	cbounds, free := wasm.MallocV[rl.Rectangle]()
+	cbounds, free := wasm.CopyValueToC(&bounds)
 	defer free()
 
 	ctext := wasm.CString(text)
@@ -976,7 +998,7 @@ func guiSlider(bounds wasm.Ptr, textLeft, textRight wasm.Ptr, value, minValue, m
 // Slider control
 func Slider(bounds rl.Rectangle, textLeft, textRight string, value, minValue, maxValue float32) float32 {
 
-	cbounds, free := wasm.MallocV[rl.Rectangle]()
+	cbounds, free := wasm.CopyValueToC(&bounds)
 	defer free()
 
 	ctextLeft := wasm.CString(textLeft)
@@ -997,7 +1019,7 @@ func guiSliderBar(bounds wasm.Ptr, textLeft, textRight wasm.Ptr, value, minValue
 // SliderBar control, returns selected value
 func SliderBar(bounds rl.Rectangle, textLeft, textRight string, value, minValue, maxValue float32) float32 {
 
-	cbounds, free := wasm.MallocV[rl.Rectangle]()
+	cbounds, free := wasm.CopyValueToC(&bounds)
 	defer free()
 
 	ctextLeft := wasm.CString(textLeft)
@@ -1019,7 +1041,7 @@ func guiProgressBar(bounds wasm.Ptr, textLeft, textRight wasm.Ptr, value, minVal
 // ProgressBar control, shows current progress value
 func ProgressBar(bounds rl.Rectangle, textLeft, textRight string, value, minValue, maxValue float32) float32 {
 
-	cbounds, free := wasm.MallocV[rl.Rectangle]()
+	cbounds, free := wasm.CopyValueToC(&bounds)
 	defer free()
 
 	ctextLeft := wasm.CString(textLeft)
@@ -1041,7 +1063,7 @@ func guiStatusBar(bounds wasm.Ptr, text wasm.Ptr)
 
 func StatusBar(bounds rl.Rectangle, text string) {
 
-	cbounds, free := wasm.MallocV[rl.Rectangle]()
+	cbounds, free := wasm.CopyValueToC(&bounds)
 	defer free()
 
 	ctext := wasm.CString(text)
@@ -1056,7 +1078,7 @@ func StatusBar(bounds rl.Rectangle, text string) {
 func guiDummyRec(bounds wasm.Ptr, text wasm.Ptr)
 
 func DummyRec(bounds rl.Rectangle, text string) {
-	cbounds, free := wasm.MallocV[rl.Rectangle]()
+	cbounds, free := wasm.CopyValueToC(&bounds)
 	defer free()
 
 	ctext := wasm.CString(text)
@@ -1071,7 +1093,7 @@ func DummyRec(bounds rl.Rectangle, text string) {
 func guiListView(bounds wasm.Ptr, text wasm.Ptr, scrollIndex wasm.Ptr, active int32) int32
 
 func ListView(bounds rl.Rectangle, text string, scrollIndex *int32, active int32) int32 {
-	cbounds, free := wasm.MallocV[rl.Rectangle]()
+	cbounds, free := wasm.CopyValueToC(&bounds)
 	defer free()
 
 	ctext := wasm.CString(text)
@@ -1141,12 +1163,12 @@ func guiColorPanel(ret wasm.Ptr, bounds wasm.Ptr, text wasm.Ptr, color wasm.Ptr)
 
 // ColorPanel control, Color (RGBA) variant
 func ColorPanel(bounds rl.Rectangle, text string, color rl.Color) rl.Color {
-	cbounds, free := wasm.MallocV[rl.Rectangle]()
+	cbounds, free := wasm.CopyValueToC(&bounds)
 	defer free()
 
 	ctext := wasm.CString(text)
 	defer wasm.Free(ctext)
-	ccolor, free := wasm.MallocV[rl.Color]()
+	ccolor, free := wasm.CopyValueToC(&color)
 	defer free()
 
 	var v rl.Color
@@ -1166,7 +1188,7 @@ func guiColorBarAlpha(bounds wasm.Ptr, text wasm.Ptr, alpha float32) float32
 
 // ColorBarAlpha control, returns alpha value normalized [0..1]
 func ColorBarAlpha(bounds rl.Rectangle, text string, alpha float32) float32 {
-	cbounds, free := wasm.MallocV[rl.Rectangle]()
+	cbounds, free := wasm.CopyValueToC(&bounds)
 	defer free()
 
 	ctext := wasm.CString(text)
@@ -1182,7 +1204,7 @@ func guiColorBarHue(bounds wasm.Ptr, text wasm.Ptr, value float32) float32
 // ColorBarHue control, returns alpha value normalized [0..1]
 func ColorBarHue(bounds rl.Rectangle, text string, value float32) float32 {
 
-	cbounds, free := wasm.MallocV[rl.Rectangle]()
+	cbounds, free := wasm.CopyValueToC(&bounds)
 	defer free()
 
 	ctext := wasm.CString(text)
@@ -1198,13 +1220,13 @@ func guiColorPicker(ret wasm.Ptr, bounds wasm.Ptr, text wasm.Ptr, color wasm.Ptr
 // ColorPicker control (multiple color controls)
 // NOTE: this picker converts RGB to HSV, which can cause the Hue control to jump. If you have this problem, consider using the HSV variant instead
 func ColorPicker(bounds rl.Rectangle, text string, color rl.Color) rl.Color {
-	cbounds, free := wasm.MallocV[rl.Rectangle]()
+	cbounds, free := wasm.CopyValueToC(&bounds)
 	defer free()
 
 	ctext := wasm.CString(text)
 	defer wasm.Free(ctext)
 
-	ccolor, free := wasm.MallocV[rl.Color]()
+	ccolor, free := wasm.CopyValueToC(&color)
 	defer free()
 	var v rl.Color
 	ret, free := wasm.CopyValueToC(&v)
@@ -1222,7 +1244,7 @@ func guiColorPickerHSV(bounds wasm.Ptr, text wasm.Ptr, colorHSV wasm.Ptr) int32
 
 // ColorPicker control that avoids conversion to RGB on each call (multiple color controls)
 func ColorPickerHSV(bounds rl.Rectangle, text string, colorHSV *rl.Vector3) int32 {
-	cbounds, free := wasm.MallocV[rl.Rectangle]()
+	cbounds, free := wasm.CopyValueToC(&bounds)
 	defer free()
 
 	ctext := wasm.CString(text)
@@ -1243,7 +1265,7 @@ func guiColorPanelHSV(bounds wasm.Ptr, text wasm.Ptr, colorHSV wasm.Ptr) int32
 
 // ColorPanel control that returns HSV color value
 func ColorPanelHSV(bounds rl.Rectangle, text string, colorHSV *rl.Vector3) int32 {
-	cbounds, free := wasm.MallocV[rl.Rectangle]()
+	cbounds, free := wasm.CopyValueToC(&bounds)
 	defer free()
 
 	ctext := wasm.CString(text)
@@ -1263,7 +1285,7 @@ func guiMessageBox(bounds wasm.Ptr, title, message, buttons wasm.Ptr) int32
 
 // MessageBox control
 func MessageBox(bounds rl.Rectangle, title, message, buttons string) int32 {
-	cbounds, free := wasm.MallocV[rl.Rectangle]()
+	cbounds, free := wasm.CopyValueToC(&bounds)
 	defer free()
 
 	ctitle := wasm.CString(title)
@@ -1302,8 +1324,27 @@ func TextInputBox(bounds rl.Rectangle, title, message, buttons string, text *str
 	cbuttons := wasm.CString(buttons)
 	defer wasm.Free(cbuttons)
 
-	ctext := wasm.CString(*text)
+	// Allocate writable buffer of size textMaxSize
+	ctext := wasm.malloc(wasm.Ptr(textMaxSize))
 	defer wasm.Free(ctext)
+
+	// Copy current text into buffer and ensure NUL-termination
+	currentText := []byte(*text)
+	if len(currentText) > int(textMaxSize)-1 {
+		currentText = currentText[:int(textMaxSize)-1]
+	}
+	// Zero-fill the buffer
+	for i := wasm.Ptr(0); i < wasm.Ptr(textMaxSize); i++ {
+		src := []byte{0}
+		wasm.CopyToC(&src[0], ctext+i)
+	}
+	// Copy the actual text
+	if len(currentText) > 0 {
+		for i, b := range currentText {
+			src := []byte{b}
+			wasm.CopyToC(&src[0], ctext+wasm.Ptr(i))
+		}
+	}
 
 	ctextMaxSize := int32(textMaxSize)
 
@@ -1313,7 +1354,12 @@ func TextInputBox(bounds rl.Rectangle, title, message, buttons string, text *str
 		free()
 	}()
 
-	return int32(guiTextInputBox(cbounds, ctitle, cmessage, cbuttons, ctext, ctextMaxSize, csecretViewActive))
+	result := int32(guiTextInputBox(cbounds, ctitle, cmessage, cbuttons, ctext, ctextMaxSize, csecretViewActive))
+
+	// Copy the result back
+	*text = wasm.GoString(ctext)
+
+	return result
 }
 
 //go:wasmimport raylib _GuiGrid
@@ -1322,7 +1368,7 @@ func guiGrid(bounds wasm.Ptr, text wasm.Ptr, spacing float32, subdivs int32, mou
 
 // Grid control, returns mouse cell position
 func Grid(bounds rl.Rectangle, text string, spacing float32, subdivs int32, mouseCell *rl.Vector2) int32 {
-	cbounds, free := wasm.MallocV[rl.Rectangle]()
+	cbounds, free := wasm.CopyValueToC(&bounds)
 	defer free()
 
 	ctext := wasm.CString(text)
@@ -1473,7 +1519,7 @@ func guiScrollBar(bounds wasm.Ptr, value, minValue, maxValue int32) int32
 
 // ScrollBar control
 func ScrollBar(bounds rl.Rectangle, value, minValue, maxValue int32) int32 {
-	cbounds, free := wasm.MallocV[rl.Rectangle]()
+	cbounds, free := wasm.CopyValueToC(&bounds)
 	defer free()
 
 	cvalue := int32(value)
@@ -1491,7 +1537,7 @@ func guiFade(ret wasm.Ptr, color wasm.Ptr, alpha float32)
 // WARNING: It multiplies current alpha by alpha scale factor
 func Fade(color rl.Color, alpha float32) rl.Color {
 
-	ccolor, free := wasm.MallocV[rl.Color]()
+	ccolor, free := wasm.CopyValueToC(&color)
 	defer free()
 
 	var v rl.Color
@@ -1514,12 +1560,12 @@ func Fade(color rl.Color, alpha float32) rl.Color {
 func guiDrawRectangle(bounds wasm.Ptr, borderWidth int32, borderColor, fillColor wasm.Ptr)
 
 func DrawRectangle(bounds rl.Rectangle, borderWidth int32, borderColor, fillColor rl.Color) {
-	cbounds, free := wasm.MallocV[rl.Rectangle]()
+	cbounds, free := wasm.CopyValueToC(&bounds)
 	defer free()
 
-	cfillColor, free := wasm.MallocV[rl.Color]()
+	cfillColor, free := wasm.CopyValueToC(&fillColor)
 	defer free()
-	cborderColor, free := wasm.MallocV[rl.Color]()
+	cborderColor, free := wasm.CopyValueToC(&borderColor)
 	defer free()
 
 	bw := int32(borderWidth)
@@ -1535,9 +1581,9 @@ func guiDrawText(text wasm.Ptr, position wasm.Ptr, alignment int32, color wasm.P
 
 func DrawText(text string, position rl.Rectangle, alignment int32, color rl.Color) {
 
-	cposition, free := wasm.MallocV[rl.Rectangle]()
+	cposition, free := wasm.CopyValueToC(&position)
 	defer free()
-	ccolor, free := wasm.MallocV[rl.Color]()
+	ccolor, free := wasm.CopyValueToC(&color)
 	defer free()
 
 	ctext := wasm.CString(text)
@@ -1553,7 +1599,7 @@ func guiGetTextBounds(ret wasm.Ptr, control int32, bounds wasm.Ptr)
 
 // GetTextBounds - static Rectangle GetTextBounds(int control, Rectangle bounds)
 func GetTextBounds(control ControlID, bounds rl.Rectangle) rl.Rectangle {
-	cbounds, free := wasm.MallocV[rl.Rectangle]()
+	cbounds, free := wasm.CopyValueToC(&bounds)
 	defer free()
 
 	ccontrol := uint16(control)

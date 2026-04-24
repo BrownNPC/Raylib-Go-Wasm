@@ -38,25 +38,6 @@ class Runtime {
   };
 
   // ---- Runtime helpers  ----
-  array = (sp) => {
-    // messing around with slice
-    sp >>>= 0;
-    console.log(sp);
-    // slice capacity
-    console.log(this.getInt64(sp + 8 + 8));
-    console.log(sp + 8);
-  };
-  // function messing around with struct
-  struct = (sp) => {
-    sp >>>= 0;
-    const ptr = this.getInt64(sp + 8);
-    // this.setInt32(ptr, 99);
-    // // 2nd field of struct
-    // this.setInt32(ptr + 4, 69);
-    // return
-    this.setInt64(sp + 16, ptr);
-  };
-
   getRaylibU8Array(cptr, len) {
     return new Uint8Array( // js slice
       globalThis.raylib.HEAPU8.buffer,
@@ -105,11 +86,16 @@ class Runtime {
 
     let count = 0;
     const idx = basePtr >> 2; // convert byte offset → i32 index
+    const heapLen = heap32.length;
 
-    while (true) {
+    while (idx + count < heapLen) {
       const ptr = heap32[idx + count];
       if (ptr === 0) break;
       count++;
+    }
+
+    if (idx + count >= heapLen) {
+      throw new Error("CStringArrayGetLength: reached heap end without finding NULL terminator");
     }
 
     this.setInt32(sp + 8 * 2, count);
