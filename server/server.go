@@ -17,7 +17,7 @@ var (
 
 func main() {
 	flag.Parse()
-	fmt.Printf("Serving %s on localhost%s", dir, port)
+	fmt.Printf("Serving %s on http://localhost%s", dir, port)
 
 	err := http.ListenAndServe(port, http.FileServer(http.Dir(dir)))
 	log.Fatalln(err)
