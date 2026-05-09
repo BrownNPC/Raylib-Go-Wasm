@@ -653,34 +653,34 @@ func Panel(bounds rl.Rectangle, text string) {
 	guiPanel(cbounds, ctext)
 }
 
-/*
 //go:wasmimport raylib _GuiTabBar
 //go:noescape
-func guiTabBar(bounds rl.Rectangle, text []wasm.Ptr, active *int32) int32
+func guiTabBar(bounds wasm.Ptr, text wasm.Ptr, count int32, active wasm.Ptr) int32
 
 // Tab Bar control, returns the current TAB closing requested, -1 otherwise
 func TabBar(bounds rl.Rectangle, text []string, active *int32) int32 {
-	var cbounds rl.Rectangle
-	cbounds.X = float32(bounds.X)
-	cbounds.Y = float32(bounds.Y)
-	cbounds.Width = float32(bounds.Width)
-	cbounds.Height = float32(bounds.Height)
+	cbounds, free := wasm.CopyValueToC(&bounds)
+	defer free()
 
 	ctext := NewCStringArrayFromSlice(text)
 	defer ctext.Free()
 
-	count := int32(len(text))
+	ccount := int32(len(text))
 
 	if active == nil {
 		active = new(int32)
 	}
-	cactive := int32(*active)
-	defer func() {
-		*active = int32(cactive)
-	}()
-	return int32(guiTabBar(cbounds, (*wasm.Ptr)(ctext.Pointer), count, cactive))
+
+	cactive, free := wasm.CopyValueToC(&active)
+	defer free()
+
+	result := guiTabBar(cbounds, ctext.Pointer, ccount, cactive)
+
+	// Copy values back before freeing
+	wasm.CopyValueToGo(cactive, &active)
+
+	return result
 }
-*/
 
 //go:wasmimport raylib _GuiScrollPanel
 //go:noescape
@@ -1001,48 +1001,49 @@ func ValueBox(bounds rl.Rectangle, text string, value *int32, minValue, maxValue
 	return guiValueBox(cbounds, ctext, cvalue, cminValue, cmaxValue, ceditMode) != 0
 }
 
-/*
 //go:wasmimport raylib _GuiValueBoxFloat
 //go:noescape
-func guiValueBoxFloat(bounds rl.Rectangle, text wasm.Ptr, textValue *wasm.Ptr, value *float32, editMode int32) int32
+func guiValueBoxFloat(bounds rl.Rectangle, text wasm.Ptr, textValue wasm.Ptr, value wasm.Ptr, editMode int32) int32
 
 // Floating point Value Box control, updates input val_str with numbers
 func ValueBoxFloat(bounds rl.Rectangle, text string, textValue *string, value *float32, editMode bool) bool {
-	var cbounds rl.Rectangle
-	cbounds.X = float32(bounds.X)
-	cbounds.Y = float32(bounds.Y)
-	cbounds.Width = float32(bounds.Width)
-	cbounds.Height = float32(bounds.Height)
-	var ctext wasm.Ptr
-	if len(text) > 0 {
-		ctext = wasm.CString(text)
-		defer wasm.Free(ctext)
-	}
+	cbounds, free := wasm.CopyValueToC(&bounds)
+	defer free()
 
-	bs := []byte(*textValue)
-	if len(bs) == 0 {
-		bs = []byte{byte(0)}
-	}
-	if 0 < len(bs) && bs[len(bs)-1] != byte(0) { // minimalize allocation
-		bs = append(bs, byte(0)) // for next input symbols
-	}
-	ctextValue := (wasm.Ptr)(unsafe.Pointer(bs[0]))
-	defer func() {
-		*textValue = strings.Trim(string(bs), "\x00")
-		// no need : wasm.Free(ctext)
-	}()
+	ctext := wasm.CString(text)
+	defer wasm.Free(ctext)
 
 	if value == nil {
 		value = new(float32)
 	}
-	cvalue := float32(*value)
+
+	// Allocate writable buffer of size textMaxSize
+	// Truncate to textMaxSize-1 and NUL-terminate
+	currentText := []byte(*textValue)
+
+	// Create a zero-filled buffer of size textMaxSize
+	buffer := make([]byte, len(*textValue))
+	copy(buffer, currentText)
+	// buffer is already zero-filled by make, so NUL-termination is automatic
+
+	ctextValue, free := wasm.CopySliceToC(buffer)
+	defer free()
+
+	cvalue, free := wasm.CopyValueToC(value)
 	defer func() {
-		*value = float32(cvalue)
+		wasm.CopyValueToGo(cvalue, value)
+		free()
 	}()
 
-	return guiValueBoxFloat(cbounds, ctext, ctextValue, &cvalue, wasm.BtoI(editMode)) != 0
+	ceditMode := wasm.BtoI(editMode)
+
+	result := guiValueBoxFloat(cbounds, ctext, ctextValue, cvalue, ceditMode) != 0
+
+	// Copy the result back
+	*textValue = wasm.GoString(ctextValue)
+
+	return result
 }
-*/
 
 // TODO check implementation of GuiSlider, as it returns a boolean that
 // indicates a mouse click on the component
@@ -1591,16 +1592,20 @@ func LoadIcons(fileName string, loadIconsName bool) {
 	guiLoadIcons(cfileName, wasm.BtoI(loadIconsName))
 }
 
-/*
 //go:wasmimport raylib _GuiLoadIconsFromMemory
 //go:noescape
-func guiLoadIconsFromMemory(data []byte, size int32, loadIconsName int32)
+func guiLoadIconsFromMemory(data wasm.Ptr, size int32, loadIconsName int32)
 
 // Load icons from memory (Binary files only)
 func LoadIconsFromMemory(data []byte, loadIconsName bool) {
-	guiLoadIconsFromMemory((*uint8)(unsafe.Pointer(data[0])), int32(len(data)), wasm.BtoI(loadIconsName))
+	cdata, free := wasm.CopySliceToC(data)
+	defer free()
+
+	csize := int32(len(data))
+	cloadIconsName := wasm.BtoI(loadIconsName)
+
+	guiLoadIconsFromMemory(cdata, csize, cloadIconsName)
 }
-*/
 
 //go:wasmimport raylib _GuiDrawIcon
 //go:noescape
@@ -1634,16 +1639,19 @@ func GetTextWidth(text string) int32 {
 // Module Internal Functions Definition
 //----------------------------------------------------------------------------------
 
-/*
 //go:wasmimport raylib _GuiLoadStyleFromMemory
 //go:noescape
 func guiLoadStyleFromMemory(data wasm.Ptr, size int32)
 
 // Load style from memory (Binary files only)
 func LoadStyleFromMemory(data []byte) {
-	guiLoadStyleFromMemory((*uint8)(unsafe.Pointer(data[0])), int32(len(data)))
+	cdata, free := wasm.CopySliceToC(data)
+	defer free()
+
+	csize := int32(len(data))
+
+	guiLoadStyleFromMemory(cdata, csize)
 }
-*/
 
 //go:wasmimport raylib _GuiScrollBar
 //go:noescape
