@@ -545,8 +545,6 @@ func SetFont(font rl.Font) {
 	guiSetFont(v)
 }
 
-// TODO possible memory corruption by passing ret
-
 //go:wasmimport raylib _GuiGetFont
 //go:noescape
 func guiGetFont(ret wasm.Ptr)
@@ -800,7 +798,7 @@ func ToggleGroup(bounds rl.Rectangle, text string, active int32) int32 {
 	return active
 }
 
-// TODO check implementation of GuiToggleSlider, as it returns a boolean that
+// TODO check implementation of GuiToggleSlider, as it returns a bool that
 // indicates a mouse click on the component
 
 //go:wasmimport raylib _GuiToggleSlider
@@ -826,7 +824,7 @@ func ToggleSlider(bounds rl.Rectangle, text string, active int32) int32 {
 	return active
 }
 
-// TODO check implementation of GuiCheckBox, as it returns a boolean that
+// TODO check implementation of GuiCheckBox, as it returns a bool that
 // indicates a mouse click on the component
 
 //go:wasmimport raylib _GuiCheckBox
@@ -852,7 +850,7 @@ func CheckBox(bounds rl.Rectangle, text string, checked bool) bool {
 	return checked
 }
 
-// TODO check implementation of GuiComboBox, as it returns a boolean that
+// TODO check implementation of GuiComboBox, as it returns a bool that
 // indicates a mouse click on the component
 
 //go:wasmimport raylib _GuiComboBox
@@ -879,7 +877,7 @@ func ComboBox(bounds rl.Rectangle, text string, active int32) int32 {
 	return active
 }
 
-// TODO check implementation of GuiDropdownBox, as it returns a boolean that
+// TODO check implementation of GuiDropdownBox, as it returns a bool that
 // indicates a mouse click on the component
 
 //go:wasmimport raylib _GuiDropdownBox
@@ -908,7 +906,7 @@ func DropdownBox(bounds rl.Rectangle, text string, active *int32, editMode bool)
 	return guiDropdownBox(cbounds, ctext, cactive, ceditMode) != 0
 }
 
-// TODO check implementation of GuiTextBox, as it returns a boolean that
+// TODO check implementation of GuiTextBox, as it returns a bool that
 // indicates a mouse click on the component
 
 //go:wasmimport raylib _GuiTextBox
@@ -1045,7 +1043,7 @@ func ValueBoxFloat(bounds rl.Rectangle, text string, textValue *string, value *f
 	return result
 }
 
-// TODO check implementation of GuiSlider, as it returns a boolean that
+// TODO check implementation of GuiSlider, as it returns a bool that
 // indicates a mouse click on the component
 
 //go:wasmimport raylib _GuiSlider
@@ -1076,7 +1074,7 @@ func Slider(bounds rl.Rectangle, textLeft, textRight string, value, minValue, ma
 	return value
 }
 
-// TODO check implementation of GuiSliderBar, as it returns a boolean that
+// TODO check implementation of GuiSliderBar, as it returns a bool that
 // indicates a mouse click on the component
 
 //go:wasmimport raylib _GuiSliderBar
@@ -1107,7 +1105,7 @@ func SliderBar(bounds rl.Rectangle, textLeft, textRight string, value, minValue,
 	return value
 }
 
-// TODO check implementation of GuiProgressBar, as it returns a boolean that
+// TODO check implementation of GuiProgressBar, as it returns a bool that
 // indicates a mouse click on the component
 
 //go:wasmimport raylib _GuiProgressBar
@@ -1169,7 +1167,7 @@ func DummyRec(bounds rl.Rectangle, text string) {
 	guiDummyRec(cbounds, ctext)
 }
 
-// TODO check implementation of GuiListView, as it returns a boolean that
+// TODO check implementation of GuiListView, as it returns a bool that
 // indicates a mouse click on the component
 
 //go:wasmimport raylib _GuiListView
@@ -1204,7 +1202,7 @@ func ListView(bounds rl.Rectangle, text string, scrollIndex *int32, active int32
 	return active
 }
 
-// TODO check implementation of GuiProgressBar, as it returns a boolean that
+// TODO check implementation of GuiProgressBar, as it returns a bool that
 // indicates a mouse click on the component
 
 //go:wasmimport raylib _GuiListViewEx
@@ -1250,10 +1248,8 @@ func ListViewEx(bounds rl.Rectangle, text []string, scrollIndex, focus *int32, a
 	return active
 }
 
-// TODO check implementation of GuiColorPanel, as it returns a boolean that
+// TODO check implementation of GuiColorPanel, as it returns a bool that
 // indicates a mouse click on the component
-
-// TODO possible memory corruption by passing ret
 
 //go:wasmimport raylib _GuiColorPanel
 //go:noescape
@@ -1278,7 +1274,7 @@ func ColorPanel(bounds rl.Rectangle, text string, color rl.Color) rl.Color {
 	return v
 }
 
-// TODO check implementation of GuiColorBarAlpha, as it returns a boolean that
+// TODO check implementation of GuiColorBarAlpha, as it returns a bool that
 // indicates a mouse click on the component
 
 //go:wasmimport raylib _GuiColorBarAlpha
@@ -1305,7 +1301,7 @@ func ColorBarAlpha(bounds rl.Rectangle, text string, alpha float32) float32 {
 	return alpha
 }
 
-// TODO check implementation of GuiColorBarHue, as it returns a boolean that
+// TODO check implementation of GuiColorBarHue, as it returns a bool that
 // indicates a mouse click on the component
 
 //go:wasmimport raylib _GuiColorBarHue
@@ -1333,7 +1329,6 @@ func ColorBarHue(bounds rl.Rectangle, text string, hue float32) float32 {
 }
 
 // TODO check implementation of GuiColorPicker, as it should return a boolean
-// TODO possible memory corruption by passing ret
 
 //go:wasmimport raylib _GuiColorPicker
 //go:noescape
@@ -1669,8 +1664,6 @@ func ScrollBar(bounds rl.Rectangle, value, minValue, maxValue int32) int32 {
 	return int32(guiScrollBar(cbounds, cvalue, cminValue, cmaxValue))
 }
 
-// TODO possible memory corruption by passing ret
-
 //go:wasmimport raylib _GuiFade
 //go:noescape
 func guiFade(ret wasm.Ptr, color wasm.Ptr, alpha float32)
@@ -1732,8 +1725,6 @@ func DrawText(text string, position rl.Rectangle, alignment int32, color rl.Colo
 	calignment := int32(alignment)
 	guiDrawText(ctext, cposition, calignment, ccolor)
 }
-
-// TODO possible memory corruption by passing ret
 
 //go:wasmimport raylib _GuiGetTextBounds
 //go:noescape
