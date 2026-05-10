@@ -669,13 +669,13 @@ func TabBar(bounds rl.Rectangle, text []string, active *int32) int32 {
 		active = new(int32)
 	}
 
-	cactive, free := wasm.CopyValueToC(&active)
+	cactive, free := wasm.CopyValueToC(active)
 	defer free()
 
 	result := guiTabBar(cbounds, ctext.Pointer, ccount, cactive)
 
 	// Copy values back before freeing
-	wasm.CopyValueToGo(cactive, &active)
+	wasm.CopyValueToGo(cactive, active)
 
 	return result
 }
@@ -688,6 +688,7 @@ func guiScrollPanel(bounds wasm.Ptr, text wasm.Ptr, content wasm.Ptr, scroll was
 func ScrollPanel(bounds rl.Rectangle, text string, content rl.Rectangle, scroll *rl.Vector2, view *rl.Rectangle) {
 	cbounds, free := wasm.CopyValueToC(&bounds)
 	defer free()
+
 	ctext := wasm.CString(text)
 	defer wasm.Free(ctext)
 
@@ -1001,7 +1002,7 @@ func ValueBox(bounds rl.Rectangle, text string, value *int32, minValue, maxValue
 
 //go:wasmimport raylib _GuiValueBoxFloat
 //go:noescape
-func guiValueBoxFloat(bounds rl.Rectangle, text wasm.Ptr, textValue wasm.Ptr, value wasm.Ptr, editMode int32) int32
+func guiValueBoxFloat(bounds wasm.Ptr, text wasm.Ptr, textValue wasm.Ptr, value wasm.Ptr, editMode int32) int32
 
 // Floating point Value Box control, updates input val_str with numbers
 func ValueBoxFloat(bounds rl.Rectangle, text string, textValue *string, value *float32, editMode bool) bool {
