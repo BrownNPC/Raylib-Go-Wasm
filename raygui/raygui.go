@@ -22,7 +22,7 @@ func (p PropertyID) IsExtended() bool {
 }
 
 func (v PropertyValue) AsColor() rl.Color {
-	return rl.Color{uint8(v >> 24), uint8(v >> 16), uint8(v >> 8), uint8(v)}
+	return rl.Color{R: uint8(v >> 24), G: uint8(v >> 16), B: uint8(v >> 8), A: uint8(v)}
 }
 
 func NewColorPropertyValue(color rl.Color) PropertyValue {
@@ -478,6 +478,8 @@ const (
 //go:noescape
 func guiEnable()
 
+// void GuiEnable(void);
+
 // Enable gui global state
 func Enable() {
 	guiEnable()
@@ -486,6 +488,8 @@ func Enable() {
 //go:wasmimport raylib _GuiDisable
 //go:noescape
 func guiDisable()
+
+// void GuiDisable(void);
 
 // Disable gui global state
 func Disable() {
@@ -496,6 +500,8 @@ func Disable() {
 //go:noescape
 func guiLock()
 
+// void GuiLock(void);
+
 // Lock gui global state
 func Lock() {
 	guiLock()
@@ -504,6 +510,8 @@ func Lock() {
 //go:wasmimport raylib _GuiUnlock
 //go:noescape
 func guiUnlock()
+
+// void GuiUnlock(void);
 
 // Unlock gui global state
 func Unlock() {
@@ -516,11 +524,15 @@ func Unlock() {
 //go:noescape
 func IsLocked() bool
 
+// bool GuiIsLocked(void);
+
 // Set gui controls alpha global state
 //
 //go:wasmimport raylib _GuiSetAlpha
 //go:noescape
 func SetAlpha(alpha float32)
+
+// void GuiSetAlpha(float alpha);
 
 // Set gui state (global state)
 //
@@ -528,15 +540,21 @@ func SetAlpha(alpha float32)
 //go:noescape
 func SetState(state PropertyValue)
 
+// void GuiSetState(int state);
+
 // Get gui state (global state)
 //
 //go:wasmimport raylib _GuiGetState
 //go:noescape
 func GetState() PropertyValue
 
+// int GuiGetState(void);
+
 //go:wasmimport raylib _GuiSetFont
 //go:noescape
 func guiSetFont(font wasm.Ptr)
+
+// void GuiSetFont(Font font);
 
 // Set custom gui font
 func SetFont(font rl.Font) {
@@ -548,6 +566,8 @@ func SetFont(font rl.Font) {
 //go:wasmimport raylib _GuiGetFont
 //go:noescape
 func guiGetFont(ret wasm.Ptr)
+
+// Font GuiGetFont(void);
 
 // Get custom gui font
 func GetFont() rl.Font {
@@ -562,7 +582,9 @@ func GetFont() rl.Font {
 
 //go:wasmimport raylib _GuiSetStyle
 //go:noescape
-func guiSetStyle(control, property, value int32) int32
+func guiSetStyle(control, property, value int32)
+
+// void GuiSetStyle(int control, int property, int value);
 
 // Set control style property value
 func SetStyle(control ControlID, property PropertyID, value PropertyValue) {
@@ -575,6 +597,8 @@ func SetStyle(control ControlID, property PropertyID, value PropertyValue) {
 //go:wasmimport raylib _GuiGetStyle
 //go:noescape
 func guiGetStyle(control, property int32) int32
+
+// int GuiGetStyle(int control, int property);
 
 // Get control style property value
 func GetStyle(control ControlID, property PropertyID) PropertyValue {
@@ -596,92 +620,116 @@ func GetColor(control ControlID, property PropertyID) rl.Color {
 //go:noescape
 func guiWindowBox(bounds wasm.Ptr, title wasm.Ptr) int32
 
+// int GuiWindowBox(Rectangle bounds, const char *title);
+
 // Window Box control
 func WindowBox(bounds rl.Rectangle, title string) bool {
 	cbounds, free := wasm.CopyValueToC(&bounds)
 	defer free()
 	ctitle := wasm.CString(title)
 	defer wasm.Free(ctitle)
+
+	// NOTE: Returns the same as C.GuiButton
 	return guiWindowBox(cbounds, ctitle) != 0
 }
 
 //go:wasmimport raylib _GuiGroupBox
 //go:noescape
-func guiGroupBox(bounds wasm.Ptr, text wasm.Ptr)
+func guiGroupBox(bounds wasm.Ptr, text wasm.Ptr) int32
+
+// int GuiGroupBox(Rectangle bounds, const char *text);
 
 // Group Box control with text name
-func GroupBox(bounds rl.Rectangle, text string) {
+func GroupBox(bounds rl.Rectangle, text string) bool {
 	cbounds, free := wasm.CopyValueToC(&bounds)
 	defer free()
 	ctext := wasm.CString(text)
 	defer wasm.Free(ctext)
-	guiGroupBox(cbounds, ctext)
+
+	// NOTE: This only returns 0 on raylib.h
+	return guiGroupBox(cbounds, ctext) != 0
 }
 
 //go:wasmimport raylib _GuiLine
 //go:noescape
-func guiLine(bounds wasm.Ptr, text wasm.Ptr)
+func guiLine(bounds wasm.Ptr, text wasm.Ptr) int32
+
+// int GuiLine(Rectangle bounds, const char *text);
 
 // Line control
-func Line(bounds rl.Rectangle, text string) {
+func Line(bounds rl.Rectangle, text string) bool {
 	cbounds, free := wasm.CopyValueToC(&bounds)
 	defer free()
 	ctext := wasm.CString(text)
 	defer wasm.Free(ctext)
-	guiLine(cbounds, ctext)
+
+	// NOTE: This only returns 0 on raylib.h
+	return guiLine(cbounds, ctext) != 0
 }
 
 //go:wasmimport raylib _GuiPanel
 //go:noescape
-func guiPanel(bounds wasm.Ptr, text wasm.Ptr)
+func guiPanel(bounds wasm.Ptr, text wasm.Ptr) int32
+
+// int GuiPanel(Rectangle bounds, const char *text);
 
 // Panel control
-func Panel(bounds rl.Rectangle, text string) {
+func Panel(bounds rl.Rectangle, text string) bool {
 	cbounds, free := wasm.CopyValueToC(&bounds)
 	defer free()
 
 	ctext := wasm.CString(text)
 	defer wasm.Free(ctext)
-	guiPanel(cbounds, ctext)
+
+	// NOTE: This only returns 0 on raylib.h
+	return guiPanel(cbounds, ctext) != 0
 }
 
-/*
 //go:wasmimport raylib _GuiTabBar
 //go:noescape
-func guiTabBar(bounds rl.Rectangle, text []wasm.Ptr, active *int32) int32
+func guiTabBar(bounds wasm.Ptr, text wasm.Ptr, count int32, active wasm.Ptr) int32
+
+// int GuiTabBar(Rectangle bounds, const char **text, int count, int *active);
 
 // Tab Bar control, returns the current TAB closing requested, -1 otherwise
 func TabBar(bounds rl.Rectangle, text []string, active *int32) int32 {
-	var cbounds rl.Rectangle
-	cbounds.X = float32(bounds.X)
-	cbounds.Y = float32(bounds.Y)
-	cbounds.Width = float32(bounds.Width)
-	cbounds.Height = float32(bounds.Height)
+	cbounds, free := wasm.CopyValueToC(&bounds)
+	defer free()
 
 	ctext := NewCStringArrayFromSlice(text)
 	defer ctext.Free()
 
-	count := int32(len(text))
+	ccount := int32(len(text))
 
 	if active == nil {
 		active = new(int32)
 	}
-	cactive := int32(*active)
+
+	cactive, free := wasm.CopyValueToC(active)
 	defer func() {
-		*active = int32(cactive)
+		wasm.CopyValueToGo(cactive, active)
+		free()
 	}()
-	return int32(guiTabBar(cbounds, (*wasm.Ptr)(ctext.Pointer), count, cactive))
+
+	result := guiTabBar(cbounds, ctext.Pointer, ccount, cactive)
+
+	// Copy values back before freeing
+	wasm.CopyValueToGo(cactive, active)
+
+	return result
 }
-*/
 
 //go:wasmimport raylib _GuiScrollPanel
 //go:noescape
-func guiScrollPanel(bounds wasm.Ptr, text wasm.Ptr, content wasm.Ptr, scroll wasm.Ptr, view wasm.Ptr)
+func guiScrollPanel(bounds wasm.Ptr, text wasm.Ptr, content wasm.Ptr, scroll wasm.Ptr, view wasm.Ptr) int32
+
+// int GuiScrollPanel(Rectangle bounds, const char *text, Rectangle content, Vector2 *scroll, Rectangle *view);
 
 // Scroll Panel control
-func ScrollPanel(bounds rl.Rectangle, text string, content rl.Rectangle, scroll *rl.Vector2, view *rl.Rectangle) {
+func ScrollPanel(bounds rl.Rectangle, text string, content rl.Rectangle, scroll *rl.Vector2, view *rl.Rectangle) bool {
 	cbounds, free := wasm.CopyValueToC(&bounds)
 	defer free()
+
 	ctext := wasm.CString(text)
 	defer wasm.Free(ctext)
 
@@ -689,34 +737,49 @@ func ScrollPanel(bounds rl.Rectangle, text string, content rl.Rectangle, scroll 
 	defer free()
 
 	cscroll, free := wasm.CopyValueToC(scroll)
-	defer free()
+	defer func() {
+		wasm.CopyValueToGo(cscroll, scroll)
+		free()
+	}()
 
 	cview, free := wasm.CopyValueToC(view)
-	defer free()
+	defer func() {
+		wasm.CopyValueToGo(cview, view)
+		free()
+	}()
 
-	guiScrollPanel(cbounds, ctext, ccontent, cscroll, cview)
+	// NOTE: This only returns 0 on raylib.h
+	result := guiScrollPanel(cbounds, ctext, ccontent, cscroll, cview)
 
 	wasm.CopyValueToGo(cscroll, scroll)
 	wasm.CopyValueToGo(cview, view)
+
+	return result != 0
 }
 
 //go:wasmimport raylib _GuiLabel
 //go:noescape
-func guiLabel(bounds wasm.Ptr, text wasm.Ptr)
+func guiLabel(bounds wasm.Ptr, text wasm.Ptr) int32
+
+// int GuiLabel(Rectangle bounds, const char *text);
 
 // Label control
-func Label(bounds rl.Rectangle, text string) {
+func Label(bounds rl.Rectangle, text string) bool {
 	cbounds, free := wasm.CopyValueToC(&bounds)
 	defer free()
 
 	ctext := wasm.CString(text)
 	defer wasm.Free(ctext)
-	guiLabel(cbounds, ctext)
+
+	// NOTE: This only returns 0 on raylib.h
+	return guiLabel(cbounds, ctext) != 0
 }
 
 //go:wasmimport raylib _GuiButton
 //go:noescape
 func guiButton(bounds wasm.Ptr, text wasm.Ptr) int32
+
+// int GuiButton(Rectangle bounds, const char *text);
 
 // Button control, returns true when clicked
 func Button(bounds rl.Rectangle, text string) bool {
@@ -733,6 +796,8 @@ func Button(bounds rl.Rectangle, text string) bool {
 //go:noescape
 func guiLabelButton(bounds wasm.Ptr, text wasm.Ptr) int32
 
+// int GuiLabelButton(Rectangle bounds, const char *text);
+
 // LabelButton control, returns true when clicked
 func LabelButton(bounds rl.Rectangle, text string) bool {
 	cbounds, free := wasm.CopyValueToC(&bounds)
@@ -745,92 +810,154 @@ func LabelButton(bounds rl.Rectangle, text string) bool {
 
 //go:wasmimport raylib _GuiToggle
 //go:noescape
-func guiToggle(bounds wasm.Ptr, text wasm.Ptr, active int32) int32
+func guiToggle(bounds wasm.Ptr, text wasm.Ptr, active wasm.Ptr) int32
+
+// int GuiToggle(Rectangle bounds, const char *text, bool *active);
 
 // Toggle control, returns true when active
-func Toggle(bounds rl.Rectangle, text string, active bool) bool {
+func Toggle(bounds rl.Rectangle, text string, active *bool) bool {
 	cbounds, free := wasm.CopyValueToC(&bounds)
 	defer free()
 
 	ctext := wasm.CString(text)
 	defer wasm.Free(ctext)
 
-	return guiToggle(cbounds, ctext, wasm.BtoI(active)) != 0
+	cactive, free := wasm.CopyValueToC(active)
+	defer func() {
+		wasm.CopyValueToGo(cactive, active)
+		free()
+	}()
+
+	// NOTE: This only returns 0 on raylib.h
+	result := guiToggle(cbounds, ctext, cactive)
+
+	// Copy values back before freeing
+	wasm.CopyValueToGo(cactive, active)
+
+	return result != 0
 }
 
 //go:wasmimport raylib _GuiToggleGroup
 //go:noescape
-func guiToggleGroup(bounds wasm.Ptr, text wasm.Ptr, active int32) int32
+func guiToggleGroup(bounds wasm.Ptr, text wasm.Ptr, active wasm.Ptr) int32
+
+// int GuiToggleGroup(Rectangle bounds, const char *text, int *active);
 
 // ToggleGroup control, returns active toggle index
-func ToggleGroup(bounds rl.Rectangle, text string, active int32) int32 {
-
+func ToggleGroup(bounds rl.Rectangle, text string, active *int32) bool {
 	cbounds, free := wasm.CopyValueToC(&bounds)
 	defer free()
 
 	ctext := wasm.CString(text)
 	defer wasm.Free(ctext)
-	return guiToggleGroup(cbounds, ctext, active)
+
+	cactive, free := wasm.CopyValueToC(active)
+	defer func() {
+		wasm.CopyValueToGo(cactive, active)
+		free()
+	}()
+
+	result := guiToggleGroup(cbounds, ctext, cactive)
+
+	// Copy values back before freeing
+	wasm.CopyValueToGo(cactive, active)
+
+	return result != 0
 }
 
 //go:wasmimport raylib _GuiToggleSlider
 //go:noescape
-func guiToggleSlider(bounds wasm.Ptr, text wasm.Ptr, active int32) int32
+func guiToggleSlider(bounds wasm.Ptr, text wasm.Ptr, active wasm.Ptr) int32
+
+// int GuiToggleSlider(Rectangle bounds, const char *text, int *active);
 
 // ToggleSlider control, returns true when clicked
-func ToggleSlider(bounds rl.Rectangle, text string, active int32) int32 {
-
+func ToggleSlider(bounds rl.Rectangle, text string, active *int32) bool {
 	cbounds, free := wasm.CopyValueToC(&bounds)
 	defer free()
 
 	ctext := wasm.CString(text)
 	defer wasm.Free(ctext)
-	return guiToggleSlider(cbounds, ctext, active)
+
+	cactive, free := wasm.CopyValueToC(active)
+	defer func() {
+		wasm.CopyValueToGo(cactive, active)
+		free()
+	}()
+
+	result := guiToggleSlider(cbounds, ctext, cactive)
+
+	// Copy values back before freeing
+	wasm.CopyValueToGo(cactive, active)
+
+	return result != 0
 }
 
 //go:wasmimport raylib _GuiCheckBox
 //go:noescape
 func guiCheckBox(bounds wasm.Ptr, text wasm.Ptr, checked wasm.Ptr) int32
 
+// int GuiCheckBox(Rectangle bounds, const char *text, bool *checked);
+
 // CheckBox control, returns true when active
-func CheckBox(bounds rl.Rectangle, text string, checked bool) bool {
-
-	cbounds, freeBounds := wasm.CopyValueToC(&bounds)
-	defer freeBounds()
-
-	ctext := wasm.CString(text)
-	defer wasm.Free(ctext)
-
-	cchecked, freeChecked := wasm.CopyValueToC(&checked)
-	defer func() {
-		wasm.CopyValueToGo(cchecked,&checked)
-		freeChecked()
-	}()
-	guiCheckBox(cbounds, ctext, cchecked)
-	return checked
-}
-
-//go:wasmimport raylib _GuiComboBox
-//go:noescape
-func guiComboBox(bounds wasm.Ptr, text wasm.Ptr, active int32) int32
-
-// ComboBox control, returns selected item index
-func ComboBox(bounds rl.Rectangle, text string, active int32) int32 {
+func CheckBox(bounds rl.Rectangle, text string, checked *bool) bool {
 	cbounds, free := wasm.CopyValueToC(&bounds)
 	defer free()
 
 	ctext := wasm.CString(text)
 	defer wasm.Free(ctext)
-	return guiComboBox(cbounds, ctext, active)
+
+	cchecked, free := wasm.CopyValueToC(checked)
+	defer func() {
+		wasm.CopyValueToGo(cchecked, checked)
+		free()
+	}()
+
+	result := guiCheckBox(cbounds, ctext, cchecked)
+
+	// Copy values back before freeing
+	wasm.CopyValueToGo(cchecked, checked)
+
+	return result != 0
+}
+
+//go:wasmimport raylib _GuiComboBox
+//go:noescape
+func guiComboBox(bounds wasm.Ptr, text wasm.Ptr, active wasm.Ptr) int32
+
+// int GuiComboBox(Rectangle bounds, const char *text, int *active);
+
+// ComboBox control, returns selected item index
+func ComboBox(bounds rl.Rectangle, text string, active *int32) bool {
+	cbounds, free := wasm.CopyValueToC(&bounds)
+	defer free()
+
+	ctext := wasm.CString(text)
+	defer wasm.Free(ctext)
+
+	cactive, free := wasm.CopyValueToC(active)
+	defer func() {
+		wasm.CopyValueToGo(cactive, active)
+		free()
+	}()
+
+	// NOTE: This only returns 0 on raylib.h
+	result := guiComboBox(cbounds, ctext, cactive)
+
+	// Copy values back before freeing
+	wasm.CopyValueToGo(cactive, active)
+
+	return result != 0
 }
 
 //go:wasmimport raylib _GuiDropdownBox
 //go:noescape
 func guiDropdownBox(bounds wasm.Ptr, text wasm.Ptr, active wasm.Ptr, editMode int32) int32
 
+// int GuiDropdownBox(Rectangle bounds, const char *text, int *active, bool editMode);
+
 // DropdownBox control, returns true when clicked
 func DropdownBox(bounds rl.Rectangle, text string, active *int32, editMode bool) bool {
-
 	cbounds, free := wasm.CopyValueToC(&bounds)
 	defer free()
 
@@ -848,16 +975,22 @@ func DropdownBox(bounds rl.Rectangle, text string, active *int32, editMode bool)
 
 	ceditMode := wasm.BtoI(editMode)
 
-	return guiDropdownBox(cbounds, ctext, cactive, ceditMode) != 0
+	result := guiDropdownBox(cbounds, ctext, cactive, ceditMode)
+
+	// Copy values back before freeing
+	wasm.CopyValueToGo(cactive, active)
+
+	return result != 0
 }
 
 //go:wasmimport raylib _GuiTextBox
 //go:noescape
 func guiTextBox(bounds wasm.Ptr, text wasm.Ptr, textSize int32, editMode int32) int32
 
+// int GuiTextBox(Rectangle bounds, char *text, int textSize, bool editMode);
+
 // TextBox control, updates input text, returns true on ENTER pressed or defocused
 func TextBox(bounds rl.Rectangle, text *string, textSize int32, editMode bool) bool {
-
 	cbounds, free := wasm.CopyValueToC(&bounds)
 	defer free()
 
@@ -872,27 +1005,30 @@ func TextBox(bounds rl.Rectangle, text *string, textSize int32, editMode bool) b
 	copy(buffer, currentText)
 	// buffer is already zero-filled by make, so NUL-termination is automatic
 
-	ctext, freeText := wasm.CopySliceToC(buffer)
-	defer freeText()
+	ctext, free := wasm.CopySliceToC(buffer)
+	defer free()
 
 	ctextSize := int32(textSize)
 	ceditMode := wasm.BtoI(editMode)
 
-	result := guiTextBox(cbounds, ctext, ctextSize, ceditMode) != 0
+	result := guiTextBox(cbounds, ctext, ctextSize, ceditMode)
 
 	// Copy the result back
 	*text = wasm.GoString(ctext)
 
-	return result
+	return result != 0
 }
+
+// NOTE check out this implementation as reference for the TODOs in this file
 
 //go:wasmimport raylib _GuiSpinner
 //go:noescape
 func guiSpinner(bounds wasm.Ptr, text wasm.Ptr, value wasm.Ptr, minValue, maxValue int32, editMode int32) int32
 
+// int GuiSpinner(Rectangle bounds, const char *text, int *value, int minValue, int maxValue, bool editMode);
+
 // Spinner control, sets value to the selected number and returns true when clicked.
 func Spinner(bounds rl.Rectangle, text string, value *int32, minValue, maxValue int, editMode bool) bool {
-
 	cbounds, free := wasm.CopyValueToC(&bounds)
 	defer free()
 
@@ -908,16 +1044,29 @@ func Spinner(bounds rl.Rectangle, text string, value *int32, minValue, maxValue 
 		free()
 	}()
 
-	return guiSpinner(cbounds, ctext, cvalue, int32(minValue), int32(maxValue), wasm.BtoI(editMode)) != 0
+	cminValue := int32(minValue)
+	cmaxValue := int32(maxValue)
+	ceditMode := wasm.BtoI(editMode)
+
+	// NOTE: Returns the same as C.GuiValueBox
+	result := guiSpinner(cbounds, ctext, cvalue, cminValue, cmaxValue, ceditMode)
+
+	// Copy values back before freeing
+	wasm.CopyValueToGo(cvalue, value)
+
+	return result != 0
 }
+
+// NOTE check out this implementation as reference for the TODOs in this file
 
 //go:wasmimport raylib _GuiValueBox
 //go:noescape
 func guiValueBox(bounds wasm.Ptr, text wasm.Ptr, value wasm.Ptr, minValue, maxValue int32, editMode int32) int32
 
+// int GuiValueBox(Rectangle bounds, const char *text, int *value, int minValue, int maxValue, bool editMode);
+
 // ValueBox control, updates input text with numbers
 func ValueBox(bounds rl.Rectangle, text string, value *int32, minValue, maxValue int, editMode bool) bool {
-
 	cbounds, free := wasm.CopyValueToC(&bounds)
 	defer free()
 
@@ -933,63 +1082,73 @@ func ValueBox(bounds rl.Rectangle, text string, value *int32, minValue, maxValue
 		wasm.CopyValueToGo(cvalue, value)
 		free()
 	}()
+
 	cminValue := int32(minValue)
 	cmaxValue := int32(maxValue)
 	ceditMode := wasm.BtoI(editMode)
 
-	return guiValueBox(cbounds, ctext, cvalue, cminValue, cmaxValue, ceditMode) != 0
+	result := guiValueBox(cbounds, ctext, cvalue, cminValue, cmaxValue, ceditMode)
+
+	// Copy values back before freeing
+	wasm.CopyValueToGo(cvalue, value)
+
+	return result != 0
 }
 
-/*
 //go:wasmimport raylib _GuiValueBoxFloat
 //go:noescape
-func guiValueBoxFloat(bounds rl.Rectangle, text wasm.Ptr, textValue *wasm.Ptr, value *float32, editMode int32) int32
+func guiValueBoxFloat(bounds wasm.Ptr, text wasm.Ptr, textValue wasm.Ptr, value wasm.Ptr, editMode int32) int32
+
+// int GuiValueBoxFloat(Rectangle bounds, const char *text, char *textValue, float *value, bool editMode);
 
 // Floating point Value Box control, updates input val_str with numbers
 func ValueBoxFloat(bounds rl.Rectangle, text string, textValue *string, value *float32, editMode bool) bool {
-	var cbounds rl.Rectangle
-	cbounds.X = float32(bounds.X)
-	cbounds.Y = float32(bounds.Y)
-	cbounds.Width = float32(bounds.Width)
-	cbounds.Height = float32(bounds.Height)
-	var ctext wasm.Ptr
-	if len(text) > 0 {
-		ctext = wasm.CString(text)
-		defer wasm.Free(ctext)
-	}
+	cbounds, free := wasm.CopyValueToC(&bounds)
+	defer free()
 
-	bs := []byte(*textValue)
-	if len(bs) == 0 {
-		bs = []byte{byte(0)}
-	}
-	if 0 < len(bs) && bs[len(bs)-1] != byte(0) { // minimalize allocation
-		bs = append(bs, byte(0)) // for next input symbols
-	}
-	ctextValue := (wasm.Ptr)(unsafe.Pointer(bs[0]))
-	defer func() {
-		*textValue = strings.Trim(string(bs), "\x00")
-		// no need : wasm.Free(ctext)
-	}()
+	ctext := wasm.CString(text)
+	defer wasm.Free(ctext)
 
 	if value == nil {
 		value = new(float32)
 	}
-	cvalue := float32(*value)
+
+	// Allocate writable buffer of size textMaxSize
+	// Truncate to textMaxSize-1 and NUL-terminate
+	currentText := []byte(*textValue)
+
+	// Create a zero-filled buffer of size textMaxSize
+	buffer := make([]byte, len(*textValue))
+	copy(buffer, currentText)
+	// buffer is already zero-filled by make, so NUL-termination is automatic
+
+	ctextValue, free := wasm.CopySliceToC(buffer)
+	defer free()
+
+	cvalue, free := wasm.CopyValueToC(value)
 	defer func() {
-		*value = float32(cvalue)
+		wasm.CopyValueToGo(cvalue, value)
+		free()
 	}()
 
-	return guiValueBoxFloat(cbounds, ctext, ctextValue, &cvalue, wasm.BtoI(editMode)) != 0
+	ceditMode := wasm.BtoI(editMode)
+
+	result := guiValueBoxFloat(cbounds, ctext, ctextValue, cvalue, ceditMode)
+
+	// Copy the result back
+	*textValue = wasm.GoString(ctextValue)
+
+	return result != 0
 }
-*/
 
 //go:wasmimport raylib _GuiSlider
 //go:noescape
-func guiSlider(bounds wasm.Ptr, textLeft, textRight wasm.Ptr, value, minValue, maxValue float32) float32
+func guiSlider(bounds wasm.Ptr, textLeft, textRight wasm.Ptr, value wasm.Ptr, minValue, maxValue float32) int32
+
+// int GuiSlider(Rectangle bounds, const char *textLeft, const char *textRight, float *value, float minValue, float maxValue);
 
 // Slider control
-func Slider(bounds rl.Rectangle, textLeft, textRight string, value, minValue, maxValue float32) float32 {
-
+func Slider(bounds rl.Rectangle, textLeft, textRight string, value *float32, minValue, maxValue float32) bool {
 	cbounds, free := wasm.CopyValueToC(&bounds)
 	defer free()
 
@@ -998,19 +1157,32 @@ func Slider(bounds rl.Rectangle, textLeft, textRight string, value, minValue, ma
 	ctextRight := wasm.CString(textRight)
 	defer wasm.Free(ctextRight)
 
-	cvalue := float32(value)
+	cvalue, free := wasm.CopyValueToC(value)
+	defer func() {
+		wasm.CopyValueToGo(cvalue, value)
+		free()
+	}()
+
 	cminValue := float32(minValue)
 	cmaxValue := float32(maxValue)
-	return guiSlider(cbounds, ctextLeft, ctextRight, cvalue, cminValue, cmaxValue)
+
+	// NOTE: 0 if value didn't change, 1 otherwise
+	result := guiSlider(cbounds, ctextLeft, ctextRight, cvalue, cminValue, cmaxValue)
+
+	// Copy values back before freeing
+	wasm.CopyValueToGo(cvalue, value)
+
+	return result != 0
 }
 
 //go:wasmimport raylib _GuiSliderBar
 //go:noescape
-func guiSliderBar(bounds wasm.Ptr, textLeft, textRight wasm.Ptr, value, minValue, maxValue float32) float32
+func guiSliderBar(bounds wasm.Ptr, textLeft, textRight wasm.Ptr, value wasm.Ptr, minValue, maxValue float32) int32
+
+// int GuiSliderBar(Rectangle bounds, const char *textLeft, const char *textRight, float *value, float minValue, float maxValue);
 
 // SliderBar control, returns selected value
-func SliderBar(bounds rl.Rectangle, textLeft, textRight string, value, minValue, maxValue float32) float32 {
-
+func SliderBar(bounds rl.Rectangle, textLeft, textRight string, value *float32, minValue, maxValue float32) bool {
 	cbounds, free := wasm.CopyValueToC(&bounds)
 	defer free()
 
@@ -1019,20 +1191,32 @@ func SliderBar(bounds rl.Rectangle, textLeft, textRight string, value, minValue,
 	ctextRight := wasm.CString(textRight)
 	defer wasm.Free(ctextRight)
 
-	cvalue := float32(value)
+	cvalue, free := wasm.CopyValueToC(value)
+	defer func() {
+		wasm.CopyValueToGo(cvalue, value)
+		free()
+	}()
+
 	cminValue := float32(minValue)
 	cmaxValue := float32(maxValue)
-	guiSliderBar(cbounds, ctextLeft, ctextRight, cvalue, cminValue, cmaxValue)
-	return float32(cvalue)
+
+	// NOTE: Returns the same as C.GuiSlider
+	result := guiSliderBar(cbounds, ctextLeft, ctextRight, cvalue, cminValue, cmaxValue)
+
+	// Copy values back before freeing
+	wasm.CopyValueToGo(cvalue, value)
+
+	return result != 0
 }
 
 //go:wasmimport raylib _GuiProgressBar
 //go:noescape
-func guiProgressBar(bounds wasm.Ptr, textLeft, textRight wasm.Ptr, value, minValue, maxValue float32) float32
+func guiProgressBar(bounds wasm.Ptr, textLeft, textRight wasm.Ptr, value wasm.Ptr, minValue, maxValue float32) int32
+
+// int GuiProgressBar(Rectangle bounds, const char *textLeft, const char *textRight, float *value, float minValue, float maxValue);
 
 // ProgressBar control, shows current progress value
-func ProgressBar(bounds rl.Rectangle, textLeft, textRight string, value, minValue, maxValue float32) float32 {
-
+func ProgressBar(bounds rl.Rectangle, textLeft, textRight string, value *float32, minValue, maxValue float32) bool {
 	cbounds, free := wasm.CopyValueToC(&bounds)
 	defer free()
 
@@ -1041,50 +1225,68 @@ func ProgressBar(bounds rl.Rectangle, textLeft, textRight string, value, minValu
 	ctextRight := wasm.CString(textRight)
 	defer wasm.Free(ctextRight)
 
-	cvalue := float32(value)
+	cvalue, free := wasm.CopyValueToC(value)
+	defer func() {
+		wasm.CopyValueToGo(cvalue, value)
+		free()
+	}()
+
 	cminValue := float32(minValue)
 	cmaxValue := float32(maxValue)
-	return guiProgressBar(cbounds, ctextLeft, ctextRight, cvalue, cminValue, cmaxValue)
-}
 
-// StatusBar control, shows info text
+	// NOTE: This only returns 0 on raylib.h
+	result := guiProgressBar(cbounds, ctextLeft, ctextRight, cvalue, cminValue, cmaxValue)
+
+	// Copy values back before freeing
+	wasm.CopyValueToGo(cvalue, value)
+
+	return result != 0
+}
 
 //go:wasmimport raylib _GuiStatusBar
 //go:noescape
-func guiStatusBar(bounds wasm.Ptr, text wasm.Ptr)
+func guiStatusBar(bounds wasm.Ptr, text wasm.Ptr) int32
 
-func StatusBar(bounds rl.Rectangle, text string) {
+// int GuiStatusBar(Rectangle bounds, const char *text);
 
+// StatusBar control, shows info text
+func StatusBar(bounds rl.Rectangle, text string) bool {
 	cbounds, free := wasm.CopyValueToC(&bounds)
 	defer free()
 
 	ctext := wasm.CString(text)
 	defer wasm.Free(ctext)
-	guiStatusBar(cbounds, ctext)
-}
 
-// DummyRectangle control, intended for placeholding
+	// NOTE: This only returns 0 on raylib.h
+	return guiStatusBar(cbounds, ctext) != 0
+}
 
 //go:wasmimport raylib _GuiDummyRec
 //go:noescape
-func guiDummyRec(bounds wasm.Ptr, text wasm.Ptr)
+func guiDummyRec(bounds wasm.Ptr, text wasm.Ptr) int32
 
-func DummyRec(bounds rl.Rectangle, text string) {
+// int GuiDummyRec(Rectangle bounds, const char *text);
+
+// DummyRectangle control, intended for placeholding
+func DummyRec(bounds rl.Rectangle, text string) bool {
 	cbounds, free := wasm.CopyValueToC(&bounds)
 	defer free()
 
 	ctext := wasm.CString(text)
 	defer wasm.Free(ctext)
-	guiDummyRec(cbounds, ctext)
-}
 
-// ListView control, returns selected list item index
+	// NOTE: This only returns 0 on raylib.h
+	return guiDummyRec(cbounds, ctext) != 0
+}
 
 //go:wasmimport raylib _GuiListView
 //go:noescape
-func guiListView(bounds wasm.Ptr, text wasm.Ptr, scrollIndex wasm.Ptr, active int32) int32
+func guiListView(bounds wasm.Ptr, text wasm.Ptr, scrollIndex wasm.Ptr, active wasm.Ptr) int32
 
-func ListView(bounds rl.Rectangle, text string, scrollIndex *int32, active int32) int32 {
+// int GuiListView(Rectangle bounds, const char *text, int *scrollIndex, int *active);
+
+// ListView control, returns selected list item index
+func ListView(bounds rl.Rectangle, text string, scrollIndex *int32, active *int32) bool {
 	cbounds, free := wasm.CopyValueToC(&bounds)
 	defer free()
 
@@ -1100,19 +1302,30 @@ func ListView(bounds rl.Rectangle, text string, scrollIndex *int32, active int32
 		free()
 	}()
 
-	cactive := int32(active)
+	cactive, free := wasm.CopyValueToC(active)
+	defer func() {
+		wasm.CopyValueToGo(cactive, active)
+		free()
+	}()
 
-	return guiListView(cbounds, ctext, cscrollIndex, cactive)
+	// NOTE: Returns the same as C.GuiListViewEx (only 0 on raylib.h)
+	result := guiListView(cbounds, ctext, cscrollIndex, cactive)
+
+	// Copy values back before freeing
+	wasm.CopyValueToGo(cscrollIndex, scrollIndex)
+	wasm.CopyValueToGo(cactive, active)
+
+	return result != 0
 }
 
 //go:wasmimport raylib _GuiListViewEx
 //go:noescape
 func guiListViewEx(bounds wasm.Ptr, text wasm.Ptr, count int32, scrollIndex wasm.Ptr, active wasm.Ptr, focus wasm.Ptr) int32
 
-// ListView control with extended parameters
-func ListViewEx(bounds rl.Rectangle, text []string,
-	scrollIndex, focus *int32, active int32) int32 {
+// int GuiListViewEx(Rectangle bounds, const char **text, int count, int *scrollIndex, int *active, int *focus);
 
+// ListView control with extended parameters
+func ListViewEx(bounds rl.Rectangle, text []string, scrollIndex, active *int32, focus *int32) bool {
 	cbounds, free := wasm.CopyValueToC(&bounds)
 	defer free()
 
@@ -1132,107 +1345,154 @@ func ListViewEx(bounds rl.Rectangle, text []string,
 		free()
 	}()
 
-	cactive, freeActive := wasm.CopyValueToC(&active)
-	defer freeActive()
+	cactive, free := wasm.CopyValueToC(active)
+	defer func() {
+		wasm.CopyValueToGo(cactive, active)
+		free()
+	}()
 
-	cfocus, freeFocus := wasm.CopyValueToC(focus)
-	defer freeFocus()
+	cfocus, free := wasm.CopyValueToC(focus)
+	defer func() {
+		wasm.CopyValueToGo(cfocus, focus)
+		free()
+	}()
 
 	count := int32(len(text))
-	guiListViewEx(cbounds, ctext.Pointer, count, cscrollIndex, cactive, cfocus)
+
+	// NOTE: This only returns 0 on raylib.h
+	result := guiListViewEx(cbounds, ctext.Pointer, count, cscrollIndex, cactive, cfocus)
 
 	// Copy values back before freeing
-	wasm.CopyValueToGo(cactive, &active)
+	wasm.CopyValueToGo(cactive, active)
 	wasm.CopyValueToGo(cfocus, focus)
 
-	return active
+	return result != 0
 }
 
 //go:wasmimport raylib _GuiColorPanel
 //go:noescape
-func guiColorPanel(ret wasm.Ptr, bounds wasm.Ptr, text wasm.Ptr, color wasm.Ptr)
+func guiColorPanel(bounds wasm.Ptr, text wasm.Ptr, color wasm.Ptr) int32
+
+// int GuiColorPanel(Rectangle bounds, const char *text, Color *color);
 
 // ColorPanel control, Color (RGBA) variant
-func ColorPanel(bounds rl.Rectangle, text string, color rl.Color) rl.Color {
+func ColorPanel(bounds rl.Rectangle, text string, color *rl.Color) bool {
 	cbounds, free := wasm.CopyValueToC(&bounds)
 	defer free()
 
 	ctext := wasm.CString(text)
 	defer wasm.Free(ctext)
-	ccolor, free := wasm.CopyValueToC(&color)
-	defer free()
 
-	var v rl.Color
-	ret, freeRet := wasm.MallocV[rl.Color]()
-	defer freeRet()
+	ccolor, free := wasm.CopyValueToC(color)
+	defer func() {
+		wasm.CopyValueToGo(ccolor, color)
+		free()
+	}()
 
-	guiColorPanel(ret, cbounds, ctext, ccolor)
-	wasm.CopyValueToGo(ret, &v)
-	return v
+	// NOTE: This only returns 0 on raylib.h
+	result := guiColorPanel(cbounds, ctext, ccolor)
+
+	// Copy values back before freeing
+	wasm.CopyValueToGo(ccolor, color)
+
+	return result != 0
 }
 
 //go:wasmimport raylib _GuiColorBarAlpha
 //go:noescape
-func guiColorBarAlpha(bounds wasm.Ptr, text wasm.Ptr, alpha float32) float32
+func guiColorBarAlpha(bounds wasm.Ptr, text wasm.Ptr, alpha wasm.Ptr) int32
+
+// int GuiColorBarAlpha(Rectangle bounds, const char *text, float *alpha);
 
 // ColorBarAlpha control, returns alpha value normalized [0..1]
-func ColorBarAlpha(bounds rl.Rectangle, text string, alpha float32) float32 {
+func ColorBarAlpha(bounds rl.Rectangle, text string, alpha *float32) bool {
 	cbounds, free := wasm.CopyValueToC(&bounds)
 	defer free()
 
 	ctext := wasm.CString(text)
 	defer wasm.Free(ctext)
-	calpha := float32(alpha)
-	return guiColorBarAlpha(cbounds, ctext, calpha)
+
+	calpha, free := wasm.CopyValueToC(alpha)
+	defer func() {
+		wasm.CopyValueToGo(calpha, alpha)
+		free()
+	}()
+
+	// NOTE: This only returns 0 on raylib.h
+	result := guiColorBarAlpha(cbounds, ctext, calpha)
+
+	// Copy values back before freeing
+	wasm.CopyValueToGo(calpha, alpha)
+
+	return result != 0
 }
 
 //go:wasmimport raylib _GuiColorBarHue
 //go:noescape
-func guiColorBarHue(bounds wasm.Ptr, text wasm.Ptr, value float32) float32
+func guiColorBarHue(bounds wasm.Ptr, text wasm.Ptr, value wasm.Ptr) int32
+
+// int GuiColorBarHue(Rectangle bounds, const char *text, float *value);
 
 // ColorBarHue control, returns alpha value normalized [0..1]
-func ColorBarHue(bounds rl.Rectangle, text string, value float32) float32 {
-
+func ColorBarHue(bounds rl.Rectangle, text string, value *float32) bool {
 	cbounds, free := wasm.CopyValueToC(&bounds)
 	defer free()
 
 	ctext := wasm.CString(text)
 	defer wasm.Free(ctext)
-	cvalue := float32(value)
-	return guiColorBarHue(cbounds, ctext, cvalue)
+
+	cvalue, free := wasm.CopyValueToC(value)
+	defer func() {
+		wasm.CopyValueToGo(cvalue, value)
+		free()
+	}()
+
+	// NOTE: This only returns 0 on raylib.h
+	result := guiColorBarHue(cbounds, ctext, cvalue)
+
+	// Copy values back before freeing
+	wasm.CopyValueToGo(cvalue, value)
+
+	return result != 0
 }
 
 //go:wasmimport raylib _GuiColorPicker
 //go:noescape
-func guiColorPicker(ret wasm.Ptr, bounds wasm.Ptr, text wasm.Ptr, color wasm.Ptr)
+func guiColorPicker(bounds wasm.Ptr, text wasm.Ptr, color wasm.Ptr) int32
+
+// int GuiColorPicker(Rectangle bounds, const char *text, Color *color);
 
 // ColorPicker control (multiple color controls)
 // NOTE: this picker converts RGB to HSV, which can cause the Hue control to jump. If you have this problem, consider using the HSV variant instead
-func ColorPicker(bounds rl.Rectangle, text string, color rl.Color) rl.Color {
+func ColorPicker(bounds rl.Rectangle, text string, color *rl.Color) bool {
 	cbounds, free := wasm.CopyValueToC(&bounds)
 	defer free()
 
 	ctext := wasm.CString(text)
 	defer wasm.Free(ctext)
 
-	ccolor, free := wasm.CopyValueToC(&color)
-	defer free()
-	var v rl.Color
-	ret, free := wasm.CopyValueToC(&v)
+	ccolor, free := wasm.CopyValueToC(color)
 	defer func() {
-		wasm.CopyValueToGo(ret, &v)
+		wasm.CopyValueToGo(ccolor, color)
 		free()
 	}()
-	guiColorPicker(ret, cbounds, ctext, ccolor)
-	return v
+
+	result := guiColorPicker(cbounds, ctext, ccolor)
+
+	// Copy values back before freeing
+	wasm.CopyValueToGo(ccolor, color)
+
+	return result != 0
 }
 
 //go:wasmimport raylib _GuiColorPickerHSV
 //go:noescape
 func guiColorPickerHSV(bounds wasm.Ptr, text wasm.Ptr, colorHSV wasm.Ptr) int32
 
+// int GuiColorPickerHSV(Rectangle bounds, const char *text, Vector3 *colorHsv);
+
 // ColorPicker control that avoids conversion to RGB on each call (multiple color controls)
-func ColorPickerHSV(bounds rl.Rectangle, text string, colorHSV *rl.Vector3) int32 {
+func ColorPickerHSV(bounds rl.Rectangle, text string, colorHSV *rl.Vector3) bool {
 	cbounds, free := wasm.CopyValueToC(&bounds)
 	defer free()
 
@@ -1245,15 +1505,23 @@ func ColorPickerHSV(bounds rl.Rectangle, text string, colorHSV *rl.Vector3) int3
 		free()
 	}()
 
-	return int32(guiColorPickerHSV(cbounds, ctext, ccolorHSV))
+	// NOTE: This only returns 0 on raylib.h
+	result := guiColorPickerHSV(cbounds, ctext, ccolorHSV)
+
+	// Copy values back before freeing
+	wasm.CopyValueToGo(ccolorHSV, colorHSV)
+
+	return result != 0
 }
 
 //go:wasmimport raylib _GuiColorPanelHSV
 //go:noescape
 func guiColorPanelHSV(bounds wasm.Ptr, text wasm.Ptr, colorHSV wasm.Ptr) int32
 
+// int GuiColorPanelHSV(Rectangle bounds, const char *text, Vector3 *colorHsv);
+
 // ColorPanel control that returns HSV color value
-func ColorPanelHSV(bounds rl.Rectangle, text string, colorHSV *rl.Vector3) int32 {
+func ColorPanelHSV(bounds rl.Rectangle, text string, colorHSV *rl.Vector3) bool {
 	cbounds, free := wasm.CopyValueToC(&bounds)
 	defer free()
 
@@ -1265,12 +1533,21 @@ func ColorPanelHSV(bounds rl.Rectangle, text string, colorHSV *rl.Vector3) int32
 		wasm.CopyValueToGo(ccolorHSV, colorHSV)
 		free()
 	}()
-	return int32(guiColorPanelHSV(cbounds, ctext, ccolorHSV))
+
+	// NOTE: This only returns 0 on raylib.h
+	result := guiColorPanelHSV(cbounds, ctext, ccolorHSV)
+
+	// Copy values back before freeing
+	wasm.CopyValueToGo(ccolorHSV, colorHSV)
+
+	return result != 0
 }
 
 //go:wasmimport raylib _GuiMessageBox
 //go:noescape
 func guiMessageBox(bounds wasm.Ptr, title, message, buttons wasm.Ptr) int32
+
+// int GuiMessageBox(Rectangle bounds, const char *title, const char *message, const char *buttons);
 
 // MessageBox control
 func MessageBox(bounds rl.Rectangle, title, message, buttons string) int32 {
@@ -1279,19 +1556,21 @@ func MessageBox(bounds rl.Rectangle, title, message, buttons string) int32 {
 
 	ctitle := wasm.CString(title)
 	defer wasm.Free(ctitle)
+
 	cmessage := wasm.CString(message)
 	defer wasm.Free(cmessage)
 
 	cbuttons := wasm.CString(buttons)
 	defer wasm.Free(cbuttons)
 
-	return int32(guiMessageBox(cbounds, ctitle, cmessage, cbuttons))
+	return guiMessageBox(cbounds, ctitle, cmessage, cbuttons)
 }
 
-//
 //go:wasmimport raylib _GuiTextInputBox
 //go:noescape
 func guiTextInputBox(bounds wasm.Ptr, title, message, buttons wasm.Ptr, text wasm.Ptr, textMaxSize int32, secretViewActive wasm.Ptr) int32
+
+// int GuiTextInputBox(Rectangle bounds, const char *title, const char *message, const char *buttons, char *text, int textMaxSize, bool *secretViewActive);
 
 // TextInputBox control, ask for text
 func TextInputBox(bounds rl.Rectangle, title, message, buttons string, text *string, textMaxSize int32, secretViewActive *bool) int32 {
@@ -1324,8 +1603,8 @@ func TextInputBox(bounds rl.Rectangle, title, message, buttons string, text *str
 	copy(buffer, currentText)
 	// buffer is already zero-filled by make, so NUL-termination is automatic
 
-	ctext, freeText := wasm.CopySliceToC(buffer)
-	defer freeText()
+	ctext, free := wasm.CopySliceToC(buffer)
+	defer free()
 
 	ctextMaxSize := int32(textMaxSize)
 
@@ -1335,7 +1614,7 @@ func TextInputBox(bounds rl.Rectangle, title, message, buttons string, text *str
 		free()
 	}()
 
-	result := int32(guiTextInputBox(cbounds, ctitle, cmessage, cbuttons, ctext, ctextMaxSize, csecretViewActive))
+	result := guiTextInputBox(cbounds, ctitle, cmessage, cbuttons, ctext, ctextMaxSize, csecretViewActive)
 
 	// Copy the result back
 	*text = wasm.GoString(ctext)
@@ -1347,8 +1626,10 @@ func TextInputBox(bounds rl.Rectangle, title, message, buttons string, text *str
 //go:noescape
 func guiGrid(bounds wasm.Ptr, text wasm.Ptr, spacing float32, subdivs int32, mouseCell wasm.Ptr) int32
 
+// int GuiGrid(Rectangle bounds, const char *text, float spacing, int subdivs, Vector2 *mouseCell);
+
 // Grid control, returns mouse cell position
-func Grid(bounds rl.Rectangle, text string, spacing float32, subdivs int32, mouseCell *rl.Vector2) int32 {
+func Grid(bounds rl.Rectangle, text string, spacing float32, subdivs int32, mouseCell *rl.Vector2) bool {
 	cbounds, free := wasm.CopyValueToC(&bounds)
 	defer free()
 
@@ -1362,7 +1643,9 @@ func Grid(bounds rl.Rectangle, text string, spacing float32, subdivs int32, mous
 		wasm.CopyValueToGo(cmouseCell, mouseCell)
 		free()
 	}()
-	return guiGrid(cbounds, ctext, cspacing, csubdivs, cmouseCell)
+
+	// NOTE: This only returns 0 on raylib.h
+	return guiGrid(cbounds, ctext, cspacing, csubdivs, cmouseCell) != 0
 }
 
 //----------------------------------------------------------------------------------
@@ -1376,20 +1659,28 @@ func Grid(bounds rl.Rectangle, text string, spacing float32, subdivs int32, mous
 //go:noescape
 func EnableTooltip()
 
+// void GuiEnableTooltip(void);
+
 // Disable gui tooltips (global state)
 //
 //go:wasmimport raylib _GuiDisableTooltip
 //go:noescape
 func DisableTooltip()
 
+// void GuiDisableTooltip(void);
+
 //go:wasmimport raylib _GuiSetTooltip
 //go:noescape
 func guiSetTooltip(tooltip wasm.Ptr)
+
+// void GuiSetTooltip(const char *tooltip);
 
 // Set tooltip string
 func SetTooltip(tooltip string) {
 	ctooltip := wasm.CString(tooltip)
 	defer wasm.Free(ctooltip)
+
+	// NOTE: This only returns 0 on raylib.h
 	guiSetTooltip(ctooltip)
 }
 
@@ -1400,6 +1691,8 @@ func SetTooltip(tooltip string) {
 //go:wasmimport raylib _GuiLoadStyle
 //go:noescape
 func guiLoadStyle(fileName wasm.Ptr)
+
+// void GuiLoadStyle(const char *fileName);
 
 // Load raygui style file (.rgs)
 func LoadStyle(fileName string) {
@@ -1412,6 +1705,8 @@ func LoadStyle(fileName string) {
 //go:noescape
 func guiLoadStyleDefault()
 
+// void GuiLoadStyleDefault(void);
+
 // Load style default over global style
 func LoadStyleDefault() {
 	guiLoadStyleDefault()
@@ -1420,6 +1715,8 @@ func LoadStyleDefault() {
 //go:wasmimport raylib _GuiIconText
 //go:noescape
 func guiIconText(iconId int32, text wasm.Ptr) wasm.Ptr
+
+// const char *GuiIconText(int iconId, const char *text);
 
 // IconText gets text with icon id prepended (if supported)
 func IconText(iconId IconID, text string) string {
@@ -1433,6 +1730,8 @@ func IconText(iconId IconID, text string) string {
 //go:noescape
 func guiLoadIcons(fileName wasm.Ptr, loadIconsName int32)
 
+// char **GuiLoadIcons(const char *fileName, bool loadIconsName);
+
 // Load raygui icons file (.rgi)
 func LoadIcons(fileName string, loadIconsName bool) {
 	cfileName := wasm.CString(fileName)
@@ -1440,20 +1739,28 @@ func LoadIcons(fileName string, loadIconsName bool) {
 	guiLoadIcons(cfileName, wasm.BtoI(loadIconsName))
 }
 
-/*
 //go:wasmimport raylib _GuiLoadIconsFromMemory
 //go:noescape
-func guiLoadIconsFromMemory(data []byte, size int32, loadIconsName int32)
+func guiLoadIconsFromMemory(data wasm.Ptr, size int32, loadIconsName int32)
+
+// char **GuiLoadIconsFromMemory(const unsigned char *fileData, int dataSize, bool loadIconsName)
 
 // Load icons from memory (Binary files only)
 func LoadIconsFromMemory(data []byte, loadIconsName bool) {
-	guiLoadIconsFromMemory((*uint8)(unsafe.Pointer(data[0])), int32(len(data)), wasm.BtoI(loadIconsName))
+	cdata, free := wasm.CopySliceToC(data)
+	defer free()
+
+	csize := int32(len(data))
+	cloadIconsName := wasm.BtoI(loadIconsName)
+
+	guiLoadIconsFromMemory(cdata, csize, cloadIconsName)
 }
-*/
 
 //go:wasmimport raylib _GuiDrawIcon
 //go:noescape
 func guiDrawIcon(iconId, posX, posY, pixelSize int32, col wasm.Ptr)
+
+// void GuiDrawIcon(int iconId, int posX, int posY, int pixelSize, Color color);
 
 // Draw icon using pixel size at specified position
 func DrawIcon(iconId IconID, posX, posY, pixelSize int32, col color.RGBA) {
@@ -1468,9 +1775,13 @@ func DrawIcon(iconId IconID, posX, posY, pixelSize int32, col color.RGBA) {
 //go:noescape
 func SetIconScale(scale int32)
 
+// void GuiSetIconScale(int scale);
+
 //go:wasmimport raylib _GuiGetTextWidth
 //go:noescape
 func guiGetTextWidth(text wasm.Ptr) int32
+
+// int GuiGetTextWidth(const char *text);
 
 // Get text width considering gui style and icon size (if required)
 func GetTextWidth(text string) int32 {
@@ -1483,20 +1794,27 @@ func GetTextWidth(text string) int32 {
 // Module Internal Functions Definition
 //----------------------------------------------------------------------------------
 
-/*
 //go:wasmimport raylib _GuiLoadStyleFromMemory
 //go:noescape
 func guiLoadStyleFromMemory(data wasm.Ptr, size int32)
 
+// static void GuiLoadStyleFromMemory(const unsigned char *fileData, int dataSize);
+
 // Load style from memory (Binary files only)
 func LoadStyleFromMemory(data []byte) {
-	guiLoadStyleFromMemory((*uint8)(unsafe.Pointer(data[0])), int32(len(data)))
+	cdata, free := wasm.CopySliceToC(data)
+	defer free()
+
+	csize := int32(len(data))
+
+	guiLoadStyleFromMemory(cdata, csize)
 }
-*/
 
 //go:wasmimport raylib _GuiScrollBar
 //go:noescape
 func guiScrollBar(bounds wasm.Ptr, value, minValue, maxValue int32) int32
+
+// static int GuiScrollBar(Rectangle bounds, int value, int minValue, int maxValue);
 
 // ScrollBar control
 func ScrollBar(bounds rl.Rectangle, value, minValue, maxValue int32) int32 {
@@ -1514,10 +1832,11 @@ func ScrollBar(bounds rl.Rectangle, value, minValue, maxValue int32) int32 {
 //go:noescape
 func guiFade(ret wasm.Ptr, color wasm.Ptr, alpha float32)
 
+// static Color GuiFade(Color color, float alpha);
+
 // Color fade-in or fade-out, alpha value normalized [0..1]
 // WARNING: It multiplies current alpha by alpha scale factor
 func Fade(color rl.Color, alpha float32) rl.Color {
-
 	ccolor, free := wasm.CopyValueToC(&color)
 	defer free()
 
@@ -1540,6 +1859,8 @@ func Fade(color rl.Color, alpha float32) rl.Color {
 //go:noescape
 func guiDrawRectangle(bounds wasm.Ptr, borderWidth int32, borderColor, fillColor wasm.Ptr)
 
+// static void GuiDrawRectangle(Rectangle rec, int borderWidth, Color borderColor, Color color);
+
 func DrawRectangle(bounds rl.Rectangle, borderWidth int32, borderColor, fillColor rl.Color) {
 	cbounds, free := wasm.CopyValueToC(&bounds)
 	defer free()
@@ -1560,8 +1881,9 @@ func DrawRectangle(bounds rl.Rectangle, borderWidth int32, borderColor, fillColo
 //go:noescape
 func guiDrawText(text wasm.Ptr, position wasm.Ptr, alignment int32, color wasm.Ptr)
 
-func DrawText(text string, position rl.Rectangle, alignment int32, color rl.Color) {
+// static void GuiDrawText(const char *text, Rectangle textBounds, int alignment, Color tint);
 
+func DrawText(text string, position rl.Rectangle, alignment int32, color rl.Color) {
 	cposition, free := wasm.CopyValueToC(&position)
 	defer free()
 	ccolor, free := wasm.CopyValueToC(&color)
@@ -1577,6 +1899,8 @@ func DrawText(text string, position rl.Rectangle, alignment int32, color rl.Colo
 //go:wasmimport raylib _GuiGetTextBounds
 //go:noescape
 func guiGetTextBounds(ret wasm.Ptr, control int32, bounds wasm.Ptr)
+
+// static Rectangle GetTextBounds(int control, Rectangle bounds);
 
 // GetTextBounds - static Rectangle GetTextBounds(int control, Rectangle bounds)
 func GetTextBounds(control ControlID, bounds rl.Rectangle) rl.Rectangle {

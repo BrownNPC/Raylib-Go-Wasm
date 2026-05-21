@@ -4,7 +4,7 @@ go 1.26.1
 
 require (
 	github.com/gen2brain/raylib-go/raygui v0.0.0-00010101000000-000000000000
-	github.com/gen2brain/raylib-go/raylib v0.55.1
+	github.com/gen2brain/raylib-go/raylib v0.60.0
 )
 
 replace (
