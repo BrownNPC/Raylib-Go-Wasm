@@ -5,6 +5,7 @@ import (
 	"image/color"
 	"unsafe"
 
+	wasmrt "github.com/BrownNPC/Raylib-Go-Wasm/wasm-runtime"
 	wasm "github.com/BrownNPC/wasm-ffi-go"
 )
 
@@ -507,6 +508,17 @@ var newImageFromImage = wasm.Func[*Image]("NewImageFromImage")
 var toImage = wasm.Func[image.Image]("ToImage")
 var openAsset = wasm.Func[Asset]("OpenAsset")
 var homeDir = wasm.Func[string]("HomeDir")
+var setClipPlanes = wasm.Proc("rlSetClipPlanes")
+var disableBackfaceCulling = wasm.Proc("rlDisableBackfaceCulling")
+var pushMatrix = wasm.Proc("rlPushMatrix")
+var translatef = wasm.Proc("rlTranslatef")
+var begin = wasm.Proc("rlBegin")
+var end = wasm.Proc("rlEnd")
+var popMatrix = wasm.Proc("rlPopMatrix")
+var setTexture = wasm.Proc("rlSetTexture")
+var texCoord2f = wasm.Proc("rlTexCoord2f")
+var vertex3f = wasm.Proc("rlVertex3f")
+var color4f = wasm.Proc("rlColor4f")
 
 // CloseWindow - Close window and unload OpenGL context
 func CloseWindow() {
@@ -1046,7 +1058,7 @@ func UnloadShader(shader Shader) {
 //
 // Deprecated: Use [GetScreenToWorldRay] instead.
 func GetMouseRay(mousePosition Vector2, camera Camera) Ray {
-	ret, fl := getMouseRay.Call(wasm.Struct(mousePosition), camera)
+	ret, fl := getMouseRay.Call(wasm.Struct(mousePosition), wasm.Struct(camera))
 	v := wasm.ReadStruct[Ray](ret)
 	wasm.Free(fl...)
 	return v
@@ -1054,7 +1066,7 @@ func GetMouseRay(mousePosition Vector2, camera Camera) Ray {
 
 // GetScreenToWorldRay - Get a ray trace from screen position (i.e mouse)
 func GetScreenToWorldRay(position Vector2, camera Camera) Ray {
-	ret, fl := getScreenToWorldRay.Call(wasm.Struct(position), camera)
+	ret, fl := getScreenToWorldRay.Call(wasm.Struct(position), wasm.Struct(camera))
 	v := wasm.ReadStruct[Ray](ret)
 	wasm.Free(fl...)
 	return v
@@ -1062,7 +1074,7 @@ func GetScreenToWorldRay(position Vector2, camera Camera) Ray {
 
 // GetScreenToWorldRayEx - Get a ray trace from screen position (i.e mouse) in a viewport
 func GetScreenToWorldRayEx(position Vector2, camera Camera, width int32, height int32) Ray {
-	ret, fl := getScreenToWorldRayEx.Call(wasm.Struct(position), camera, width, height)
+	ret, fl := getScreenToWorldRayEx.Call(wasm.Struct(position), wasm.Struct(camera), width, height)
 	v := wasm.ReadStruct[Ray](ret)
 	wasm.Free(fl...)
 	return v
@@ -1086,7 +1098,7 @@ func GetCameraMatrix2D(camera Camera2D) Matrix {
 
 // GetWorldToScreen - Get the screen space position for a 3d world space position
 func GetWorldToScreen(position Vector3, camera Camera) Vector2 {
-	ret, fl := getWorldToScreen.Call(wasm.Struct(position), camera)
+	ret, fl := getWorldToScreen.Call(wasm.Struct(position), wasm.Struct(camera))
 	v := wasm.ReadStruct[Vector2](ret)
 	wasm.Free(fl...)
 	return v
@@ -1102,7 +1114,7 @@ func GetScreenToWorld2D(position Vector2, camera Camera2D) Vector2 {
 
 // GetWorldToScreenEx - Get size position for a 3d world space position
 func GetWorldToScreenEx(position Vector3, camera Camera, width int32, height int32) Vector2 {
-	ret, fl := getWorldToScreenEx.Call(wasm.Struct(position), camera, width, height)
+	ret, fl := getWorldToScreenEx.Call(wasm.Struct(position), wasm.Struct(camera), width, height)
 	v := wasm.ReadStruct[Vector2](ret)
 	wasm.Free(fl...)
 	return v
@@ -2130,8 +2142,12 @@ func LoadImageAnimFromMemory(fileType string, fileData []byte, dataSize int32, f
 
 // LoadImageFromMemory - Load image from memory buffer, fileType refers to extension: i.e. '.png'
 func LoadImageFromMemory(fileType string, fileData []byte, dataSize int32) *Image {
-	var zero *Image
-	return zero
+	cdata, free := wasmrt.CopySliceToC(fileData)
+	defer free()
+	ret, fl := loadImageFromMemory.Call(fileType, cdata, dataSize)
+	v := wasm.ReadStruct[Image](ret)
+	wasm.Free(fl...)
+	return &v
 }
 
 // LoadImageFromTexture - Load image from GPU texture data
