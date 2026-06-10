@@ -1082,7 +1082,7 @@ func GetScreenToWorldRayEx(position Vector2, camera Camera, width int32, height 
 
 // GetCameraMatrix - Get camera transform matrix (view matrix)
 func GetCameraMatrix(camera Camera) Matrix {
-	ret, fl := getCameraMatrix.Call(camera)
+	ret, fl := getCameraMatrix.Call(wasm.Struct(camera))
 	v := wasm.ReadStruct[Matrix](ret)
 	wasm.Free(fl...)
 	return v
