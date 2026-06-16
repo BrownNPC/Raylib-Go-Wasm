@@ -233,8 +233,6 @@ var loadImage = wasm.Func[*Image]("LoadImage")
 var loadImageRaw = wasm.Func[*Image]("LoadImageRaw")
 var loadImageAnim = wasm.Func[*Image]("LoadImageAnim")
 var loadImageAnimFromMemory = wasm.Func[*Image]("LoadImageAnimFromMemory")
-var loadImageFromMemory = wasm.Func[*Image]("LoadImageFromMemory")
-var loadImageFromTexture = wasm.Func[*Image]("LoadImageFromTexture")
 var loadImageFromScreen = wasm.Func[*Image]("LoadImageFromScreen")
 var isImageValid = wasm.Func[bool]("IsImageValid")
 var unloadImage = wasm.Proc("UnloadImage")
@@ -249,7 +247,6 @@ var genImageWhiteNoise = wasm.Func[*Image]("GenImageWhiteNoise")
 var genImagePerlinNoise = wasm.Func[*Image]("GenImagePerlinNoise")
 var genImageCellular = wasm.Func[*Image]("GenImageCellular")
 var genImageText = wasm.Func[Image]("GenImageText")
-var imageCopy = wasm.Func[*Image]("ImageCopy")
 var imageFromImage = wasm.Func[Image]("ImageFromImage")
 var imageFromChannel = wasm.Func[Image]("ImageFromChannel")
 var imageText = wasm.Func[Image]("ImageText")
@@ -268,7 +265,6 @@ var imageResizeNN = wasm.Proc("ImageResizeNN")
 var imageResizeCanvas = wasm.Proc("ImageResizeCanvas")
 var imageMipmaps = wasm.Proc("ImageMipmaps")
 var imageDither = wasm.Proc("ImageDither")
-var imageFlipVertical = wasm.Proc("ImageFlipVertical")
 var imageFlipHorizontal = wasm.Proc("ImageFlipHorizontal")
 var imageRotate = wasm.Proc("ImageRotate")
 var imageRotateCW = wasm.Proc("ImageRotateCW")
@@ -279,9 +275,7 @@ var imageColorGrayscale = wasm.Proc("ImageColorGrayscale")
 var imageColorContrast = wasm.Proc("ImageColorContrast")
 var imageColorBrightness = wasm.Proc("ImageColorBrightness")
 var imageColorReplace = wasm.Proc("ImageColorReplace")
-var loadImageColors = wasm.Func[[]color.RGBA]("LoadImageColors")
 var loadImagePalette = wasm.Func[[]color.RGBA]("LoadImagePalette")
-var unloadImageColors = wasm.Proc("UnloadImageColors")
 var unloadImagePalette = wasm.Proc("UnloadImagePalette")
 var getImageAlphaBorder = wasm.Func[Rectangle]("GetImageAlphaBorder")
 var getImageColor = wasm.Func[color.RGBA]("GetImageColor")
@@ -2140,20 +2134,38 @@ func LoadImageAnimFromMemory(fileType string, fileData []byte, dataSize int32, f
 	return zero
 }
 
+//go:wasmimport raylib _LoadImageFromMemory
+//go:noescape
+func loadImageFromMemory(retAddress, fileType, fileData wasmrt.Ptr, dataSize int32)
+
 // LoadImageFromMemory - Load image from memory buffer, fileType refers to extension: i.e. '.png'
 func LoadImageFromMemory(fileType string, fileData []byte, dataSize int32) *Image {
-	cdata, free := wasmrt.CopySliceToC(fileData)
+	cFileData, free := wasmrt.CopySliceToC(fileData)
 	defer free()
-	ret, fl := loadImageFromMemory.Call(fileType, cdata, dataSize)
-	v := wasm.ReadStruct[Image](ret)
-	wasm.Free(fl...)
-	return &v
+	cFileType := wasmrt.CString(fileType)
+	defer wasmrt.Free(cFileType)
+	retAddr, free := wasmrt.MallocV[Image]()
+	defer free()
+	loadImageFromMemory(retAddr, cFileType, cFileData, dataSize)
+	var ReturnValue Image
+	wasmrt.CopyValueToGo(retAddr, &ReturnValue)
+	return &ReturnValue
 }
+
+//go:wasmimport raylib _LoadImageFromTexture
+//go:noescape
+func loadImageFromTexture(retAddress, texture wasmrt.Ptr)
 
 // LoadImageFromTexture - Load image from GPU texture data
 func LoadImageFromTexture(texture Texture2D) *Image {
-	var zero *Image
-	return zero
+	cTexture, free := wasmrt.CopyValueToC(&texture)
+	defer free()
+	retAddr, free := wasmrt.MallocV[Texture2D]()
+	defer free()
+	loadImageFromTexture(retAddr, cTexture)
+	var ReturnValue Image
+	wasmrt.CopyValueToGo(retAddr, &ReturnValue)
+	return &ReturnValue
 }
 
 // LoadImageFromScreen - Load image from screen buffer and (screenshot)
@@ -2240,10 +2252,20 @@ func GenImageText(width int, height int, text string) Image {
 	return v
 }
 
+//go:wasmimport raylib _ImageCopy
+//go:noescape
+func imageCopy(retAddress, image wasmrt.Ptr)
+
 // ImageCopy - Create an image duplicate (useful for transformations)
 func ImageCopy(image *Image) *Image {
-	var zero *Image
-	return zero
+	retAddr, free := wasmrt.MallocV[Image]()
+	defer free()
+	cImage, free := wasmrt.CopyValueToC(image)
+	defer free()
+	imageCopy(retAddr, cImage)
+	var ReturnValue Image
+	wasmrt.CopyValueToGo(retAddr, &ReturnValue)
+	return &ReturnValue
 }
 
 // ImageFromImage - Create an image from another image piece
@@ -2362,10 +2384,15 @@ func ImageDither(image *Image, rBpp int32, gBpp int32, bBpp int32, aBpp int32) {
 	wasm.Free(fl...)
 }
 
+//go:wasmimport raylib _ImageFlipVertical
+func imageFlipVertical(imgStruct wasmrt.Ptr)
+
 // ImageFlipVertical - Flip image vertically
 func ImageFlipVertical(image *Image) {
-	_, fl := imageFlipVertical.Call(image)
-	wasm.Free(fl...)
+	cImage, free := wasmrt.CopyValueToC(image)
+	defer free()
+	imageFlipVertical(cImage)
+	wasmrt.CopyValueToGo(cImage, image)
 }
 
 // ImageFlipHorizontal - Flip image horizontally
@@ -2428,12 +2455,57 @@ func ImageColorReplace(image *Image, col color.RGBA, replace color.RGBA) {
 	wasm.Free(fl...)
 }
 
-// LoadImageColors - Load color data from image as a Color array (RGBA - 32bit)
-//
-// NOTE: Memory allocated should be freed using UnloadImageColors()
+//go:wasmimport raylib _LoadImageColors
+func loadImageColors(imgStruct wasmrt.Ptr) (colors wasmrt.Ptr)
+
+// NOTE: Must de-allocate colors with UnloadImageColors
+// The returned slice should not be resliced/appended to.
 func LoadImageColors(image *Image) []color.RGBA {
-	var zero []color.RGBA
-	return zero
+	cImage, free := wasmrt.CopyValueToC(image)
+	defer free()
+
+	ccolors := loadImageColors(cImage)
+	var colors = make([]color.RGBA, image.Width*image.Height+1)
+	wasmrt.CopySliceToGo(ccolors, colors)
+
+	// we allocate +1 length to do a hack.
+	// We will store ccolors pointer in the last element,
+	// so later we can de-allocate it in UnloadImageColors with some unsafe magic
+
+	last := len(colors) - 1
+
+	colors[last] = color.RGBA{
+		R: uint8(ccolors >> 24),
+		G: uint8(ccolors >> 16),
+		B: uint8(ccolors >> 8),
+		A: uint8(ccolors),
+	}
+
+	return colors[:last] // don't include last element, our "hacked" struct.
+}
+
+//go:wasmimport raylib _UnloadImageColors
+func unloadImageColors(ccolors wasmrt.Ptr)
+
+func UnloadImageColors(colors []color.RGBA) {
+	if len(colors) == 0 {
+		return
+	}
+
+	// The hidden pointer is stored immediately after the visible slice.
+	tail := (*color.RGBA)(
+		unsafe.Add(
+			unsafe.Pointer(unsafe.SliceData(colors)),
+			len(colors)*4,
+		),
+	)
+
+	ccolors := (wasmrt.Ptr(tail.R) << 24) |
+		(wasmrt.Ptr(tail.G) << 16) |
+		(wasmrt.Ptr(tail.B) << 8) |
+		wasmrt.Ptr(tail.A)
+
+	unloadImageColors(ccolors)
 }
 
 // LoadImagePalette - Load colors palette from image as a Color array (RGBA - 32bit)
@@ -2442,12 +2514,6 @@ func LoadImageColors(image *Image) []color.RGBA {
 func LoadImagePalette(image Image, maxPaletteSize int32) []color.RGBA {
 	var zero []color.RGBA
 	return zero
-}
-
-// UnloadImageColors - Unload color data loaded with LoadImageColors()
-func UnloadImageColors(colors []color.RGBA) {
-	_, fl := unloadImageColors.Call(colors)
-	wasm.Free(fl...)
 }
 
 // UnloadImagePalette - Unload colors palette loaded with LoadImagePalette()
@@ -2582,7 +2648,7 @@ func ImageDrawTriangleStrip(dst *Image, points []Vector2, col color.RGBA) {
 
 // ImageDraw - Draw a source image within a destination image (tint applied to source)
 func ImageDraw(dst *Image, src *Image, srcRec Rectangle, dstRec Rectangle, tint color.RGBA) {
-	_, fl := imageDraw.Call(dst, src, wasm.Struct(srcRec), wasm.Struct(dstRec), wasm.Struct(tint))
+	_, fl := imageDraw.Call(wasm.Struct(*dst), wasm.Struct(*src), wasm.Struct(srcRec), wasm.Struct(dstRec), wasm.Struct(tint))
 	wasm.Free(fl...)
 }
 
