@@ -2160,7 +2160,7 @@ func loadImageFromTexture(retAddress, texture wasmrt.Ptr)
 func LoadImageFromTexture(texture Texture2D) *Image {
 	cTexture, free := wasmrt.CopyValueToC(&texture)
 	defer free()
-	retAddr, free := wasmrt.MallocV[Texture2D]()
+	retAddr, free := wasmrt.MallocV[Image]()
 	defer free()
 	loadImageFromTexture(retAddr, cTexture)
 	var ReturnValue Image
