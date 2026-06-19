@@ -16,5 +16,5 @@ replace (
 
 require (
 	github.com/BrownNPC/Raylib-Go-Wasm/wasm-runtime v0.0.0-20260421110350-7c24b2d5e6d3 // indirect
-	github.com/BrownNPC/wasm-ffi-go v1.2.0 // indirect
+	github.com/BrownNPC/wasm-ffi-go v1.3.0 // indirect
 )
