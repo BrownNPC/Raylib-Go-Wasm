@@ -7,6 +7,8 @@
 
 The Go bindings for raylib had not been able to compile to web for a decade, so I did it myself :D
 
+### Contributors
+Special thanks to [@kerudev](https://github.com/kerudev) for RayGUI binding help, and [@genriot](https://github.com/kerudev) for rlgl and image bindings help 
 ## Table Of Contents
 
 - [Getting Started](#getting-started)
@@ -14,15 +16,9 @@ The Go bindings for raylib had not been able to compile to web for a decade, so 
 - [Running](#running)
 - [Tips](#tips)
 
-## What works?
-
-- Loading Fonts, Sounds Textures etc.
-- Drawing Shapes and Graphics
 
 ## What doesnt work?
-
-- Images (can use NewImageFromImage [#7](https://github.com/BrownNPC/Raylib-Go-Wasm/issues/7))
-
+- Unsure, open an issue please.
 ## Getting started
 
 ### 1. Download this repository. 
