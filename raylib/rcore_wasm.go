@@ -265,8 +265,6 @@ var imageResizeNN = wasm.Proc("ImageResizeNN")
 var imageResizeCanvas = wasm.Proc("ImageResizeCanvas")
 var imageMipmaps = wasm.Proc("ImageMipmaps")
 var imageDither = wasm.Proc("ImageDither")
-var imageFlipHorizontal = wasm.Proc("ImageFlipHorizontal")
-var imageRotate = wasm.Proc("ImageRotate")
 var imageRotateCW = wasm.Proc("ImageRotateCW")
 var imageRotateCCW = wasm.Proc("ImageRotateCCW")
 var imageColorTint = wasm.Proc("ImageColorTint")
@@ -2395,16 +2393,26 @@ func ImageFlipVertical(image *Image) {
 	wasmrt.CopyValueToGo(cImage, image)
 }
 
+//go:wasmimport raylib _ImageFlipHorizontal
+func imageFlipHorizontal(imgStruct wasmrt.Ptr)
+
 // ImageFlipHorizontal - Flip image horizontally
 func ImageFlipHorizontal(image *Image) {
-	_, fl := imageFlipHorizontal.Call(image)
-	wasm.Free(fl...)
+	cImage, free := wasmrt.CopyValueToC(image)
+	defer free()
+	imageFlipHorizontal(cImage)
+	wasmrt.CopyValueToGo(cImage, image)
 }
+
+//go:wasmimport raylib _ImageRotate
+func imageRotate(imgStruct wasmrt.Ptr, degrees int32)
 
 // ImageRotate - Rotate image by input angle in degrees (-359 to 359)
 func ImageRotate(image *Image, degrees int32) {
-	_, fl := imageRotate.Call(image, degrees)
-	wasm.Free(fl...)
+	cImage, free := wasmrt.CopyValueToC(image)
+	defer free()
+	imageRotate(cImage, degrees)
+	wasmrt.CopyValueToGo(cImage, image)
 }
 
 // ImageRotateCW - Rotate image clockwise 90deg
