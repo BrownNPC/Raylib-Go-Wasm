@@ -2431,11 +2431,11 @@ func imageColorTint(imgStruct wasmrt.Ptr, color wasmrt.Ptr)
 
 // ImageColorTint - Modify image color: tint
 func ImageColorTint(image *Image, col color.RGBA) {
-	cImage, free := wasmrt.CopyValueToC(image)
-	defer free()
-	ccol, free := wasmrt.CopyValueToC(&col)
-	defer free()
-	imageColorTint(cImage, ccol)
+	cImage, free1 := wasmrt.CopyValueToC(image)
+	defer free1()
+	cCol, free2 := wasmrt.CopyValueToC(&col)
+	defer free2()
+	imageColorTint(cImage, cCol)
 	wasmrt.CopyValueToGo(cImage, image)
 }
 
