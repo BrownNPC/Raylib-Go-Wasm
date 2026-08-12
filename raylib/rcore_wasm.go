@@ -267,7 +267,6 @@ var imageMipmaps = wasm.Proc("ImageMipmaps")
 var imageDither = wasm.Proc("ImageDither")
 var imageRotateCW = wasm.Proc("ImageRotateCW")
 var imageRotateCCW = wasm.Proc("ImageRotateCCW")
-var imageColorTint = wasm.Proc("ImageColorTint")
 var imageColorInvert = wasm.Proc("ImageColorInvert")
 var imageColorGrayscale = wasm.Proc("ImageColorGrayscale")
 var imageColorContrast = wasm.Proc("ImageColorContrast")
@@ -2427,10 +2426,16 @@ func ImageRotateCCW(image *Image) {
 	wasm.Free(fl...)
 }
 
+//go:wasmimport raylib _ImageColorTint
+func imageColorTint(imgStruct wasmrt.Ptr, color wasmrt.Ptr)
+
 // ImageColorTint - Modify image color: tint
 func ImageColorTint(image *Image, col color.RGBA) {
-	_, fl := imageColorTint.Call(image, wasm.Struct(col))
-	wasm.Free(fl...)
+	cImage, free := wasmrt.CopyValueToC(image)
+	ccol, free := wasmrt.CopyValueToC(&col)
+	defer free()
+	imageColorTint(cImage, ccol)
+	wasmrt.CopyValueToGo(cImage, image)
 }
 
 // ImageColorInvert - Modify image color: invert
