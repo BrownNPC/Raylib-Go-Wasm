@@ -21,6 +21,10 @@ Special thanks to [@kerudev](https://github.com/kerudev) for RayGUI binding help
 - Unsure, open an issue please.
 ## Getting started
 
+#### **You can use this template: https://github.com/BrownNPC/Golang-Raylib-GameFramework**
+
+or setup manually:
+
 ### 1. Download this repository. 
 
 Either use `git clone` or click the green "Code" button and download it in your project folder.
