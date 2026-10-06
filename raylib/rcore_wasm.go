@@ -306,8 +306,6 @@ var isTextureValid = wasm.Func[bool]("IsTextureValid")
 var unloadTexture = wasm.Proc("UnloadTexture")
 var isRenderTextureValid = wasm.Func[bool]("IsRenderTextureValid")
 var unloadRenderTexture = wasm.Proc("UnloadRenderTexture")
-var updateTexture = wasm.Proc("UpdateTexture")
-var updateTextureRec = wasm.Proc("UpdateTextureRec")
 var genTextureMipmaps = wasm.Proc("GenTextureMipmaps")
 var setTextureFilter = wasm.Proc("SetTextureFilter")
 var setTextureWrap = wasm.Proc("SetTextureWrap")
@@ -2730,16 +2728,30 @@ func UnloadRenderTexture(target RenderTexture2D) {
 	wasm.Free(fl...)
 }
 
-// UpdateTexture - Update GPU texture with new data
-func UpdateTexture(texture Texture2D, pixels []color.RGBA) {
-	_, fl := updateTexture.Call(wasm.Struct(texture), pixels)
-	wasm.Free(fl...)
+//go:wasmimport raylib _UpdateTexture
+//go:noescape
+func updateTexture(cTexture wasmrt.Ptr, cColors wasmrt.Ptr)
+
+func UpdateTexture(texture Texture2D, colors []color.RGBA) {
+	cTexture, free1 := wasmrt.CopyValueToC(&texture)
+	defer free1()
+	cColors, free2 := wasmrt.CopySliceToC(colors)
+	defer free2()
+	updateTexture(cTexture, cColors)
 }
 
-// UpdateTextureRec - Update GPU texture rectangle with new data
-func UpdateTextureRec(texture Texture2D, rec Rectangle, pixels []color.RGBA) {
-	_, fl := updateTextureRec.Call(wasm.Struct(texture), wasm.Struct(rec), pixels)
-	wasm.Free(fl...)
+//go:wasmimport raylib _UpdateTextureRec
+//go:noescape
+func updateTextureRec(texture wasmrt.Ptr, cRec wasmrt.Ptr, cColors wasmrt.Ptr)
+
+func UpdateTextureRec(texture Texture2D, rec Rectangle, colors []color.RGBA) {
+	cTexture, free1 := wasmrt.CopyValueToC(&texture)
+	defer free1()
+	cColors, free2 := wasmrt.CopySliceToC(colors)
+	defer free2()
+	cRec, free3 := wasmrt.CopyValueToC(&rec)
+	defer free3()
+	updateTextureRec(cTexture, cRec, cColors)
 }
 
 // GenTextureMipmaps - Generate GPU mipmaps for a texture
