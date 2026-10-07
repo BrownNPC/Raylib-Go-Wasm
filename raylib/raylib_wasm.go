@@ -9,7 +9,9 @@ import (
 	"image/color"
 	"io/fs"
 	"syscall/js"
+	"unsafe"
 
+	wasmrt "github.com/BrownNPC/Raylib-Go-Wasm/wasm-runtime"
 	"github.com/BrownNPC/wasm-ffi-go"
 )
 
@@ -206,4 +208,179 @@ func Vertex3f(x float32, y float32, z float32) {
 func Color4f(x float32, y float32, z float32, w float32) {
 	_, fl := color4f.Call(x, y, z, w)
 	wasm.Free(fl...)
+}
+
+//go:wasmimport raylib _UpdateTexture
+//go:noescape
+func updateTexture(cTexture wasmrt.Ptr, cColors wasmrt.Ptr)
+
+func UpdateTexture(texture Texture2D, colors []color.RGBA) {
+	cTexture, free1 := wasmrt.CopyValueToC(&texture)
+	defer free1()
+	cColors, free2 := wasmrt.CopySliceToC(colors)
+	defer free2()
+	updateTexture(cTexture, cColors)
+}
+
+//go:wasmimport raylib _UpdateTextureRec
+//go:noescape
+func updateTextureRec(texture wasmrt.Ptr, cRec wasmrt.Ptr, cColors wasmrt.Ptr)
+
+func UpdateTextureRec(texture Texture2D, rec Rectangle, colors []color.RGBA) {
+	cTexture, free1 := wasmrt.CopyValueToC(&texture)
+	defer free1()
+	cColors, free2 := wasmrt.CopySliceToC(colors)
+	defer free2()
+	cRec, free3 := wasmrt.CopyValueToC(&rec)
+	defer free3()
+	updateTextureRec(cTexture, cRec, cColors)
+}
+
+//go:wasmimport raylib _LoadImageFromMemory
+//go:noescape
+func loadImageFromMemory(retAddress, fileType, fileData wasmrt.Ptr, dataSize int32)
+
+// LoadImageFromMemory - Load image from memory buffer, fileType refers to extension: i.e. '.png'
+func LoadImageFromMemory(fileType string, fileData []byte, dataSize int32) *Image {
+	cFileData, free := wasmrt.CopySliceToC(fileData)
+	defer free()
+	cFileType := wasmrt.CString(fileType)
+	defer wasmrt.Free(cFileType)
+	retAddr, free := wasmrt.MallocV[Image]()
+	defer free()
+	loadImageFromMemory(retAddr, cFileType, cFileData, dataSize)
+	var ReturnValue Image
+	wasmrt.CopyValueToGo(retAddr, &ReturnValue)
+	return &ReturnValue
+}
+
+//go:wasmimport raylib _LoadImageFromTexture
+//go:noescape
+func loadImageFromTexture(retAddress, texture wasmrt.Ptr)
+
+// LoadImageFromTexture - Load image from GPU texture data
+func LoadImageFromTexture(texture Texture2D) *Image {
+	cTexture, free := wasmrt.CopyValueToC(&texture)
+	defer free()
+	retAddr, free := wasmrt.MallocV[Image]()
+	defer free()
+	loadImageFromTexture(retAddr, cTexture)
+	var ReturnValue Image
+	wasmrt.CopyValueToGo(retAddr, &ReturnValue)
+	return &ReturnValue
+}
+
+//go:wasmimport raylib _ImageCopy
+//go:noescape
+func imageCopy(retAddress, image wasmrt.Ptr)
+
+// ImageCopy - Create an image duplicate (useful for transformations)
+func ImageCopy(image *Image) *Image {
+	retAddr, free := wasmrt.MallocV[Image]()
+	defer free()
+	cImage, free := wasmrt.CopyValueToC(image)
+	defer free()
+	imageCopy(retAddr, cImage)
+	var ReturnValue Image
+	wasmrt.CopyValueToGo(retAddr, &ReturnValue)
+	return &ReturnValue
+}
+
+//go:wasmimport raylib _ImageFlipVertical
+func imageFlipVertical(imgStruct wasmrt.Ptr)
+
+// ImageFlipVertical - Flip image vertically
+func ImageFlipVertical(image *Image) {
+	cImage, free := wasmrt.CopyValueToC(image)
+	defer free()
+	imageFlipVertical(cImage)
+	wasmrt.CopyValueToGo(cImage, image)
+}
+
+//go:wasmimport raylib _ImageFlipHorizontal
+func imageFlipHorizontal(imgStruct wasmrt.Ptr)
+
+// ImageFlipHorizontal - Flip image horizontally
+func ImageFlipHorizontal(image *Image) {
+	cImage, free := wasmrt.CopyValueToC(image)
+	defer free()
+	imageFlipHorizontal(cImage)
+	wasmrt.CopyValueToGo(cImage, image)
+}
+
+//go:wasmimport raylib _ImageRotate
+func imageRotate(imgStruct wasmrt.Ptr, degrees int32)
+
+// ImageRotate - Rotate image by input angle in degrees (-359 to 359)
+func ImageRotate(image *Image, degrees int32) {
+	cImage, free := wasmrt.CopyValueToC(image)
+	defer free()
+	imageRotate(cImage, degrees)
+	wasmrt.CopyValueToGo(cImage, image)
+}
+
+//go:wasmimport raylib _ImageColorTint
+func imageColorTint(imgStruct wasmrt.Ptr, color wasmrt.Ptr)
+
+// ImageColorTint - Modify image color: tint
+func ImageColorTint(image *Image, col color.RGBA) {
+	cImage, free1 := wasmrt.CopyValueToC(image)
+	defer free1()
+	cCol, free2 := wasmrt.CopyValueToC(&col)
+	defer free2()
+	imageColorTint(cImage, cCol)
+	wasmrt.CopyValueToGo(cImage, image)
+}
+
+//go:wasmimport raylib _LoadImageColors
+func loadImageColors(imgStruct wasmrt.Ptr) (colors wasmrt.Ptr)
+
+// NOTE: Must de-allocate colors with UnloadImageColors
+// The returned slice should not be resliced/appended to.
+func LoadImageColors(image *Image) []color.RGBA {
+	cImage, free := wasmrt.CopyValueToC(image)
+	defer free()
+
+	ccolors := loadImageColors(cImage)
+	var colors = make([]color.RGBA, image.Width*image.Height+1)
+	wasmrt.CopySliceToGo(ccolors, colors)
+
+	// we allocate +1 length to do a hack.
+	// We will store ccolors pointer in the last element,
+	// so later we can de-allocate it in UnloadImageColors with some unsafe magic
+
+	last := len(colors) - 1
+
+	colors[last] = color.RGBA{
+		R: uint8(ccolors >> 24),
+		G: uint8(ccolors >> 16),
+		B: uint8(ccolors >> 8),
+		A: uint8(ccolors),
+	}
+
+	return colors[:last] // don't include last element, our "hacked" struct.
+}
+
+//go:wasmimport raylib _UnloadImageColors
+func unloadImageColors(ccolors wasmrt.Ptr)
+
+func UnloadImageColors(colors []color.RGBA) {
+	if len(colors) == 0 {
+		return
+	}
+
+	// The hidden pointer is stored immediately after the visible slice.
+	tail := (*color.RGBA)(
+		unsafe.Add(
+			unsafe.Pointer(unsafe.SliceData(colors)),
+			len(colors)*4,
+		),
+	)
+
+	ccolors := (wasmrt.Ptr(tail.R) << 24) |
+		(wasmrt.Ptr(tail.G) << 16) |
+		(wasmrt.Ptr(tail.B) << 8) |
+		wasmrt.Ptr(tail.A)
+
+	unloadImageColors(ccolors)
 }
