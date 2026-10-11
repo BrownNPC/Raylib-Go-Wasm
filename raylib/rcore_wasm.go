@@ -144,8 +144,6 @@ var getMouseY = wasm.Func[int32]("GetMouseY")
 var getMousePosition = wasm.Func[Vector2]("GetMousePosition")
 var getMouseDelta = wasm.Func[Vector2]("GetMouseDelta")
 var setMousePosition = wasm.Proc("SetMousePosition")
-var setMouseOffset = wasm.Proc("SetMouseOffset")
-var setMouseScale = wasm.Proc("SetMouseScale")
 var getMouseWheelMove = wasm.Func[float32]("GetMouseWheelMove")
 var getMouseWheelMoveV = wasm.Func[Vector2]("GetMouseWheelMoveV")
 var setMouseCursor = wasm.Proc("SetMouseCursor")
@@ -1531,18 +1529,6 @@ func GetMouseDelta() Vector2 {
 // SetMousePosition - Set mouse position XY
 func SetMousePosition(x int32, y int32) {
 	_, fl := setMousePosition.Call(x, y)
-	wasm.Free(fl...)
-}
-
-// SetMouseOffset - Set mouse offset
-func SetMouseOffset(offsetX int32, offsetY int32) {
-	_, fl := setMouseOffset.Call(offsetX, offsetY)
-	wasm.Free(fl...)
-}
-
-// SetMouseScale - Set mouse scaling
-func SetMouseScale(scaleX float32, scaleY float32) {
-	_, fl := setMouseScale.Call(scaleX, scaleY)
 	wasm.Free(fl...)
 }
 

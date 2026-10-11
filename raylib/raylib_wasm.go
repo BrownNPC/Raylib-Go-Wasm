@@ -384,3 +384,19 @@ func UnloadImageColors(colors []color.RGBA) {
 
 	unloadImageColors(ccolors)
 }
+
+//go:wasmimport raylib _SetMouseOffset
+func setMouseOffset(offsetX int32, offsetY int32)
+
+// SetMouseOffset - Set mouse offset
+func SetMouseOffset(offsetX int, offsetY int) {
+	setMouseOffset(int32(offsetX), int32(offsetY))
+}
+
+//go:wasmimport raylib _SetMouseScale
+func setMouseScale(offsetX float32, offsetY float32)
+
+// SetMouseScale - Set mouse scaling
+func SetMouseScale(scaleX float32, scaleY float32) {
+	setMouseScale(scaleX, scaleY)
+}
